@@ -5420,4 +5420,9 @@ textarea:focus-visible,
     .sidebar-panel {
         padding-top: 60px !important;
     }
+    /* La barra flotante ya ofrece sonido; ocultar el 🔊 redundante
+       del encabezado del panel para no duplicar el control. */
+    #screen-game-board .project-info-header .btn-sound-toggle {
+        display: none;
+    }
 }

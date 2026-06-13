@@ -1,0 +1,305 @@
+TITLE: Pensamiento Computacional
+AUTHOR: Prof. Darwin Salina
+NIVEL: 8vo
+OBS: Preguntas basadas en los temas de estudio para  la evaluación parcial de Junio
+DATE: 01/06/2026
+
+1. ¿Qué es el pensamiento computacional?
+   @ *Una forma de resolver problemas de manera ordenada, lógica y clara.
+   @ Una manera de memorizar comandos sin comprenderlos.
+   @ Una técnica para reparar computadoras dañadas.
+   @ Un método para pensar exactamente igual que una máquina.
+
+2. ¿Qué NO significa el pensamiento computacional?
+   @ Aprender a analizar un problema.
+   @ Buscar una solución paso a paso.
+   @ *Pensar exactamente como una computadora.
+   @ Resolver problemas de forma clara.
+
+3. ¿Para qué sirve el pensamiento computacional?
+   @ *Para entender problemas complejos, dividirlos y crear instrucciones claras.
+   @ Para decorar dispositivos tecnológicos.
+   @ Para aumentar automáticamente la velocidad de una computadora.
+   @ Para evitar revisar errores.
+
+4. ¿En qué consiste la fase de análisis del problema?
+   @ *En comprender qué problema se debe resolver antes de intentar solucionarlo.
+   @ En escribir directamente el programa final.
+   @ En eliminar todos los datos del problema.
+   @ En repetir instrucciones sin control.
+
+5. En la máquina de bebidas, ¿qué se analiza antes de preparar café?
+   @ *Si hay electricidad, agua, ficha válida, selección de bebida y vaso colocado.
+   @ El color exterior de la máquina.
+   @ La marca del mueble de la máquina.
+   @ El nombre del fabricante del plástico.
+
+6. ¿Qué significa descomponer un problema?
+   @ *Dividir un problema grande en partes más pequeñas y fáciles de resolver.
+   @ Mezclar todos los pasos en una sola instrucción.
+   @ Resolver el problema sin analizarlo.
+   @ Ignorar las partes importantes del sistema.
+
+7. ¿Cuál de estas opciones es un subproblema de la máquina de bebidas?
+   @ *Validar ficha.
+   @ Pintar la carcasa.
+   @ Elegir el color del cartel.
+   @ Cambiar el diseño del aula.
+
+8. ¿Qué es el reconocimiento de patrones?
+   @ *Encontrar partes parecidas o repetidas dentro de un problema.
+   @ Borrar las instrucciones repetidas sin analizarlas.
+   @ Cambiar el objetivo del algoritmo.
+   @ Usar cualquier respuesta aunque sea incorrecta.
+
+9. ¿Qué patrón comparten preparar café y preparar té en la máquina?
+   @ *Colocar producto soluble, calentar agua, agregar agua, mezclar y servir.
+   @ Moler granos de café en todos los casos.
+   @ Enfriar el agua antes de usarla.
+   @ Apagar la máquina antes de servir.
+
+10. ¿Qué es la abstracción?
+    @ *Quedarse con lo importante y dejar de lado detalles innecesarios.
+    @ Agregar todos los detalles posibles aunque no sirvan.
+    @ Repetir un procedimiento sin final.
+    @ Escribir pasos desordenados.
+
+11. Para diseñar el algoritmo de una máquina de bebidas, ¿qué detalle puede ignorarse por abstracción?
+    @ *El color de la máquina.
+    @ Si hay agua.
+    @ Si la ficha es válida.
+    @ Si hay vaso colocado.
+
+12. ¿Qué es un algoritmo?
+    @ *Un conjunto ordenado y finito de instrucciones para resolver un problema.
+    @ Un depósito de agua caliente.
+    @ Una ficha que activa la máquina.
+    @ Una lista infinita de pasos desordenados.
+
+13. ¿Qué significa que un algoritmo sea ordenado?
+    @ *Que sus pasos estén en una secuencia correcta.
+    @ Que nunca termine.
+    @ Que tenga instrucciones confusas.
+    @ Que ignore las condiciones.
+
+14. ¿Qué significa que un algoritmo sea claro?
+    @ *Que cada instrucción se entienda fácilmente.
+    @ Que tenga la mayor cantidad posible de palabras difíciles.
+    @ Que omita pasos importantes.
+    @ Que solo pueda entenderlo quien lo escribió.
+
+15. ¿Qué significa que un algoritmo sea finito?
+    @ *Que debe terminar en algún momento.
+    @ Que debe repetirse para siempre.
+    @ Que no debe tener final.
+    @ Que debe evitar toda decisión.
+
+16. ¿Qué significa que un algoritmo sea preciso?
+    @ *Que no debe tener ambigüedades.
+    @ Que debe usar frases vagas.
+    @ Que puede saltar a cualquier parte sin indicar dónde.
+    @ Que no necesita explicar las decisiones.
+
+17. ¿Qué significa que un algoritmo sea eficiente?
+    @ *Que resuelve el problema sin pasos innecesarios.
+    @ Que agrega acciones inútiles para hacerlo más largo.
+    @ Que repite siempre los mismos pasos sin control.
+    @ Que evita llegar a una solución.
+
+18. ¿Qué significa que un algoritmo sea verificable?
+    @ *Que se puede probar si funciona o no.
+    @ Que no puede revisarse.
+    @ Que solo funciona si nadie lo lee.
+    @ Que no necesita corrección.
+
+19. ¿Qué se busca durante la prueba y corrección de un algoritmo?
+    @ *Pasos desordenados, instrucciones poco claras, condiciones incompletas y caminos sin salida.
+    @ El color más atractivo de la máquina.
+    @ El nombre de los estudiantes del equipo.
+    @ La decoración exterior del dispositivo.
+
+20. Si la máquina pide un vaso pero nunca devuelve la ficha cuando el usuario no coloca el vaso, ¿qué ocurre?
+    @ *El algoritmo está incompleto.
+    @ El algoritmo es más eficiente.
+    @ La abstracción está perfectamente aplicada.
+    @ El problema ya quedó resuelto.
+
+21. En el análisis de un problema, ¿qué pregunta corresponde al objetivo?
+    @ *¿Qué quiero lograr?
+    @ ¿Qué color debe tener?
+    @ ¿Qué nombre tendrá el archivo?
+    @ ¿Cuántas veces puedo repetir el error?
+
+22. En el análisis de un problema, ¿qué pregunta corresponde a las entradas?
+    @ *¿Qué datos o elementos necesito?
+    @ ¿Qué resultado espero?
+    @ ¿Qué puede salir mal?
+    @ ¿Qué pasos ya no importan?
+
+23. En el análisis de un problema, ¿qué pregunta corresponde al proceso?
+    @ *¿Qué pasos debo realizar?
+    @ ¿Qué resultado espero?
+    @ ¿Qué datos necesito?
+    @ ¿Qué puede salir mal?
+
+24. En el análisis de un problema, ¿qué pregunta corresponde a las salidas?
+    @ *¿Qué resultado espero?
+    @ ¿Qué decisiones hay que tomar?
+    @ ¿Qué datos necesito?
+    @ ¿Qué pasos debo ocultar?
+
+25. En el análisis de un problema, ¿qué pregunta corresponde a las condiciones?
+    @ *¿Qué decisiones hay que tomar?
+    @ ¿Qué color externo tendrá la máquina?
+    @ ¿Qué resultado decorativo espero?
+    @ ¿Qué pasos debo eliminar sin revisar?
+
+26. ¿Cuál de estos es un error posible en la máquina de bebidas?
+    @ *Ficha atascada.
+    @ Color poco atractivo.
+    @ Fuente de letra incorrecta.
+    @ Nombre demasiado largo.
+
+27. ¿Qué es un algoritmo de hilo único?
+    @ *Un algoritmo que sigue un solo flujo principal de instrucciones.
+    @ Un algoritmo que ejecuta muchos módulos al mismo tiempo.
+    @ Un algoritmo que nunca tiene decisiones.
+    @ Un algoritmo que no puede terminar.
+
+28. En un algoritmo de hilo único para validar ficha, ¿qué debe ocurrir si la ficha no es válida?
+    @ *Devolver la ficha.
+    @ Preparar café inmediatamente.
+    @ Apagar para siempre la máquina.
+    @ Ignorar el error y servir la bebida.
+
+29. ¿Qué es una rutina?
+    @ *Una parte del algoritmo que resuelve una tarea concreta.
+    @ Un error que bloquea el sistema.
+    @ Una ficha especial de la máquina.
+    @ Un tipo de ingrediente soluble.
+
+30. ¿Qué es un algoritmo con rutinas múltiples?
+    @ *Un algoritmo que divide el trabajo en varias partes o módulos.
+    @ Un algoritmo que no tiene organización.
+    @ Un algoritmo formado por un solo paso.
+    @ Un algoritmo que no puede revisarse.
+
+31. ¿Cuál es una ventaja de usar rutinas?
+    @ *Facilita encontrar errores.
+    @ Obliga a repetir instrucciones innecesarias.
+    @ Impide modificar una parte del algoritmo.
+    @ Hace que el algoritmo sea menos claro.
+
+32. ¿Qué es una subrutina?
+    @ *Una rutina más pequeña que se usa dentro de otra.
+    @ Un error imposible de corregir.
+    @ Un tipo de vaso descartable.
+    @ Una señal sonora de la máquina.
+
+33. ¿Cuál de estas es una rutina básica de la máquina de bebidas?
+    @ *Detección y validación de ficha.
+    @ Elección del color del gabinete.
+    @ Diseño del logotipo exterior.
+    @ Compra del uniforme del usuario.
+
+34. ¿Qué verifica la rutina de control de insumos e ingredientes?
+    @ *Electricidad, agua y niveles mínimos de ingredientes.
+    @ El color de los botones.
+    @ El tamaño del cartel exterior.
+    @ La marca del vaso del usuario.
+
+35. ¿Qué controla la rutina de detección y validación de ficha?
+    @ *Si se ingresó ficha, si llegó al sensor y si es válida.
+    @ Si el usuario tiene sed.
+    @ Si la bebida quedó dulce.
+    @ Si el vaso tiene dibujos.
+
+36. ¿Qué permite la rutina de selección de bebida?
+    @ *Elegir entre café, capuchino, chocolatada o té.
+    @ Elegir el color de la máquina.
+    @ Cambiar el nombre del algoritmo.
+    @ Apagar todos los sensores.
+
+37. ¿Qué hace la rutina de preparación de la bebida?
+    @ *Recibe el código de bebida y dirige la preparación correspondiente.
+    @ Decide el color del vaso.
+    @ Reemplaza la electricidad por agua.
+    @ Elimina las condiciones del algoritmo.
+
+38. ¿Qué comprueba la rutina de detección y validación de vaso?
+    @ *Si hay vaso y si tiene el tamaño correcto.
+    @ Si el usuario sabe programar.
+    @ Si la ficha tiene buen color.
+    @ Si la máquina está decorada.
+
+39. ¿Qué hace la rutina de servir bebida?
+    @ *Sirve la bebida y limpia la cazoleta.
+    @ Elige el título del documento.
+    @ Cambia la marca de la máquina.
+    @ Elimina los ingredientes.
+
+40. ¿Qué hace la rutina de detección de retiro de vaso?
+    @ *Espera que el usuario retire el vaso y reinicia el ciclo.
+    @ Prepara todas las bebidas a la vez.
+    @ Borra la selección del usuario antes de servir.
+    @ Cambia el tamaño de la máquina.
+
+41. ¿Cómo debe ser la numeración de pasos en el algoritmo de la máquina de bebidas?
+    @ *Secuencial e ininterrumpida desde el principio hasta el final.
+    @ Reiniciada en cada rutina.
+    @ Desordenada para que sea más flexible.
+    @ Opcional y sin importancia.
+
+42. ¿Cómo deben indicarse los saltos entre rutinas?
+    @ *Con el nombre de la rutina de destino y el número de paso entre paréntesis.
+    @ Con frases como “volver arriba”.
+    @ Sin indicar el paso exacto.
+    @ Solo con una flecha sin explicación.
+
+43. ¿Qué debe quedar claro en cada decisión del algoritmo?
+    @ *Qué ocurre si la condición se cumple y qué ocurre si no se cumple.
+    @ Solo qué pasa cuando la respuesta es sí.
+    @ Solo qué pasa cuando la respuesta es no.
+    @ Nada, porque las decisiones no necesitan explicación.
+
+44. ¿Cuál de estas expresiones debe evitarse al escribir el algoritmo?
+    @ *“Hacer lo necesario”.
+    @ “Ir a Detección y validación de ficha (Paso 19)”.
+    @ “Volver a Control de insumos e ingredientes (Paso 1)”.
+    @ “Si no hay vaso, mostrar Colocar vaso”.
+
+45. ¿Qué significa probar el algoritmo “como si fueran la máquina”?
+    @ *Seguir cada camino posible y comprobar que no haya caminos sin salida.
+    @ Leer solo el título del trabajo.
+    @ Cambiar las rutinas sin revisarlas.
+    @ Ignorar los errores posibles.
+
+46. En la máquina dispensadora, ¿qué significa 3 pitidos?
+    @ *No se detectó recipiente.
+    @ Bebida lista para retirar.
+    @ Falta suministro de agua.
+    @ Ingredientes insuficientes.
+
+47. En la máquina dispensadora, ¿qué indica 4 pitidos más luz de advertencia?
+    @ *Ingredientes insuficientes y necesidad de reposición.
+    @ Bebida lista para retirar.
+    @ Recipiente colocado correctamente.
+    @ Ficha aceptada sin problemas.
+
+48. En la máquina dispensadora, ¿qué indica 5 pitidos más luz de advertencia?
+    @ *Falta suministro de agua.
+    @ Bebida lista para retirar.
+    @ Botón presionado correctamente.
+    @ Vaso retirado por el usuario.
+
+49. Según la preparación indicada, ¿qué bebida usa leche, agua, café y formación de espuma?
+    @ *Capuchino.
+    @ Té.
+    @ Café solo.
+    @ Agua caliente.
+
+50. En el ejemplo del horno microondas digital, ¿qué condición de seguridad debe cumplirse para iniciar la operación?
+    @ *La puerta debe estar cerrada correctamente.
+    @ El plato debe ser de una marca determinada.
+    @ Los cables internos deben tener un color específico.
+    @ La frecuencia exacta debe ser visible para el usuario.

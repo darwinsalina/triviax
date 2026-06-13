@@ -1,0 +1,1364 @@
+{
+    "metadata": {
+        "title": "Mundiales de Fútbol",
+        "author": "Prof. Darwin Salina",
+        "nivel": "Deportes",
+        "obs": "¿Cúanto sabes de los mundiales y la participación de Uruguay?",
+        "date": "08\/06\/2026",
+        "mail": "prof.darwinsalina@gmail.com",
+        "background": "fondo.jpg"
+    },
+    "board": {
+        "type": "serpentine"
+    },
+    "challenges": [
+        {
+            "id": "mc_001",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿En qué país se jugó el primer Mundial de fútbol?"
+            },
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Uruguay",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Brasil",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Italia",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Francia",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_002",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿A qué selección venció Uruguay en la final del Mundial de 1930?"
+            },
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Brasil",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Argentina",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Hungría",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Italia",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_003",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Cuál fue el resultado de Uruguay contra Brasil en 1950?"
+            },
+            "options": [
+                {
+                    "id": "a",
+                    "text": "4-2",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "2-1",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "3-2",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "1-0",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_004",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Quién es el máximo goleador histórico de los Mundiales según el documento?"
+            },
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Pelé",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Miroslav Klose",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Ronaldo",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Luis Suárez",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_005",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Cuántos goles anotó Miroslav Klose en la historia de los Mundiales?"
+            },
+            "options": [
+                {
+                    "id": "a",
+                    "text": "12",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "14",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "16",
+                    "correct": true
+                },
+                {
+                    "id": "d",
+                    "text": "18",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_006",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Quién fue el máximo goleador uruguayo en un solo Mundial según el documento?"
+            },
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Pedro Cea",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Óscar Míguez",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Diego Forlán",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Luis Suárez",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_007",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Quién es el máximo goleador uruguayo en la historia de los Mundiales según el documento?"
+            },
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Pedro Cea",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Óscar Míguez",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Darwin Núñez",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Obdulio Varela",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_008",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Quién es el Director Técnico de Uruguay para el Mundial 2026 según el documento?"
+            },
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Marcelo Bielsa",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Diego Reyes",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Santiago Ferro",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Enzo Ferrari",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_009",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿En qué Mundial fue expulsado José Batista a los 56 segundos?"
+            },
+            "options": [
+                {
+                    "id": "a",
+                    "text": "México 1970",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "México 1986",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Italia 1990",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Sudáfrica 2010",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_001",
+            "type": "true_false",
+            "prompt": {
+                "text": "Uruguay ganó el Mundial de 1930 jugando la final en el Estadio Centenario."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_002",
+            "type": "true_false",
+            "prompt": {
+                "text": "El Mundial de 1950 tuvo una final directa por eliminación entre Uruguay y Brasil."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_003",
+            "type": "true_false",
+            "prompt": {
+                "text": "En 1950, a Brasil le bastaba con empatar ante Uruguay para ser campeón."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_004",
+            "type": "true_false",
+            "prompt": {
+                "text": "Alcides Ghiggia anotó el segundo gol de Uruguay en el Maracanazo."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_005",
+            "type": "true_false",
+            "prompt": {
+                "text": "Uruguay anotó 16 goles en el Mundial de Suiza 1954."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_006",
+            "type": "true_false",
+            "prompt": {
+                "text": "En Sudáfrica 2010, Uruguay perdió la semifinal ante Países Bajos por 3-2."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_007",
+            "type": "true_false",
+            "prompt": {
+                "text": "El gol más rápido mencionado en el documento fue anotado por Hakan Şükür."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_008",
+            "type": "true_false",
+            "prompt": {
+                "text": "El trofeo original Jules Rimet fue robado en Brasil en 1983 y luego recuperado."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_009",
+            "type": "true_false",
+            "prompt": {
+                "text": "Uruguay integra el Grupo H en el Mundial 2026 según el documento."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "match_001",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Relaciona cada Mundial con su país sede."
+            },
+            "pairs": [
+                {
+                    "id": "p1",
+                    "left": "1930",
+                    "right": "Uruguay"
+                },
+                {
+                    "id": "p2",
+                    "left": "1950",
+                    "right": "Brasil"
+                },
+                {
+                    "id": "p3",
+                    "left": "1966",
+                    "right": "Inglaterra"
+                },
+                {
+                    "id": "p4",
+                    "left": "2022",
+                    "right": "Catar"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "match_002",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Relaciona cada Mundial con su campeón."
+            },
+            "pairs": [
+                {
+                    "id": "p1",
+                    "left": "1934",
+                    "right": "Italia"
+                },
+                {
+                    "id": "p2",
+                    "left": "1958",
+                    "right": "Brasil"
+                },
+                {
+                    "id": "p3",
+                    "left": "2010",
+                    "right": "España"
+                },
+                {
+                    "id": "p4",
+                    "left": "2018",
+                    "right": "Francia"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "match_003",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Relaciona cada final con su resultado."
+            },
+            "pairs": [
+                {
+                    "id": "p1",
+                    "left": "Uruguay vs. Argentina, 1930",
+                    "right": "4-2"
+                },
+                {
+                    "id": "p2",
+                    "left": "Uruguay vs. Brasil, 1950",
+                    "right": "2-1"
+                },
+                {
+                    "id": "p3",
+                    "left": "Brasil vs. Suecia, 1958",
+                    "right": "5-2"
+                },
+                {
+                    "id": "p4",
+                    "left": "Francia vs. Croacia, 2018",
+                    "right": "4-2"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "match_004",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Relaciona cada jugador con el dato que aparece en el documento."
+            },
+            "pairs": [
+                {
+                    "id": "p1",
+                    "left": "Miroslav Klose",
+                    "right": "16 goles en Mundiales"
+                },
+                {
+                    "id": "p2",
+                    "left": "Óscar Míguez",
+                    "right": "8 goles uruguayos en Mundiales"
+                },
+                {
+                    "id": "p3",
+                    "left": "Pedro Cea",
+                    "right": "5 goles en Uruguay 1930"
+                },
+                {
+                    "id": "p4",
+                    "left": "José Batista",
+                    "right": "Expulsado a los 56 segundos"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "match_005",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Relaciona cada arquero con su selección."
+            },
+            "pairs": [
+                {
+                    "id": "p1",
+                    "left": "Fabien Barthez",
+                    "right": "Francia"
+                },
+                {
+                    "id": "p2",
+                    "left": "Gianluigi Buffon",
+                    "right": "Italia"
+                },
+                {
+                    "id": "p3",
+                    "left": "Iker Casillas",
+                    "right": "España"
+                },
+                {
+                    "id": "p4",
+                    "left": "Roque Gastón Máspoli",
+                    "right": "Uruguay"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "match_006",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Relaciona cada partido inicial de Uruguay en 2026 con su sede."
+            },
+            "pairs": [
+                {
+                    "id": "p1",
+                    "left": "Uruguay vs. Arabia Saudita",
+                    "right": "Miami"
+                },
+                {
+                    "id": "p2",
+                    "left": "Uruguay vs. Cabo Verde",
+                    "right": "Miami"
+                },
+                {
+                    "id": "p3",
+                    "left": "Uruguay vs. España",
+                    "right": "Guadalajara"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "match_007",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Relaciona cada integrante del cuerpo técnico de Uruguay 2026 con su función."
+            },
+            "pairs": [
+                {
+                    "id": "p1",
+                    "left": "Marcelo Bielsa",
+                    "right": "Director Técnico"
+                },
+                {
+                    "id": "p2",
+                    "left": "Enzo Ferrari",
+                    "right": "Preparador de Arqueros"
+                },
+                {
+                    "id": "p3",
+                    "left": "Santiago Ferro",
+                    "right": "Preparador Físico"
+                },
+                {
+                    "id": "p4",
+                    "left": "Diego Reyes",
+                    "right": "Asistente Técnico"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "match_008",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Relaciona cada hecho curioso con su protagonista."
+            },
+            "pairs": [
+                {
+                    "id": "p1",
+                    "left": "Gol más rápido",
+                    "right": "Hakan Şükür"
+                },
+                {
+                    "id": "p2",
+                    "left": "Jugador más joven en debutar",
+                    "right": "Erick Radilla"
+                },
+                {
+                    "id": "p3",
+                    "left": "Jugador más longevo mencionado",
+                    "right": "Essam El-Hadary"
+                },
+                {
+                    "id": "p4",
+                    "left": "Perro que encontró el trofeo en 1966",
+                    "right": "Pickles"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "seq_001",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena estos Mundiales desde el más antiguo al más reciente."
+            },
+            "items": [
+                "Uruguay 1930",
+                "Brasil 1950",
+                "México 1970",
+                "Catar 2022"
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Uruguay 1930",
+                    "Brasil 1950",
+                    "México 1970",
+                    "Catar 2022"
+                ]
+            }
+        },
+        {
+            "id": "seq_002",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena la remontada de Uruguay en la final de 1930."
+            },
+            "items": [
+                "Uruguay fue perdiendo 1-2 al descanso.",
+                "Uruguay reaccionó en el segundo tiempo.",
+                "Uruguay dio vuelta el marcador.",
+                "Uruguay ganó 4-2 y fue el primer campeón."
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Uruguay fue perdiendo 1-2 al descanso.",
+                    "Uruguay reaccionó en el segundo tiempo.",
+                    "Uruguay dio vuelta el marcador.",
+                    "Uruguay ganó 4-2 y fue el primer campeón."
+                ]
+            }
+        },
+        {
+            "id": "seq_003",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena los hechos principales del Maracanazo."
+            },
+            "items": [
+                "Brasil llegó al partido con ventaja deportiva.",
+                "Friaça anotó el 1-0 para Brasil.",
+                "Schiaffino empató para Uruguay al minuto 66.",
+                "Ghiggia marcó el 2-1 al minuto 79."
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Brasil llegó al partido con ventaja deportiva.",
+                    "Friaça anotó el 1-0 para Brasil.",
+                    "Schiaffino empató para Uruguay al minuto 66.",
+                    "Ghiggia marcó el 2-1 al minuto 79."
+                ]
+            }
+        },
+        {
+            "id": "seq_004",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena cronológicamente estos campeones mundiales."
+            },
+            "items": [
+                "Italia 1934",
+                "Brasil 1958",
+                "Argentina 1978",
+                "España 2010"
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Italia 1934",
+                    "Brasil 1958",
+                    "Argentina 1978",
+                    "España 2010"
+                ]
+            }
+        },
+        {
+            "id": "seq_005",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena las participaciones destacadas de Uruguay sin ganar el título."
+            },
+            "items": [
+                "Suiza 1954",
+                "México 1970",
+                "Sudáfrica 2010"
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Suiza 1954",
+                    "México 1970",
+                    "Sudáfrica 2010"
+                ]
+            }
+        },
+        {
+            "id": "seq_006",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena los partidos iniciales de Uruguay en el Grupo H del Mundial 2026."
+            },
+            "items": [
+                "Uruguay vs. Arabia Saudita",
+                "Uruguay vs. Cabo Verde",
+                "Uruguay vs. España"
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Uruguay vs. Arabia Saudita",
+                    "Uruguay vs. Cabo Verde",
+                    "Uruguay vs. España"
+                ]
+            }
+        },
+        {
+            "id": "seq_007",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena estas finales recientes desde la más antigua a la más nueva."
+            },
+            "items": [
+                "Francia vs. Brasil, 1998",
+                "Brasil vs. Alemania, 2002",
+                "España vs. Países Bajos, 2010",
+                "Argentina vs. Francia, 2022"
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Francia vs. Brasil, 1998",
+                    "Brasil vs. Alemania, 2002",
+                    "España vs. Países Bajos, 2010",
+                    "Argentina vs. Francia, 2022"
+                ]
+            }
+        },
+        {
+            "id": "seq_008",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena estos robos o hechos del trofeo según el documento."
+            },
+            "items": [
+                "En 1966, la Copa Jules Rimet fue robada en Inglaterra.",
+                "El perro Pickles la encontró en un jardín.",
+                "En 1983, fue robada definitivamente en Brasil.",
+                "Nunca fue recuperada."
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "En 1966, la Copa Jules Rimet fue robada en Inglaterra.",
+                    "El perro Pickles la encontró en un jardín.",
+                    "En 1983, fue robada definitivamente en Brasil.",
+                    "Nunca fue recuperada."
+                ]
+            }
+        },
+        {
+            "id": "class_001",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica estos países según hayan sido campeones o finalistas perdedores en las finales mencionadas."
+            },
+            "categories": [
+                {
+                    "id": "cat_campeon",
+                    "label": "Campeón en la final mencionada"
+                },
+                {
+                    "id": "cat_finalista",
+                    "label": "Finalista perdedor en la final mencionada"
+                }
+            ],
+            "items": [
+                {
+                    "id": "item_1",
+                    "text": "Uruguay en 1930",
+                    "categoryId": "cat_campeon"
+                },
+                {
+                    "id": "item_2",
+                    "text": "Argentina en 1930",
+                    "categoryId": "cat_finalista"
+                },
+                {
+                    "id": "item_3",
+                    "text": "Italia en 1934",
+                    "categoryId": "cat_campeon"
+                },
+                {
+                    "id": "item_4",
+                    "text": "Checoslovaquia en 1934",
+                    "categoryId": "cat_finalista"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "class_002",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica los nombres según su rol en el plantel de Uruguay 2026."
+            },
+            "categories": [
+                {
+                    "id": "cat_arqueros",
+                    "label": "Arqueros"
+                },
+                {
+                    "id": "cat_delanteros",
+                    "label": "Delanteros"
+                }
+            ],
+            "items": [
+                {
+                    "id": "item_1",
+                    "text": "Sergio Rochet",
+                    "categoryId": "cat_arqueros"
+                },
+                {
+                    "id": "item_2",
+                    "text": "Fernando Muslera",
+                    "categoryId": "cat_arqueros"
+                },
+                {
+                    "id": "item_3",
+                    "text": "Darwin Núñez",
+                    "categoryId": "cat_delanteros"
+                },
+                {
+                    "id": "item_4",
+                    "text": "Federico Viñas",
+                    "categoryId": "cat_delanteros"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "class_003",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica los jugadores de Uruguay 2026 en defensores o mediocampistas."
+            },
+            "categories": [
+                {
+                    "id": "cat_defensores",
+                    "label": "Defensores"
+                },
+                {
+                    "id": "cat_mediocampistas",
+                    "label": "Mediocampistas"
+                }
+            ],
+            "items": [
+                {
+                    "id": "item_1",
+                    "text": "Ronald Araújo",
+                    "categoryId": "cat_defensores"
+                },
+                {
+                    "id": "item_2",
+                    "text": "José María Giménez",
+                    "categoryId": "cat_defensores"
+                },
+                {
+                    "id": "item_3",
+                    "text": "Federico Valverde",
+                    "categoryId": "cat_mediocampistas"
+                },
+                {
+                    "id": "item_4",
+                    "text": "Manuel Ugarte",
+                    "categoryId": "cat_mediocampistas"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "class_004",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica estas ediciones según si Uruguay fue campeón o terminó cuarto."
+            },
+            "categories": [
+                {
+                    "id": "cat_campeon",
+                    "label": "Uruguay campeón"
+                },
+                {
+                    "id": "cat_cuarto",
+                    "label": "Uruguay cuarto puesto"
+                }
+            ],
+            "items": [
+                {
+                    "id": "item_1",
+                    "text": "Uruguay 1930",
+                    "categoryId": "cat_campeon"
+                },
+                {
+                    "id": "item_2",
+                    "text": "Brasil 1950",
+                    "categoryId": "cat_campeon"
+                },
+                {
+                    "id": "item_3",
+                    "text": "Suiza 1954",
+                    "categoryId": "cat_cuarto"
+                },
+                {
+                    "id": "item_4",
+                    "text": "Sudáfrica 2010",
+                    "categoryId": "cat_cuarto"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "class_005",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica estos datos según sean de 1930 o de 1950."
+            },
+            "categories": [
+                {
+                    "id": "cat_1930",
+                    "label": "Mundial de 1930"
+                },
+                {
+                    "id": "cat_1950",
+                    "label": "Mundial de 1950"
+                }
+            ],
+            "items": [
+                {
+                    "id": "item_1",
+                    "text": "Final contra Argentina",
+                    "categoryId": "cat_1930"
+                },
+                {
+                    "id": "item_2",
+                    "text": "Primer campeón de la historia",
+                    "categoryId": "cat_1930"
+                },
+                {
+                    "id": "item_3",
+                    "text": "Partido decisivo contra Brasil",
+                    "categoryId": "cat_1950"
+                },
+                {
+                    "id": "item_4",
+                    "text": "Maracanazo",
+                    "categoryId": "cat_1950"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "class_006",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica los estadios según correspondan a Uruguay 1930 o Catar 2022."
+            },
+            "categories": [
+                {
+                    "id": "cat_uruguay1930",
+                    "label": "Uruguay 1930"
+                },
+                {
+                    "id": "cat_catar2022",
+                    "label": "Catar 2022"
+                }
+            ],
+            "items": [
+                {
+                    "id": "item_1",
+                    "text": "Estadio Centenario como sede inaugural",
+                    "categoryId": "cat_uruguay1930"
+                },
+                {
+                    "id": "item_2",
+                    "text": "Estadio Centenario como sede de la final",
+                    "categoryId": "cat_uruguay1930"
+                },
+                {
+                    "id": "item_3",
+                    "text": "Lusail Stadium como sede inaugural",
+                    "categoryId": "cat_catar2022"
+                },
+                {
+                    "id": "item_4",
+                    "text": "Lusail Stadium como sede de la final",
+                    "categoryId": "cat_catar2022"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "class_007",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica estas selecciones según el grupo de rivales de Uruguay 2026 o finales históricas."
+            },
+            "categories": [
+                {
+                    "id": "cat_rivales2026",
+                    "label": "Rivales de Uruguay en Grupo H 2026"
+                },
+                {
+                    "id": "cat_finales",
+                    "label": "Rivales en finales históricas mencionadas"
+                }
+            ],
+            "items": [
+                {
+                    "id": "item_1",
+                    "text": "Arabia Saudita",
+                    "categoryId": "cat_rivales2026"
+                },
+                {
+                    "id": "item_2",
+                    "text": "Cabo Verde",
+                    "categoryId": "cat_rivales2026"
+                },
+                {
+                    "id": "item_3",
+                    "text": "Argentina en 1930",
+                    "categoryId": "cat_finales"
+                },
+                {
+                    "id": "item_4",
+                    "text": "Brasil en 1950",
+                    "categoryId": "cat_finales"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "class_008",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica estos hechos como récord global o récord celeste."
+            },
+            "categories": [
+                {
+                    "id": "cat_global",
+                    "label": "Récord global"
+                },
+                {
+                    "id": "cat_celeste",
+                    "label": "Récord celeste"
+                }
+            ],
+            "items": [
+                {
+                    "id": "item_1",
+                    "text": "Miroslav Klose, 16 goles",
+                    "categoryId": "cat_global"
+                },
+                {
+                    "id": "item_2",
+                    "text": "Hakan Şükür, gol a los 11 segundos",
+                    "categoryId": "cat_global"
+                },
+                {
+                    "id": "item_3",
+                    "text": "Óscar Míguez, 8 goles",
+                    "categoryId": "cat_celeste"
+                },
+                {
+                    "id": "item_4",
+                    "text": "Uruguay, 16 goles en Suiza 1954",
+                    "categoryId": "cat_celeste"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "blank_001",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "Uruguay ganó el primer Mundial en el año [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "1930",
+                        "1950",
+                        "1970",
+                        "2010"
+                    ],
+                    "correct": "1930"
+                }
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "blank_002",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "El Maracanazo ocurrió en el Mundial de [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "Brasil 1950",
+                        "Uruguay 1930",
+                        "México 1970",
+                        "Sudáfrica 2010"
+                    ],
+                    "correct": "Brasil 1950"
+                }
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "blank_003",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "En el Maracanazo, el gol del empate uruguayo fue anotado por [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "Juan Alberto Schiaffino",
+                        "Alcides Ghiggia",
+                        "Friaça",
+                        "Obdulio Varela"
+                    ],
+                    "correct": "Juan Alberto Schiaffino"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "blank_004",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "En el Maracanazo, el segundo gol uruguayo fue anotado por [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "Alcides Ghiggia",
+                        "Friaça",
+                        "Pedro Cea",
+                        "Luis Suárez"
+                    ],
+                    "correct": "Alcides Ghiggia"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "blank_005",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "Uruguay disputará sus dos primeros partidos del Grupo H 2026 en [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "Miami",
+                        "Guadalajara",
+                        "Montevideo",
+                        "Doha"
+                    ],
+                    "correct": "Miami"
+                }
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "blank_006",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "El tercer partido inicial de Uruguay en 2026 será contra [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "España",
+                        "Brasil",
+                        "Argentina",
+                        "Francia"
+                    ],
+                    "correct": "España"
+                }
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "blank_007",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "La Copa Jules Rimet fue encontrada en 1966 por un perro llamado [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "Pickles",
+                        "Rimet",
+                        "Ghiggia",
+                        "Barbosa"
+                    ],
+                    "correct": "Pickles"
+                }
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "blank_008",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "En 2022, la final Argentina vs. Francia terminó 3-3 y Argentina ganó por [blank1] en penales."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "4-2",
+                        "3-2",
+                        "5-3",
+                        "2-1"
+                    ],
+                    "correct": "4-2"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        }
+    ]
+}

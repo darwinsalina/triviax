@@ -1,0 +1,30 @@
+TITLE: Thunderbird
+AUTHOR: Darwin Salina
+NIVEL: Narrativa
+OBS: Actividad de prueba 001
+DATE: 05/06/2026
+
+1. Qué modelo de auto compró el protagonista
+@ Dodge Challenger
+@ Ford Thunderbird
+@ *Ford Mustang
+
+2. Cuál es la primera ciudad que le impacta por su nombre?
+@ San Francisco
+@ *Needles
+@ Los Angeles
+
+3. En qué parque nacional inicia la historia?
+@ *Gran Cañón
+@ Yosemite
+@ Yellowstone
+
+4. Dónde lo Alcanza el Thunderbird?
+@ *En Monument Valley
+@ En Zion
+@ En Ouray
+
+5. Qué profesión tiene Elena?
+@ Arquitecta
+@ Decoradora
+@ *Ingeniera

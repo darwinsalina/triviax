@@ -1,0 +1,1093 @@
+{
+    "metadata": {
+        "title": "Máquina de Bebidas Calientes",
+        "author": "Prof. Darwin Salina",
+        "nivel": "8vo EBI",
+        "obs": "",
+        "date": "08\/06\/2026",
+        "mail": "darwinsalina@gmail.com",
+        "background": "fondo.jpg"
+    },
+    "board": {
+        "type": "serpentine"
+    },
+    "challenges": [
+        {
+            "id": "tf_01",
+            "type": "true_false",
+            "prompt": {
+                "text": "Antes de programar o conectar componentes, primero debemos comprender el sistema."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_02",
+            "type": "true_false",
+            "prompt": {
+                "text": "En el simulador de clase es obligatorio usar agua hirviendo real para darle realismo al proyecto."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_03",
+            "type": "true_false",
+            "prompt": {
+                "text": "Un algoritmo debe estar redactado explicando lo que hacen las personas y no las acciones lógicas de la máquina."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_04",
+            "type": "true_false",
+            "prompt": {
+                "text": "Un estado es una situación específica en la que se encuentra el sistema, como por ejemplo 'APAGADA'."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_05",
+            "type": "true_false",
+            "prompt": {
+                "text": "La placa que ejecutará el programa y controlará las entradas y salidas del simulador se llama placa Buty."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_06",
+            "type": "true_false",
+            "prompt": {
+                "text": "Un servo motor está diseñado para girar continuamente sin detenerse nunca."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_07",
+            "type": "true_false",
+            "prompt": {
+                "text": "Abstraer significa elegir qué aspectos son esenciales para el problema y qué elementos se pueden simplificar."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_08",
+            "type": "true_false",
+            "prompt": {
+                "text": "La máquina debe rechazar una segunda ficha si ya se encuentra en el estado 'PREPARANDO'."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_01",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué herramienta del pensamiento computacional nos permite dividir el problema de la máquina en partes manejables?"
+            },
+            "options": [
+                {
+                    "id": "m1_o1",
+                    "text": "Descomposición",
+                    "correct": true
+                },
+                {
+                    "id": "m1_o2",
+                    "text": "Abstracción",
+                    "correct": false
+                },
+                {
+                    "id": "m1_o3",
+                    "text": "Reconocimiento de patrones",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_02",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "Si el simulador detecta que falta un vaso, ¿qué salida de error produce?"
+            },
+            "options": [
+                {
+                    "id": "m2_o1",
+                    "text": "Da 1 pitido y sirve el café",
+                    "correct": false
+                },
+                {
+                    "id": "m2_o2",
+                    "text": "Emite 3 pitidos y no sirve",
+                    "correct": true
+                },
+                {
+                    "id": "m2_o3",
+                    "text": "Enciende todos los LEDs y se apaga",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_03",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué componente robótico usarías para representar o simular el proceso de mezcla interno?"
+            },
+            "options": [
+                {
+                    "id": "m3_o1",
+                    "text": "Motor DC",
+                    "correct": true
+                },
+                {
+                    "id": "m3_o2",
+                    "text": "Sensor ultrasónico",
+                    "correct": false
+                },
+                {
+                    "id": "m3_o3",
+                    "text": "Zumbador (Buzzer)",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_04",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué tipo de sensor detecta la presencia de un vaso al notar que se bloquea o refleja la luz?"
+            },
+            "options": [
+                {
+                    "id": "m4_o1",
+                    "text": "Sensor de temperatura",
+                    "correct": false
+                },
+                {
+                    "id": "m4_o2",
+                    "text": "Sensor infrarrojo de proximidad",
+                    "correct": true
+                },
+                {
+                    "id": "m4_o3",
+                    "text": "Potenciómetro",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_05",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "En la lógica del sistema, ¿qué sucede después de que la persona retira el vaso con su bebida?"
+            },
+            "options": [
+                {
+                    "id": "m5_o1",
+                    "text": "La máquina se apaga por completo",
+                    "correct": false
+                },
+                {
+                    "id": "m5_o2",
+                    "text": "Libera el sistema y vuelve a ESPERANDO_FICHA",
+                    "correct": true
+                },
+                {
+                    "id": "m5_o3",
+                    "text": "Comienza a preparar otro café automáticamente",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_06",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Cuál es la función principal de un actuador en un proyecto de robótica?"
+            },
+            "options": [
+                {
+                    "id": "m6_o1",
+                    "text": "Realizar una acción física, visual o sonora",
+                    "correct": true
+                },
+                {
+                    "id": "m6_o2",
+                    "text": "Almacenar el código del programa",
+                    "correct": false
+                },
+                {
+                    "id": "m6_o3",
+                    "text": "Sentir la temperatura del ambiente",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_07",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué herramienta nos ayuda a no tener que inventar desde cero 4 algoritmos totalmente distintos para 4 bebidas similares?"
+            },
+            "options": [
+                {
+                    "id": "m7_o1",
+                    "text": "Reconocimiento de patrones",
+                    "correct": true
+                },
+                {
+                    "id": "m7_o2",
+                    "text": "El bloque de espera",
+                    "correct": false
+                },
+                {
+                    "id": "m7_o3",
+                    "text": "El potenciómetro de agua",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_08",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "Si el nivel de agua está bajo, el sistema emite 5 pitidos, enciende la luz de advertencia y..."
+            },
+            "options": [
+                {
+                    "id": "m8_o1",
+                    "text": "Bloquea el pedido deteniendo la preparación",
+                    "correct": true
+                },
+                {
+                    "id": "m8_o2",
+                    "text": "Sigue sirviendo solo café seco",
+                    "correct": false
+                },
+                {
+                    "id": "m8_o3",
+                    "text": "Abre la compuerta del servo",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "fb_01",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "La máquina de bebidas se considera un sistema [blank1] que procesa información y toma decisiones lógicas."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "automático",
+                        "manual"
+                    ],
+                    "correct": "automático"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "fb_02",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "En informática y robótica, al analizar sistemas solemos hablar de entradas, procesos y [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "salidas",
+                        "cables"
+                    ],
+                    "correct": "salidas"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "fb_03",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "Para que la máquina habilite el panel de bebidas, primero debe confirmar que la ficha es [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "válida",
+                        "metálica"
+                    ],
+                    "correct": "válida"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "fb_04",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "Una [blank1] es un espacio en la memoria del programa que guarda un valor que puede ir cambiando (ej: bebida_seleccionada)."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "variable",
+                        "rutina"
+                    ],
+                    "correct": "variable"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "fb_05",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "El dispositivo físico o entrada que detecta una condición en el entorno del robot se llama [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "sensor",
+                        "actuador"
+                    ],
+                    "correct": "sensor"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "fb_06",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "La secuencia ordenada, precisa y finita de instrucciones para resolver un problema se llama [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "algoritmo",
+                        "simulador"
+                    ],
+                    "correct": "algoritmo"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "fb_07",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "En vez de usar agua a altas temperaturas y correr riesgos en clase, simulamos el agua con un [blank1] de luz azul o cian."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "LED",
+                        "motor"
+                    ],
+                    "correct": "LED"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "fb_08",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "Las partes en las que se divide el algoritmo principal para facilitar su manejo y orden se denominan [blank1]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "rutinas",
+                        "variables"
+                    ],
+                    "correct": "rutinas"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "sq_01",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena lógicamente los pasos del funcionamiento general del simulador:"
+            },
+            "items": [
+                "Control de insumos (agua e ingredientes)",
+                "Validar la ficha insertada",
+                "Selección de la bebida deseada",
+                "Control y verificación del vaso",
+                "Preparar y servir la bebida"
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Control de insumos (agua e ingredientes)",
+                    "Validar la ficha insertada",
+                    "Selección de la bebida deseada",
+                    "Control y verificación del vaso",
+                    "Preparar y servir la bebida"
+                ]
+            }
+        },
+        {
+            "id": "sq_02",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena los pasos sugeridos en la receta para preparar un té:"
+            },
+            "items": [
+                "Agregar medida de té",
+                "Agregar agua caliente",
+                "Mezclar por 5 segundos",
+                "Dejar reposar 5 segundos",
+                "Servir la bebida"
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Agregar medida de té",
+                    "Agregar agua caliente",
+                    "Mezclar por 5 segundos",
+                    "Dejar reposar 5 segundos",
+                    "Servir la bebida"
+                ]
+            }
+        },
+        {
+            "id": "sq_03",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena las etapas ideales para construir el simulador, de la primera a la última:"
+            },
+            "items": [
+                "Comprender el problema y listar entradas\/salidas",
+                "Escribir rutinas y diagrama de flujo",
+                "Programar la primera versión mínima",
+                "Agregar controles para situaciones de error",
+                "Integrar todo y mejorar fallas"
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Comprender el problema y listar entradas\/salidas",
+                    "Escribir rutinas y diagrama de flujo",
+                    "Programar la primera versión mínima",
+                    "Agregar controles para situaciones de error",
+                    "Integrar todo y mejorar fallas"
+                ]
+            }
+        },
+        {
+            "id": "sq_04",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena secuencialmente los estados de la máquina durante un ciclo exitoso:"
+            },
+            "items": [
+                "ESPERANDO_FICHA",
+                "ESPERANDO_SELECCIÓN",
+                "PREPARANDO",
+                "SIRVIENDO",
+                "ESPERANDO_RETIRO"
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "ESPERANDO_FICHA",
+                    "ESPERANDO_SELECCIÓN",
+                    "PREPARANDO",
+                    "SIRVIENDO",
+                    "ESPERANDO_RETIRO"
+                ]
+            }
+        },
+        {
+            "id": "sq_05",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena las rutinas de verificación que realiza la subrutina 'Control de insumos':"
+            },
+            "items": [
+                "Verificar agua_ok",
+                "Verificar nivel_cafe",
+                "Verificar nivel_leche",
+                "Verificar nivel_chocolate",
+                "Volver a rutina principal si todo está OK"
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Verificar agua_ok",
+                    "Verificar nivel_cafe",
+                    "Verificar nivel_leche",
+                    "Verificar nivel_chocolate",
+                    "Volver a rutina principal si todo está OK"
+                ]
+            }
+        },
+        {
+            "id": "mp_01",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Empareja cada herramienta del pensamiento computacional con su acción en el proyecto:"
+            },
+            "pairs": [
+                {
+                    "left": "Descomposición",
+                    "right": "Separar el funcionamiento en rutinas independientes"
+                },
+                {
+                    "left": "Reconocimiento de patrones",
+                    "right": "Detectar los pasos que se repiten en cada bebida"
+                },
+                {
+                    "left": "Abstracción",
+                    "right": "Representar agua caliente solo con un LED"
+                },
+                {
+                    "left": "Diseño de algoritmos",
+                    "right": "Crear instrucciones claras, ordenadas y precisas"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mp_02",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Empareja la cantidad de pitidos del Buzzer con el aviso de error que representan:"
+            },
+            "pairs": [
+                {
+                    "left": "1 pitido",
+                    "right": "Bebida lista para retirar"
+                },
+                {
+                    "left": "3 pitidos",
+                    "right": "No hay vaso detectado"
+                },
+                {
+                    "left": "4 pitidos",
+                    "right": "Ingredientes en nivel insuficiente"
+                },
+                {
+                    "left": "5 pitidos",
+                    "right": "Falta de suministro de agua"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mp_03",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Empareja cada bebida con los ingredientes lógicos que requiere su receta:"
+            },
+            "pairs": [
+                {
+                    "left": "Café",
+                    "right": "Café + Agua"
+                },
+                {
+                    "left": "Capuchino",
+                    "right": "Leche + Café + Agua"
+                },
+                {
+                    "left": "Chocolate",
+                    "right": "Chocolate + Leche + Agua"
+                },
+                {
+                    "left": "Té",
+                    "right": "Té + Agua"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mp_04",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Empareja el componente físico con el comportamiento que produce:"
+            },
+            "pairs": [
+                {
+                    "left": "Motor DC",
+                    "right": "Gira de forma continua, ideal para mezclar"
+                },
+                {
+                    "left": "Servo motor",
+                    "right": "Gira a un ángulo específico, ideal para compuertas"
+                },
+                {
+                    "left": "LED",
+                    "right": "Emite luz, ideal para advertencias y avisos"
+                },
+                {
+                    "left": "Buzzer",
+                    "right": "Emite sonido, ideal para pitidos"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mp_05",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Empareja el elemento físico real con su representación simulada y segura en la maqueta:"
+            },
+            "pairs": [
+                {
+                    "left": "Ficha de dinero",
+                    "right": "Botón pulsador que el usuario presiona"
+                },
+                {
+                    "left": "Agua muy caliente",
+                    "right": "LED azul o cian iluminado"
+                },
+                {
+                    "left": "Batidor de líquidos",
+                    "right": "Motor DC pequeño con animación"
+                },
+                {
+                    "left": "Nivel de polvo",
+                    "right": "Potenciómetro o variable interna"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "cl_01",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica los siguientes elementos en Entradas de información o Salidas de acción para la placa."
+            },
+            "categories": [
+                {
+                    "id": "cat_in",
+                    "label": "Entradas"
+                },
+                {
+                    "id": "cat_out",
+                    "label": "Salidas"
+                }
+            ],
+            "items": [
+                {
+                    "id": "cl1_i1",
+                    "text": "boton_cafe",
+                    "categoryId": "cat_in"
+                },
+                {
+                    "id": "cl1_i2",
+                    "text": "sensor_vaso",
+                    "categoryId": "cat_in"
+                },
+                {
+                    "id": "cl1_i3",
+                    "text": "led_advertencia",
+                    "categoryId": "cat_out"
+                },
+                {
+                    "id": "cl1_i4",
+                    "text": "motor_mezclador",
+                    "categoryId": "cat_out"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "cl_02",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica los dispositivos según sean Sensores (perciben el entorno) o Actuadores (realizan acciones)."
+            },
+            "categories": [
+                {
+                    "id": "cat_sen",
+                    "label": "Sensores"
+                },
+                {
+                    "id": "cat_act",
+                    "label": "Actuadores"
+                }
+            ],
+            "items": [
+                {
+                    "id": "cl2_i1",
+                    "text": "Sensor infrarrojo",
+                    "categoryId": "cat_sen"
+                },
+                {
+                    "id": "cl2_i2",
+                    "text": "Potenciómetro",
+                    "categoryId": "cat_sen"
+                },
+                {
+                    "id": "cl2_i3",
+                    "text": "Servo motor",
+                    "categoryId": "cat_act"
+                },
+                {
+                    "id": "cl2_i4",
+                    "text": "Buzzer",
+                    "categoryId": "cat_act"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "cl_03",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica estos conceptos lógicos del programa en Estados del sistema o Variables de memoria."
+            },
+            "categories": [
+                {
+                    "id": "cat_est",
+                    "label": "Estados"
+                },
+                {
+                    "id": "cat_var",
+                    "label": "Variables"
+                }
+            ],
+            "items": [
+                {
+                    "id": "cl3_i1",
+                    "text": "ESPERANDO_FICHA",
+                    "categoryId": "cat_est"
+                },
+                {
+                    "id": "cl3_i2",
+                    "text": "SIRVIENDO",
+                    "categoryId": "cat_est"
+                },
+                {
+                    "id": "cl3_i3",
+                    "text": "bebida_seleccionada",
+                    "categoryId": "cat_var"
+                },
+                {
+                    "id": "cl3_i4",
+                    "text": "ocupada",
+                    "categoryId": "cat_var"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "cl_04",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica estas acciones del algoritmo principal según ocurran en Funcionamiento normal o en el Manejo de errores."
+            },
+            "categories": [
+                {
+                    "id": "cat_norm",
+                    "label": "Funcionamiento normal"
+                },
+                {
+                    "id": "cat_err",
+                    "label": "Manejo de errores"
+                }
+            ],
+            "items": [
+                {
+                    "id": "cl4_i1",
+                    "text": "Habilitar panel de selección",
+                    "categoryId": "cat_norm"
+                },
+                {
+                    "id": "cl4_i2",
+                    "text": "Servir la receta deseada",
+                    "categoryId": "cat_norm"
+                },
+                {
+                    "id": "cl4_i3",
+                    "text": "Emitir 3 pitidos al no detectar vaso",
+                    "categoryId": "cat_err"
+                },
+                {
+                    "id": "cl4_i4",
+                    "text": "Bloquear pedido por falta de agua",
+                    "categoryId": "cat_err"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "cl_05",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica las piezas de acuerdo con su finalidad en la maqueta de cartón y electrónica."
+            },
+            "categories": [
+                {
+                    "id": "cat_sim",
+                    "label": "Simular botones o sensores de nivel"
+                },
+                {
+                    "id": "cat_mov",
+                    "label": "Generar movimiento o avisos"
+                }
+            ],
+            "items": [
+                {
+                    "id": "cl5_i1",
+                    "text": "Potenciómetro rotativo",
+                    "categoryId": "cat_sim"
+                },
+                {
+                    "id": "cl5_i2",
+                    "text": "Interruptor de energía",
+                    "categoryId": "cat_sim"
+                },
+                {
+                    "id": "cl5_i3",
+                    "text": "Motor DC",
+                    "categoryId": "cat_mov"
+                },
+                {
+                    "id": "cl5_i4",
+                    "text": "Luces LED",
+                    "categoryId": "cat_mov"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_09",
+            "type": "true_false",
+            "prompt": {
+                "text": "Para evitar cruzar líneas confusas, en un diagrama de flujo utilizamos conectores circulares."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "tf_10",
+            "type": "true_false",
+            "prompt": {
+                "text": "Probar el simulador significa comprobar solo las situaciones en las que todo funciona correctamente."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_09",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué símbolo lógico de los diagramas de flujo utilizarías para la pregunta: '¿Hay vaso?'?"
+            },
+            "options": [
+                {
+                    "id": "m9_o1",
+                    "text": "Un rombo de Decisión",
+                    "correct": true
+                },
+                {
+                    "id": "m9_o2",
+                    "text": "Un rectángulo de Proceso",
+                    "correct": false
+                },
+                {
+                    "id": "m9_o3",
+                    "text": "Un óvalo de Inicio",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "mc_10",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "Si se deja el vaso lleno sin retirar, ¿qué medida de seguridad toma la máquina?"
+            },
+            "options": [
+                {
+                    "id": "m10_o1",
+                    "text": "Bloquea un nuevo pedido y espera el retiro",
+                    "correct": true
+                },
+                {
+                    "id": "m10_o2",
+                    "text": "Empieza a mezclar agua para vaciarlo",
+                    "correct": false
+                },
+                {
+                    "id": "m10_o3",
+                    "text": "Cobra automáticamente otra ficha",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "fb_09",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "El símbolo de [blank1] en un diagrama representa acciones directas como 'activar motor' o 'emitir pitido'."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "Proceso",
+                        "Decisión"
+                    ],
+                    "correct": "Proceso"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "sq_06",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena los pasos de la rutina de Manejo del Vaso:"
+            },
+            "items": [
+                "Ejecutar rutina Control de vaso",
+                "Si no hay vaso, emitir 3 pitidos y detener",
+                "Si hay vaso, ejecutar rutina de Servir",
+                "Emitir 1 pitido de bebida lista",
+                "Esperar en la rutina Retiro de vaso"
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Ejecutar rutina Control de vaso",
+                    "Si no hay vaso, emitir 3 pitidos y detener",
+                    "Si hay vaso, ejecutar rutina de Servir",
+                    "Emitir 1 pitido de bebida lista",
+                    "Esperar en la rutina Retiro de vaso"
+                ]
+            }
+        }
+    ]
+}

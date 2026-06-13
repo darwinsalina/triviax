@@ -1,0 +1,27 @@
+#!/bin/sh
+# Plantilla de hook pre-commit para TRIVIAX (NO es un hook activo).
+# Mantiene sincronizados los PDF de los manuales: si en el commit se modifican
+# docs/MANUAL_*.md, regenera los PDF y los incluye en el mismo commit.
+#
+# Instalación (una sola vez, desde la raíz del repo):
+#   cp tools/git-hooks/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit          # en Windows/Git Bash el chmod es opcional
+#
+# Para desinstalarlo: borra .git/hooks/pre-commit
+
+staged_md=$(git diff --cached --name-only --diff-filter=ACM | grep -E '^docs/MANUAL_.*\.md$')
+[ -z "$staged_md" ] && exit 0
+
+if ! command -v python >/dev/null 2>&1; then
+  echo "pre-commit: 'python' no disponible; PDF de manuales NO regenerados." >&2
+  exit 0
+fi
+
+echo "pre-commit: regenerando PDF de manuales..."
+python tools/build_manuals.py || {
+  echo "pre-commit: aviso, fallo la generacion de PDF; commit no bloqueado." >&2
+  exit 0
+}
+
+git add docs/MANUAL_DOCENTE_TRIVIAX.pdf docs/MANUAL_ESTUDIANTE_TRIVIAX.pdf 2>/dev/null
+exit 0

@@ -1,0 +1,485 @@
+{
+    "metadata": {
+        "title": "Funcionamiento de la Computadora",
+        "author": "Prof. Darwin Salina",
+        "nivel": "7mo EBI",
+        "obs": "Estudia el documento publicado en Classroom y evalúa tus conocimientos",
+        "date": "11\/06\/2026",
+        "mail": "",
+        "background": "fondo.jpg"
+    },
+    "board": {
+        "type": "serpentine"
+    },
+    "challenges": [
+        {
+            "id": "c01",
+            "type": "true_false",
+            "prompt": {
+                "text": "La Motherboard es una gran placa llena de autopistas electrónicas que conectan todos los componentes entre sí."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c02",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué chip pequeño contiene instrucciones grabadas de fábrica que nunca se borran? "
+            },
+            "options": [
+                {
+                    "text": "ROM",
+                    "correct": true
+                },
+                {
+                    "text": "RAM",
+                    "correct": false
+                },
+                {
+                    "text": "CPU",
+                    "correct": false
+                },
+                {
+                    "text": "SSD",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c03",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "El [blank1] es el director que coordina todo el software y el hardware."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "Sistema Operativo",
+                        "Microprocesador",
+                        "Disco Duro"
+                    ],
+                    "correct": "Sistema Operativo"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c04",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Empareja cada componente con su metáfora en el texto."
+            },
+            "pairs": [
+                {
+                    "id": "c04_p1",
+                    "left": "Motherboard",
+                    "right": "Cuerpo de la computadora"
+                },
+                {
+                    "id": "c04_p2",
+                    "left": "CPU",
+                    "right": "Cerebro de la computadora"
+                },
+                {
+                    "id": "c04_p3",
+                    "left": "Sistema Operativo",
+                    "right": "Director de orquesta"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c05",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena los pasos que ocurren al encender la computadora."
+            },
+            "items": [
+                "La electricidad corre por la Motherboard.",
+                "La ROM hace un chequeo rápido de energía y componentes.",
+                "La ROM le cede el control al Sistema Operativo."
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "La electricidad corre por la Motherboard.",
+                    "La ROM hace un chequeo rápido de energía y componentes.",
+                    "La ROM le cede el control al Sistema Operativo."
+                ]
+            }
+        },
+        {
+            "id": "c06",
+            "type": "true_false",
+            "prompt": {
+                "text": "La memoria RAM es volátil, lo que significa que la información se guarda de forma permanente aunque se corte la luz."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c07",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica los componentes según si su almacenamiento es permanente o volátil."
+            },
+            "categories": [
+                {
+                    "id": "c07_c1",
+                    "label": "Permanente"
+                },
+                {
+                    "id": "c07_c2",
+                    "label": "Volátil"
+                }
+            ],
+            "items": [
+                {
+                    "id": "c07_i1",
+                    "text": "SSD",
+                    "categoryId": "c07_c1"
+                },
+                {
+                    "id": "c07_i2",
+                    "text": "HDD",
+                    "categoryId": "c07_c1"
+                },
+                {
+                    "id": "c07_i3",
+                    "text": "ROM",
+                    "categoryId": "c07_c1"
+                },
+                {
+                    "id": "c07_i4",
+                    "text": "RAM",
+                    "categoryId": "c07_c2"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c08",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿En qué componente se guarda normalmente el Sistema Operativo? "
+            },
+            "options": [
+                {
+                    "text": "SSD o HDD",
+                    "correct": true
+                },
+                {
+                    "text": "Memoria RAM",
+                    "correct": false
+                },
+                {
+                    "text": "Motherboard",
+                    "correct": false
+                },
+                {
+                    "text": "Memoria ROM",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c09",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "La CPU procesa datos a velocidades de [blank1], que significa miles de millones de operaciones por segundo."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "gigahertz",
+                        "megabytes",
+                        "milisegundos"
+                    ],
+                    "correct": "gigahertz"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c10",
+            "type": "true_false",
+            "prompt": {
+                "text": "Al presionar la tecla 'a', se genera en la CPU el código binario '01100001'."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c11",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué hace el Sistema Operativo si abres demasiadas pestañas de internet y la RAM se llena? "
+            },
+            "options": [
+                {
+                    "text": "Crea archivos temporales en el SSD",
+                    "correct": true
+                },
+                {
+                    "text": "Borra permanentemente los programas",
+                    "correct": false
+                },
+                {
+                    "text": "Apaga la computadora por seguridad",
+                    "correct": false
+                },
+                {
+                    "text": "Transfiere los datos a la ROM",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c12",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "Para trabajar aún más rápido, la CPU usa la memoria [blank1], una mini mesa auxiliar súper veloz."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "caché",
+                        "flash",
+                        "ROM"
+                    ],
+                    "correct": "caché"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c13",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Empareja cada elemento con su descripción en el texto."
+            },
+            "pairs": [
+                {
+                    "id": "c13_p1",
+                    "left": "Memoria RAM",
+                    "right": "Mesa de trabajo ultrarrápida"
+                },
+                {
+                    "id": "c13_p2",
+                    "left": "Disco SSD",
+                    "right": "Depósito permanente y silencioso"
+                },
+                {
+                    "id": "c13_p3",
+                    "left": "Archivos temporales",
+                    "right": "Apuntes usados para recordar algo"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c14",
+            "type": "true_false",
+            "prompt": {
+                "text": "La Tarjeta de Sonido es el motor especializado en dibujar imágenes, texto y videos en la pantalla."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c15",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué componente traduce los códigos digitales en ondas sonoras para tus auriculares? "
+            },
+            "options": [
+                {
+                    "text": "Tarjeta de Sonido",
+                    "correct": true
+                },
+                {
+                    "text": "Tarjeta de Video",
+                    "correct": false
+                },
+                {
+                    "text": "GPU",
+                    "correct": false
+                },
+                {
+                    "text": "Microprocesador",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c16",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica los componentes según su función principal."
+            },
+            "categories": [
+                {
+                    "id": "c16_c1",
+                    "label": "Procesamiento"
+                },
+                {
+                    "id": "c16_c2",
+                    "label": "Almacenamiento"
+                }
+            ],
+            "items": [
+                {
+                    "id": "c16_i1",
+                    "text": "CPU",
+                    "categoryId": "c16_c1"
+                },
+                {
+                    "id": "c16_i2",
+                    "text": "GPU",
+                    "categoryId": "c16_c1"
+                },
+                {
+                    "id": "c16_i3",
+                    "text": "Pendrive",
+                    "categoryId": "c16_c2"
+                },
+                {
+                    "id": "c16_i4",
+                    "text": "SSD",
+                    "categoryId": "c16_c2"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c17",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena los pasos para guardar y llevar un archivo."
+            },
+            "items": [
+                "Haces clic en Guardar.",
+                "La CPU traslada tu archivo desde la RAM hacia el SSD.",
+                "Conectas un Pendrive en uno de los puertos.",
+                "El archivo viaja a través del puerto y se graba en el pendrive."
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Haces clic en Guardar.",
+                    "La CPU traslada tu archivo desde la RAM hacia el SSD.",
+                    "Conectas un Pendrive en uno de los puertos.",
+                    "El archivo viaja a través del puerto y se graba en el pendrive."
+                ]
+            }
+        },
+        {
+            "id": "c18",
+            "type": "true_false",
+            "prompt": {
+                "text": "El Pendrive es un tipo de memoria flash que se conecta en los puertos, que son los conectores externos."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c19",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "La palabra [blank1] significa que la información no es permanente, sino que se va borrando."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "volátil",
+                        "flash",
+                        "permanente"
+                    ],
+                    "correct": "volátil"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "c20",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué componente se encarga de hacer un chequeo rápido de energía y componentes para dar el 'arranque' inicial? "
+            },
+            "options": [
+                {
+                    "text": "Memoria ROM",
+                    "correct": true
+                },
+                {
+                    "text": "Sistema Operativo",
+                    "correct": false
+                },
+                {
+                    "text": "Memoria RAM",
+                    "correct": false
+                },
+                {
+                    "text": "Tarjeta de Video",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        }
+    ]
+}

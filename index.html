@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIVIAX - Juego Educativo</title>
+    
+    <!-- Fuentes locales o del sistema para funcionamiento offline -->
+    <!-- Estilos de la aplicación -->
+    <link rel="stylesheet" href="css/styles.css?v=5.0.17">
+    
+    <!-- Soporte PWA / Aplicación Móvil (WAP) -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+    <link rel="apple-touch-icon" href="images/logo.svg">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+    <div id="intro-splash" class="intro-splash" aria-hidden="false">
+        <div class="intro-splash-stack triviax-brand-splash" aria-label="TRIVIAX 5.0 - EL CAMINO DEL CONOCIMIENTO">
+            <h1 class="intro-splash-text triviax-logo" id="splash-main-text" aria-label="TRIVIAX">
+                <span class="triviax-logo__main" style="--i: 0;" aria-hidden="true">T</span>
+                <span class="triviax-logo__main" style="--i: 1;" aria-hidden="true">R</span>
+                <span class="triviax-logo__main" style="--i: 2;" aria-hidden="true">I</span>
+                <span class="triviax-logo__main" style="--i: 3;" aria-hidden="true">V</span>
+                <span class="triviax-logo__main" style="--i: 4;" aria-hidden="true">I</span>
+                <span class="triviax-logo__main" style="--i: 5;" aria-hidden="true">A</span>
+                <span class="triviax-logo__x" style="--i: 6;" aria-hidden="true">X</span>
+                <span class="triviax-logo__version" id="splash-version-text" style="--i: 7;" aria-hidden="true"></span>
+            </h1>
+            <p class="intro-splash-subtitle triviax-tagline">EL CAMINO DEL CONOCIMIENTO</p>
+        </div>
+    </div>
+
+    <!-- BANNER DE ACTUALIZACIÓN DEL SERVICE WORKER (PWA) -->
+    <div id="sw-update-banner" class="sw-update-banner hidden">
+        <div class="sw-update-content">
+            <span class="sw-update-icon">🚀</span>
+            <span class="sw-update-text">Hay una nueva versión de TRIVIAX disponible.</span>
+        </div>
+        <button id="btn-sw-update" class="btn btn-primary btn-sm">Actualizar ahora</button>
+    </div>
+
+    <div id="app-container">
+        
+        <!-- PANTALLA 1: HOME -->
+        <section id="screen-project-select" class="game-screen active">
+            <div class="cover-layout">
+                <aside class="cover-brand-panel" aria-hidden="true">
+                    <div class="cover-brand-content">
+                        <span class="version-pill" data-app-version="TRIVIAX Plus v{v}">TRIVIAX Plus v5.0</span>
+                        <h1 class="logo-text" aria-label="TRIVIAX">
+                            <span class="triviax-wordmark" aria-hidden="true">
+                                <span class="triviax-wordmark__main" aria-hidden="true">TRIVIA</span><span class="triviax-wordmark__x" aria-hidden="true">X</span>
+                            </span>
+                        </h1>
+                        <p class="subtitle-text">EL CAMINO DEL CONOCIMIENTO</p>
+                    </div>
+                    <div class="hero-art">
+                        <div class="hero-mini-board">
+                            <div class="hero-cell hero-cell--start">1</div>
+                            <div class="hero-cell"></div>
+                            <div class="hero-cell hero-cell--accent"></div>
+                            <div class="hero-cell"></div>
+                            <div class="hero-cell"></div>
+                            <div class="hero-cell hero-cell--accent"></div>
+                            <div class="hero-cell"></div>
+                            <div class="hero-cell hero-cell--accent"></div>
+                            <div class="hero-cell"></div>
+                            <div class="hero-cell"></div>
+                            <div class="hero-cell hero-cell--accent"></div>
+                            <div class="hero-cell hero-cell--goal">50</div>
+                        </div>
+                        <div class="hero-pieces">
+                            <span class="hero-piece" style="background: #ff4b4b;"></span>
+                            <span class="hero-piece" style="background: #3b82f6;"></span>
+                            <span class="hero-piece" style="background: #10b981;"></span>
+                            <span class="hero-piece" style="background: #ffd43b;"></span>
+                        </div>
+                    </div>
+                </aside>
+
+                <div class="cover-form-side">
+                <div class="glass-card main-menu-card">
+                    <header class="menu-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <p class="eyebrow-text">Plataforma educativa</p>
+                            <h2>Aprender jugando</h2>
+                        </div>
+                        <button id="btn-home-sound" class="btn-sound-toggle" title="Silenciar/Activar Sonido" aria-label="Activar o silenciar el sonido">🔊</button>
+                    </header>
+                    
+                    <div class="menu-body">
+                        <div class="home-intro">
+                            <p>TRIVIAX transforma actividades de clase en partidas de tablero para practicar, repasar y competir de forma cuidada.</p>
+                            <ul class="home-objectives">
+                                <li>Elegir una actividad preparada por docentes.</li>
+                                <li>Jugar por turnos con desafíos breves y claros.</li>
+                                <li>Guardar resultados para revisar el aprendizaje.</li>
+                            </ul>
+                        </div>
+
+                        <select id="project-dropdown" class="compat-project-select" hidden aria-hidden="true">
+                            <option value="">Cargando proyectos...</option>
+                        </select>
+
+                        <div class="cover-actions">
+                            <button id="btn-go-to-catalog" class="btn btn-primary btn-large" disabled>
+                                Iniciar partida
+                            </button>
+                            <div class="cover-secondary-row">
+                                <a href="panel/dashboard.php"
+                                   class="btn-icon-pill"
+                                   title="Panel docente — Sesiones · Estadísticas · Actividades"
+                                   aria-label="Panel docente: sesiones, estadísticas y actividades">
+                                    <span class="btn-icon-pill__icon" aria-hidden="true">⚙️</span>
+                                </a>
+                                <button type="button"
+                                   id="btn-open-manuals"
+                                   class="btn-icon-pill"
+                                   title="Manuales y guías"
+                                   aria-label="Abrir manuales y guías">
+                                    <span class="btn-icon-pill__icon" aria-hidden="true">📖</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <footer class="app-version-footer">
+                            <span data-app-version-full="TRIVIAX Plus v{v}">TRIVIAX Plus v5.0.17</span>
+                            <span>by Darwin Salina © 2026</span>
+                        </footer>
+                    </div>
+                </div>
+                </div><!-- /cover-form-side -->
+            </div>
+        </section>
+
+        <!-- PANTALLA 2: MANUALES Y GUÍAS -->
+        <section id="screen-manuals" class="game-screen">
+            <div class="manuals-shell">
+                <header class="glass-card catalog-header">
+                    <div>
+                        <p class="eyebrow-text">Ayuda TRIVIAX</p>
+                        <h2>Manuales y guías</h2>
+                        <p class="catalog-subtitle">Elige el material según tu rol en la plataforma.</p>
+                    </div>
+                    <div class="catalog-header-actions">
+                        <button type="button" id="btn-manuals-back-home" class="btn btn-secondary">Volver</button>
+                    </div>
+                </header>
+
+                <div class="manuals-grid">
+                    <article class="glass-card manual-card">
+                        <span class="manual-card__tag">Jugadores</span>
+                        <h3>Manual para estudiantes</h3>
+                        <p>Ingreso a partidas, turnos, respuestas y resultados.</p>
+                        <a href="docs/GUIA_JUGADORES_TRIVIAX.pdf" target="_blank" class="btn btn-primary">Abrir manual</a>
+                    </article>
+
+                    <article class="glass-card manual-card">
+                        <span class="manual-card__tag">Docentes</span>
+                        <h3>Manual docente</h3>
+                        <p>Creación de actividades, sesiones, reportes y seguimiento.</p>
+                        <a href="docs/GUIA_DOCENTE_TRIVIAX.pdf" target="_blank" class="btn btn-primary">Abrir manual</a>
+                    </article>
+
+                    <article class="glass-card manual-card manual-card--soon">
+                        <span class="manual-card__tag">Videos</span>
+                        <h3>Videos para estudiantes</h3>
+                        <p>Próximamente.</p>
+                        <button type="button" class="btn btn-secondary" disabled>En preparación</button>
+                    </article>
+
+                    <article class="glass-card manual-card manual-card--soon">
+                        <span class="manual-card__tag">Videos</span>
+                        <h3>Videos para docentes</h3>
+                        <p>Próximamente.</p>
+                        <button type="button" class="btn btn-secondary" disabled>En preparación</button>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANTALLA 3: CATÁLOGO DE ACTIVIDADES -->
+        <section id="screen-activity-catalog" class="game-screen">
+            <div class="catalog-shell">
+                <header class="glass-card catalog-header">
+                    <div>
+                        <p class="eyebrow-text">Elige tu actividad</p>
+                        <h2>Catálogo TRIVIAX</h2>
+                        <p class="catalog-subtitle">Busca por tema, nivel o docente antes de configurar la partida.</p>
+                    </div>
+                    <div class="catalog-header-actions">
+                        <button type="button" id="btn-catalog-back-home" class="btn btn-secondary">Volver</button>
+                    </div>
+                </header>
+
+                <div class="catalog-layout">
+                    <aside class="glass-card catalog-sidebar">
+                        <h3>Explorar</h3>
+                        <div id="activity-category-list" class="category-list">
+                            <button type="button" class="category-chip active" data-category="all">Todas</button>
+                        </div>
+                    </aside>
+
+                    <main class="catalog-main">
+                        <div class="glass-card catalog-search-card">
+                            <label for="activity-search">Buscar actividad</label>
+                            <div class="search-input-wrapper">
+                                <input id="activity-search" type="search" placeholder="Tema, nivel, docente o nombre..." autocomplete="off">
+                                <button type="button" id="btn-activity-search" class="btn-search-icon" title="Buscar" aria-label="Buscar actividad">🔍</button>
+                            </div>
+                        </div>
+
+                        <section class="catalog-section" data-section="popular">
+                            <div class="catalog-section-header">
+                                <h3>Más jugadas</h3>
+                                <span id="popular-count" class="catalog-count">0</span>
+                            </div>
+                            <div id="popular-activities-grid" class="activity-cards-grid activity-cards-grid--featured"></div>
+                        </section>
+
+                        <section class="catalog-section" data-section="new">
+                            <div class="catalog-section-header">
+                                <h3>Novedades</h3>
+                                <span id="new-count" class="catalog-count">0</span>
+                            </div>
+                            <div id="new-activities-grid" class="activity-cards-grid activity-cards-grid--featured"></div>
+                        </section>
+
+                        <section class="catalog-section" data-section="all">
+                            <div class="catalog-section-header">
+                                <h3 id="all-activities-heading">Actividades disponibles</h3>
+                                <span id="all-count" class="catalog-count">0</span>
+                            </div>
+                            <div id="activities-grid" class="activity-cards-grid"></div>
+                            <div id="catalog-empty-state" class="catalog-empty-state hidden">
+                                No hay actividades que coincidan con la búsqueda.
+                            </div>
+                        </section>
+                    </main>
+
+                    <aside class="glass-card catalog-preview">
+                        <p class="eyebrow-text">Actividad seleccionada</p>
+                        <div id="project-details" class="details-box hidden">
+                            <h2 id="detail-title">Selecciona una actividad</h2>
+                            <ul class="meta-list">
+                                <li><strong>Docente:</strong> <span id="detail-author">-</span></li>
+                                <li><strong>Nivel:</strong> <span id="detail-nivel">-</span></li>
+                                <li><strong>Fecha:</strong> <span id="detail-date">-</span></li>
+                            </ul>
+                            <div class="obs-box">
+                                <strong>Indicaciones:</strong>
+                                <p id="detail-obs">-</p>
+                            </div>
+                        </div>
+                        <div id="catalog-no-selection" class="catalog-no-selection">
+                            Selecciona una tarjeta del catálogo para ver sus datos y continuar.
+                        </div>
+                        <button id="btn-go-to-setup" class="btn btn-primary btn-large" disabled>
+                            Continuar
+                        </button>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANTALLA 4: CONFIGURACIÓN DE JUGADORES -->
+        <section id="screen-players-setup" class="game-screen">
+            <div class="glass-card setup-card">
+                <h2>Configurar Jugadores</h2>
+                <p class="section-desc">Selecciona la cantidad de participantes, modalidad y nombres:</p>
+
+                <form id="players-form">
+                    <div class="setup-columns">
+
+                        <!-- ══ Columna izquierda: Jugadores ══════════════════════ -->
+                        <div class="setup-col setup-col--players">
+                            <h3 class="setup-col-label">Jugadores</h3>
+
+                            <div class="player-count-selector">
+                                <button type="button" class="btn btn-tab btn-count active" data-count="2">2 Jugadores</button>
+                                <button type="button" class="btn btn-tab btn-count" data-count="3">3 Jugadores</button>
+                                <button type="button" class="btn btn-tab btn-count" data-count="4">4 Jugadores</button>
+                                <button type="button" class="btn btn-tab btn-count" data-count="5">5 Jugadores</button>
+                                <button type="button" class="btn btn-tab btn-count" data-count="6">6 Jugadores</button>
+                                <button type="button" class="btn btn-tab btn-count" data-count="7">7 Jugadores</button>
+                                <button type="button" class="btn btn-tab btn-count" data-count="8">8 Jugadores</button>
+                            </div>
+
+                            <div class="players-inputs-container">
+                                <!-- Renderizado dinámico de inputs según cantidad seleccionada -->
+                                <div class="player-input-row" data-index="0">
+                                    <span class="color-badge badge-red" style="background-color: #ff4b4b;"></span>
+                                    <input type="text" placeholder="Jugador 1" maxlength="15" class="player-name-input">
+                                </div>
+                                <div class="player-input-row" data-index="1">
+                                    <span class="color-badge badge-blue" style="background-color: #3b82f6;"></span>
+                                    <input type="text" placeholder="Jugador 2" maxlength="15" class="player-name-input">
+                                </div>
+                                <div class="player-input-row hidden" data-index="2">
+                                    <span class="color-badge badge-green" style="background-color: #10b981;"></span>
+                                    <input type="text" placeholder="Jugador 3" maxlength="15" class="player-name-input">
+                                </div>
+                                <div class="player-input-row hidden" data-index="3">
+                                    <span class="color-badge badge-yellow" style="background-color: #ffd43b;"></span>
+                                    <input type="text" placeholder="Jugador 4" maxlength="15" class="player-name-input">
+                                </div>
+                                <div class="player-input-row hidden" data-index="4">
+                                    <span class="color-badge" style="background-color: #a855f7;"></span>
+                                    <input type="text" placeholder="Jugador 5" maxlength="15" class="player-name-input">
+                                </div>
+                                <div class="player-input-row hidden" data-index="5">
+                                    <span class="color-badge" style="background-color: #f97316;"></span>
+                                    <input type="text" placeholder="Jugador 6" maxlength="15" class="player-name-input">
+                                </div>
+                                <div class="player-input-row hidden" data-index="6">
+                                    <span class="color-badge" style="background-color: #06b6d4;"></span>
+                                    <input type="text" placeholder="Jugador 7" maxlength="15" class="player-name-input">
+                                </div>
+                                <div class="player-input-row hidden" data-index="7">
+                                    <span class="color-badge" style="background-color: #ec4899;"></span>
+                                    <input type="text" placeholder="Jugador 8" maxlength="15" class="player-name-input">
+                                </div>
+                            </div>
+
+                            <!-- Código de sesión: el alumno pega/escribe el código y el botón lo lleva directo a la actividad de esa sesión -->
+                            <div class="session-code-group" style="margin-top: 20px;">
+                                <label for="session-code-input" style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">
+                                    Código de sesión
+                                    <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);font-size:0.8rem;">(opcional — lo provee el docente)</span>
+                                </label>
+                                <div style="display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;">
+                                    <input type="text"
+                                           id="session-code-input"
+                                           maxlength="6"
+                                           placeholder="Ej: ABC123"
+                                           autocomplete="off"
+                                           spellcheck="false"
+                                           style="
+                                               background: rgba(255,255,255,0.05);
+                                               border: 1px solid var(--border-color);
+                                               border-radius: 10px;
+                                               padding: 11px 16px;
+                                               color: var(--text-primary);
+                                               font-family: var(--font-main);
+                                               font-size: 1.1rem;
+                                               font-weight: 800;
+                                               letter-spacing: 4px;
+                                               text-transform: uppercase;
+                                               width: 160px;
+                                               outline: none;
+                                               transition: border-color 0.2s, box-shadow 0.2s;
+                                           "
+                                           oninput="this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
+                                           onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px var(--accent-glow)'"
+                                           onblur="this.style.borderColor='';this.style.boxShadow=''">
+                                    <button type="button" id="btn-join-by-code"
+                                            style="background:var(--accent-gradient);border:none;color:#fff;border-radius:10px;padding:11px 20px;font-family:var(--font-main);font-weight:800;font-size:0.95rem;cursor:pointer;white-space:nowrap;">
+                                        Ir a la actividad ▶
+                                    </button>
+                                </div>
+                            </div>
+                        </div><!-- /setup-col--players -->
+
+                        <!-- ══ Columna derecha: Configuración de partida ════════ -->
+                        <div class="setup-col setup-col--rules">
+                            <h3 class="setup-col-label">Configuración de partida</h3>
+
+                            <div class="game-mode-config">
+                                <label for="board-profile-select">Tipo de tablero:</label>
+                                <select id="board-profile-select">
+                                    <option value="oca" selected>Oca tradicional - 50 casillas</option>
+                                    <option value="monopoly">Monopoly educativo - 40 casillas</option>
+                                    <option value="circular">Circular - 36 casillas</option>
+                                </select>
+                                <p id="board-profile-help" class="form-hint">Recorrido clásico de 50 casillas. Permite jugar por meta o por puntos.</p>
+
+                                <label for="victory-mode-select">Modalidad de juego:</label>
+                                <select id="victory-mode-select">
+                                    <option value="race" selected>A) Llegar a la meta</option>
+                                    <option value="exact">B) Meta exacta con rebote</option>
+                                    <option value="points">C) Puntos por vueltas</option>
+                                </select>
+                                <p id="victory-mode-help" class="form-hint">Gana quien llega primero a la última casilla.</p>
+
+                                <div id="score-target-config" class="score-target-config hidden">
+                                    <label for="score-target-select">Puntaje meta:</label>
+                                    <select id="score-target-select">
+                                        <option value="50">50 puntos</option>
+                                        <option value="100" selected>100 puntos</option>
+                                        <option value="120">120 puntos</option>
+                                        <option value="150">150 puntos</option>
+                                        <option value="180">180 puntos</option>
+                                        <option value="200">200 puntos</option>
+                                        <option value="250">250 puntos</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="input-group" style="margin-bottom: 12px;">
+                                <label>Tiempo base de respuesta (segundos):</label>
+                                <div class="time-selector-container">
+                                    <label class="time-option">
+                                        <input type="radio" name="base-time-option" value="20">
+                                        <span>20s</span>
+                                    </label>
+                                    <label class="time-option">
+                                        <input type="radio" name="base-time-option" value="30" checked>
+                                        <span>30s</span>
+                                    </label>
+                                    <label class="time-option">
+                                        <input type="radio" name="base-time-option" value="40">
+                                        <span>40s</span>
+                                    </label>
+                                    <label class="time-option">
+                                        <input type="radio" name="base-time-option" value="50">
+                                        <span>50s</span>
+                                    </label>
+                                    <label class="time-option">
+                                        <input type="radio" name="base-time-option" value="60">
+                                        <span>60s</span>
+                                    </label>
+                                    <label class="time-option">
+                                        <input type="radio" name="base-time-option" value="90">
+                                        <span>90s</span>
+                                    </label>
+                                    <label class="time-option">
+                                        <input type="radio" name="base-time-option" value="120">
+                                        <span>120s</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" id="timer-released-checkbox" style="width: 18px; height: 18px; cursor: pointer;">
+                                <label for="timer-released-checkbox" style="font-size: 0.9rem; color: var(--text-secondary); cursor: pointer; user-select: none;">Desactivar temporizador (tiempo libre)</label>
+                            </div>
+
+                            <div class="input-group" style="margin-bottom: 0;">
+                                <label for="penalty-mode-select">Regla de penalización (por fallo o tiempo agotado):</label>
+                                <select id="penalty-mode-select">
+                                    <option value="lose_turn" selected>a) Pierden un turno y no avanzan</option>
+                                    <option value="deduct_points">b) Se les restan 5 puntos y no avanzan</option>
+                                    <option value="both">c) Pierden un turno y se les restan 5 puntos</option>
+                                </select>
+                            </div>
+                        </div><!-- /setup-col--rules -->
+
+                    </div><!-- /setup-columns -->
+
+                    <div class="action-buttons-row">
+                        <button type="button" id="btn-back-to-projects" class="btn btn-secondary">
+                            Volver
+                        </button>
+                        <button type="submit" id="btn-start-game" class="btn btn-primary">
+                            Iniciar Juego
+                        </button>
+                    </div>
+                </form>
+
+                <footer class="app-version-footer">
+                    <span data-app-version-full="TRIVIAX v{v}">TRIVIAX v5.0.17</span>
+                    <span>by Darwin Salina © 2026</span>
+                </footer>
+            </div>
+        </section>
+
+        <!-- PANTALLA 3: TABLERO DE JUEGO -->
+        <section id="screen-game-board" class="game-screen board-screen-layout">
+            
+            <!-- Barra de Acciones para Móviles (Reiniciar, Salir y Sonido) -->
+            <div class="mobile-action-bar">
+                <button id="btn-mobile-sound" class="mobile-action-btn" title="Silenciar/Activar Sonido" aria-label="Activar o silenciar el sonido">🔊</button>
+                <button id="btn-mobile-restart" class="mobile-action-btn" title="Reiniciar Partida" aria-label="Reiniciar la partida">🔄</button>
+                <button id="btn-mobile-exit" class="mobile-action-btn" title="Salir al Inicio" aria-label="Salir al inicio">🏠</button>
+            </div>
+            
+            <!-- Tablero (Izquierda/Centro) -->
+            <div class="board-viewport">
+                <div class="board-container" id="board-container">
+                    <!-- Se carga dinámicamente el fondo, casillas, líneas y fichas -->
+                </div>
+            </div>
+
+            <!-- Panel de Control Lateral (Derecha) -->
+            <aside class="sidebar-panel">
+                <div class="project-info-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <h3 id="game-project-title">TRIVIAX</h3>
+                        <span id="game-project-level" class="badge-level">S1</span>
+                    </div>
+                    <button id="btn-toggle-sound" class="btn-sound-toggle" title="Silenciar/Activar Sonido" aria-label="Activar o silenciar el sonido">🔊</button>
+                </div>
+
+                <!-- Tabla de Clasificación / Marcadores -->
+                <div class="leaderboard-section">
+                    <h4>Puntuaciones</h4>
+                    <div id="players-list" class="players-status-list">
+                        <!-- Lista de jugadores renderizada dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Control de Turno y Dado -->
+                <div class="turn-dice-section">
+                    <div class="current-turn-indicator">
+                        <span class="turn-label">TURNO ACTUAL</span>
+                        <div id="current-player-display" class="player-badge">
+                            <span class="player-badge-color"></span>
+                            <span class="player-badge-name">Cargando...</span>
+                        </div>
+                    </div>
+
+                    <div class="dice-area">
+                        <div class="dice-wrapper">
+                            <div class="dice-element" id="dice-element">
+                                <!-- Se dibuja dinámicamente en 3x3 -->
+                            </div>
+                        </div>
+                        <button id="btn-roll-dice" class="btn btn-primary btn-roll">
+                            Tirar dado
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Registro de Historial de Eventos -->
+                <div class="game-logs-section">
+                    <h4>Registro de Juego</h4>
+                    <div id="game-logs" class="logs-container">
+                        <div class="log-entry system-log">Partida inicializada. ¡Tira el dado!</div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción de Estado -->
+                <div class="sidebar-footer" style="display: flex; flex-direction: column; gap: 10px;">
+                    <button id="btn-restart-game" class="btn btn-outline-danger">
+                        Reiniciar Juego
+                    </button>
+                    <button id="btn-exit-game" class="btn btn-secondary">
+                        Salir al Inicio
+                    </button>
+                    <div style="margin-top: 10px; text-align: center; font-size: 0.75rem; opacity: 0.5; font-weight: 300;">by Darwin Salina © 2026</div>
+                </div>
+            </aside>
+        </section>
+
+        <!-- PANTALLA 4: PANTALLA DE JUEGO TERMINADO -->
+        <section id="screen-game-over" class="game-screen">
+            <div class="glass-card game-over-card">
+                <div class="trophy-icon">🏆</div>
+                <h1 class="congrats-text">¡Tenemos un Ganador!</h1>
+                <h2 id="winner-name-display" class="winner-highlight">-</h2>
+                <p class="congrats-subtext">Ha completado el recorrido del conocimiento llegando a la meta final.</p>
+
+                <div class="stats-container">
+                    <h3>Estadísticas de la Partida</h3>
+                    <div class="stats-table-wrapper">
+                        <table class="stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Posición</th>
+                                    <th>Jugador</th>
+                                    <th>Casilla</th>
+                                    <th>Puntaje</th>
+                                    <th>Correctas</th>
+                                    <th>Incorrectas</th>
+                                </tr>
+                            </thead>
+                            <tbody id="game-over-stats-body">
+                                <!-- Estadísticas dinámicas -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="session-trivia-stats">
+                        <p>Total respuestas contestadas: <strong id="stats-total-answered">0</strong></p>
+                        <p>✅ Correctas: <strong id="stats-correct">0</strong> | ❌ Incorrectas/Timeout: <strong id="stats-incorrect">0</strong></p>
+                    </div>
+
+                    <div id="game-over-detailed-report" class="detailed-report-section">
+                        <h4>Detalle de Preguntas Respondidas</h4>
+                        <div id="detailed-attempts-list" class="detailed-attempts-list">
+                            <!-- Lista de preguntas e individual evaluation -->
+                        </div>
+                    </div>
+
+                    <div id="email-report-status" class="email-status-box" style="display: none;">
+                        <!-- Estado del envío de mail -->
+                    </div>
+                </div>
+
+                <div class="game-over-actions">
+                    <button id="btn-game-over-restart" class="btn btn-primary">
+                        Jugar de Nuevo
+                    </button>
+                    <button id="btn-game-over-home" class="btn btn-secondary">
+                        Volver al comienzo
+                    </button>
+                </div>
+                <footer class="app-version-footer">
+                    <span data-app-version-full="TRIVIAX Plus v{v}">TRIVIAX Plus v5.0.17</span>
+                    <span>by Darwin Salina © 2026</span>
+                </footer>
+            </div>
+        </section>
+
+        <!-- PANTALLA 5: PANTALLA DE ERROR GENERAL -->
+        <section id="screen-error" class="game-screen">
+            <div class="glass-card error-card">
+                <div class="error-icon">⚠️</div>
+                <h2>Error de Carga</h2>
+                <p id="error-message-text">Ha ocurrido un problema al procesar la solicitud.</p>
+                <button id="btn-error-retry" class="btn btn-primary">
+                    Reintentar
+                </button>
+            </div>
+        </section>
+
+        <!-- MODAL DE TRIVIA / PREGUNTA (SUPERPUESTO) -->
+        <div id="modal-question" class="modal-overlay">
+            <div class="glass-card modal-content-card" role="dialog" aria-modal="true" aria-labelledby="modal-question-text">
+
+                <!-- Temporizador superior -->
+                <div class="timer-bar-container">
+                    <div id="question-timer-bar" class="timer-bar-fill"></div>
+                </div>
+                
+                <div class="modal-header">
+                    <div class="question-meta">
+                        <span class="question-number-badge">Pregunta <span id="q-number-badge">-</span></span>
+                        <span id="question-timer-text" class="timer-text">30s</span>
+                    </div>
+                    <h3 id="modal-question-text" class="question-text">¿Cómo se define formalmente la informática?</h3>
+                    <!-- Instrucción contextual según tipo de desafío -->
+                    <p id="challenge-type-instruction" style="display:none; margin:6px 0 0; font-size:0.8rem; font-weight:600; color:var(--accent); letter-spacing:0.02em; opacity:0.85;"></p>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Opciones de Respuesta -->
+                    <div id="options-container" class="options-grid">
+                        <!-- Botones de opciones cargados dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Panel de retroalimentación posterior a la respuesta -->
+                <div id="feedback-panel" class="feedback-panel hidden">
+                    <div class="feedback-content" style="flex: 1; display: flex; flex-direction: column; gap: 6px; text-align: left;">
+                        <p id="feedback-msg" class="feedback-message">¡Respuesta correcta!</p>
+                        <div id="feedback-details" class="feedback-details hidden" style="font-size: 0.95rem; line-height: 1.4; color: var(--text-secondary); margin-top: 4px;">
+                            <!-- Detalles de respuestas correctas e incorrectas -->
+                        </div>
+                    </div>
+                    <button id="btn-next-turn" class="btn btn-primary" style="flex-shrink: 0; margin-left: 16px;">
+                        Continuar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DE DIAGNÓSTICO TÉCNICO (SUPERPUESTO) -->
+        <div id="modal-diagnostics" class="modal-overlay">
+            <div class="glass-card modal-content-card" style="width: 700px; max-width: 95%; max-height: 85vh; overflow-y: auto;">
+                <div class="modal-header">
+                    <h3 style="font-size: 1.3rem; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Diagnóstico Técnico TRIVIAX</h3>
+                    <button id="btn-close-diagnostics" class="btn btn-secondary btn-sm" style="padding: 4px 8px;">Cerrar</button>
+                </div>
+                <div class="modal-body">
+                    <div class="diagnostics-panel">
+                        <div class="diag-grid">
+                            <div class="diag-card" id="diag-app-version">
+                                <span class="label">Versión de App</span>
+                                <span class="value">2026.06.01.2</span>
+                            </div>
+                            <div class="diag-card" id="diag-sw-status">
+                                <span class="label">Estado SW</span>
+                                <span class="value" style="font-size: 0.95rem;">Cargando...</span>
+                            </div>
+                            <div class="diag-card" id="diag-online-status">
+                                <span class="label">Estado Red</span>
+                                <span class="value" style="font-size: 0.95rem;">Cargando...</span>
+                            </div>
+                            <div class="diag-card" id="diag-backend-status">
+                                <span class="label">Backend PHP</span>
+                                <span class="value" style="font-size: 0.95rem;">Cargando...</span>
+                            </div>
+                        </div>
+
+                        <div class="diag-details-box">
+                            <h3>Información del Proyecto Activo</h3>
+                            <div class="diag-log-container">
+                                <div class="diag-log-row">
+                                    <span>Proyecto Activo:</span>
+                                    <span id="diag-proj-name">-</span>
+                                </div>
+                                <div class="diag-log-row">
+                                    <span>Título:</span>
+                                    <span id="diag-proj-title">-</span>
+                                </div>
+                                <div class="diag-log-row">
+                                    <span>Docente / Autor:</span>
+                                    <span id="diag-proj-author">-</span>
+                                </div>
+                                <div class="diag-log-row">
+                                    <span>Desafíos Cargados:</span>
+                                    <span id="diag-proj-qty">-</span>
+                                </div>
+                                <div class="diag-log-row">
+                                    <span>Caché Activa:</span>
+                                    <span id="diag-cache-name">-</span>
+                                </div>
+                                <div class="diag-log-row">
+                                    <span>Última Actualización Detectada:</span>
+                                    <span id="diag-last-update">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="diag-actions">
+                            <button id="btn-diag-check" class="btn btn-primary">Buscar Actualización</button>
+                            <button id="btn-diag-clear" class="btn btn-outline-danger">Limpiar Caché y Recargar</button>
+                            <button id="btn-diag-precache" class="btn btn-secondary">Precargar offline</button>
+                            <button id="btn-diag-export" class="btn btn-secondary">Exportar Diagnóstico</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script de diagnóstico y control de errores de inicio/módulos -->
+    <script>
+        (function() {
+            // 1. Detectar si se abre directamente el archivo HTML con file://
+            if (window.location.protocol === 'file:') {
+                window.addEventListener('DOMContentLoaded', () => {
+                    const selectScreen = document.getElementById('screen-project-select');
+                    const errScreen = document.getElementById('screen-error');
+                    const errText = document.getElementById('error-message-text');
+                    const retryBtn = document.getElementById('btn-error-retry');
+                    
+                    if (selectScreen && errScreen && errText) {
+                        selectScreen.classList.remove('active');
+                        errScreen.classList.add('active');
+                        errText.innerHTML = '<strong>TRIVIAX no puede ejecutarse directamente abriendo el archivo HTML (protocolo <code style="background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 4px; font-family: monospace;">file://</code>).</strong><br><br>' +
+                            'Debido a las políticas de seguridad de los navegadores modernos (CORS) para módulos JavaScript y peticiones locales, ' +
+                            'debes abrir el juego a través de un servidor web local.<br><br>' +
+                            '<strong>Cómo ejecutar el juego:</strong><br>' +
+                            '• Copia la carpeta del juego en el directorio público de tu servidor local (ej. <code style="background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 4px; font-family: monospace;">c:\\wamp64\\www\\triviax\\</code>) y accede a <code style="background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 4px; font-family: monospace;">http://localhost/triviax/</code>.<br>' +
+                            '• O abre una terminal en la carpeta del juego y ejecuta: <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-family: monospace;">php -S localhost:8000</code> o <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-family: monospace;">python -m http.server 8000</code>, y abre <a href="http://localhost:8000" style="color: #60a5fa; text-decoration: underline;">http://localhost:8000</a> en el navegador.';
+                        
+                        if (retryBtn) {
+                            retryBtn.innerText = 'Ver Instrucciones';
+                            retryBtn.onclick = () => {
+                                alert('Instrucciones de ejecución local:\n\n1. Inicie su servidor web (WampServer, XAMPP, etc.).\n2. Asegúrese de que los archivos estén dentro de la carpeta www/htdocs (ej: c:\\wamp64\\www\\triviax).\n3. Abra en el navegador: http://localhost/triviax/\n\nO abra la terminal en esta carpeta y ejecute: php -S localhost:8000');
+                            };
+                        }
+                    }
+                });
+                return;
+            }
+
+            // 2. Detectar fallas globales de carga de scripts/módulos
+            window.addEventListener('error', function(e) {
+                if (e.target && (e.target.src || e.target.href)) {
+                    showGeneralStartError("No se pudo cargar el recurso: " + (e.target.src || e.target.href));
+                }
+            }, true);
+
+            window.addEventListener('unhandledrejection', function(event) {
+                showGeneralStartError("Error asíncrono en la inicialización: " + event.reason);
+            });
+
+            function showGeneralStartError(msg) {
+                const dropdown = document.getElementById('project-dropdown');
+                // Si el selector aún dice "Cargando proyectos...", la inicialización falló o se detuvo
+                if (dropdown && (dropdown.value === '' || dropdown.textContent.includes('Cargando proyectos'))) {
+                    const selectScreen = document.getElementById('screen-project-select');
+                    const errScreen = document.getElementById('screen-error');
+                    const errText = document.getElementById('error-message-text');
+                    const retryBtn = document.getElementById('btn-error-retry');
+                    
+                    if (selectScreen && errScreen && errText) {
+                        selectScreen.classList.remove('active');
+                        errScreen.classList.add('active');
+                        errText.innerHTML = '<strong>Error de inicialización de TRIVIAX</strong><br><br>' +
+                            'Hubo un problema al cargar los componentes del juego en el navegador.<br><br>' +
+                            'Detalle técnico: <code style="background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-family: monospace; display: block; margin-top: 10px; white-space: pre-wrap; word-break: break-all;">' + msg + '</code>';
+                        
+                        if (retryBtn) {
+                            retryBtn.innerText = 'Recargar';
+                            retryBtn.onclick = () => { window.location.reload(); };
+                        }
+                    }
+                }
+            }
+        })();
+
+        // Registrar Service Worker para soporte PWA y funcionamiento offline
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then((reg) => {
+                        console.log('TRIVIAX PWA: Service Worker registrado con éxito en el ámbito:', reg.scope);
+                        
+                        // Detectar actualizaciones si el Service Worker ya está esperando
+                        if (reg.waiting) {
+                            showUpdateBanner(reg.waiting);
+                        }
+
+                        // Escuchar si se detecta un nuevo Service Worker en instalación
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    showUpdateBanner(newWorker);
+                                }
+                            });
+                        });
+                    })
+                    .catch((err) => {
+                        console.warn('TRIVIAX PWA: Falló el registro del Service Worker:', err);
+                    });
+            });
+
+            // Variable para evitar recargas infinitas en el cambio de controlador
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
+            });
+        }
+
+        function showUpdateBanner(worker) {
+            const banner = document.getElementById('sw-update-banner');
+            const updateBtn = document.getElementById('btn-sw-update');
+            if (banner && updateBtn) {
+                banner.classList.remove('hidden');
+                updateBtn.onclick = () => {
+                    worker.postMessage({ action: 'SKIP_WAITING' });
+                    banner.classList.add('hidden');
+                };
+            }
+        }
+    </script>
+
+    <!-- Cargar Script Principal como Módulo ES6 -->
+    <!--
+        VERSIÓN DINÁMICA DEL SPLASH Y TEXTOS DE LA INTERFAZ
+        Lee APP_VERSION de config.js y:
+          1. Inyecta los dígitos "major.minor" como <span> animados en el splash.
+          2. Actualiza los elementos con data-app-version="{v}" (versión resumida major.minor)
+             y data-app-version-full="{v}" (versión completa X.Y.Z, pies de página).
+        El color depende de APP_VERSION en config.js; los querystrings se actualizan por release para evitar caché vieja.
+    -->
+    <script type="module">
+        import { APP_VERSION, getSplashTextColor } from './js/config.js';
+
+        // ── Versión a mostrar: solo major.minor (ej: "5.0" de "5.0.0") ──
+        const parts      = APP_VERSION.split('.');
+        const displayVer = parts[0] + '.' + (parts[1] ?? '0');
+
+        // ── Color del splash según rueda RYB: v5 → rojo #E31B23 ───────
+        const splashColor = getSplashTextColor(APP_VERSION);
+
+        // ── 1. Título: inyectar dígitos de versión con animación ─────────
+        document.documentElement.style.setProperty('--triviax-version-accent', splashColor);
+
+        const splash = document.getElementById('splash-main-text');
+        if (splash) {
+            splash.setAttribute('aria-label', 'TRIVIAX ' + displayVer);
+        }
+        const splashBrand = document.querySelector('.triviax-brand-splash');
+        if (splashBrand) {
+            splashBrand.setAttribute('aria-label', 'TRIVIAX ' + displayVer + ' - EL CAMINO DEL CONOCIMIENTO');
+        }
+        const versionEl = document.getElementById('splash-version-text');
+        if (versionEl) {
+            versionEl.textContent = displayVer;
+        }
+
+        // ── 3. Todos los textos de versión estáticos de la página ────────
+        // Resumida (major.minor): píldoras de marca, splash. Solo cambia en saltos 6.0, 7.0…
+        document.querySelectorAll('[data-app-version]').forEach(el => {
+            el.textContent = el.dataset.appVersion.replace('{v}', displayVer);
+        });
+        // Completa (APP_VERSION): pies de página "TRIVIAX Plus vX.Y.Z by Darwin Salina".
+        document.querySelectorAll('[data-app-version-full]').forEach(el => {
+            el.textContent = el.dataset.appVersionFull.replace('{v}', APP_VERSION);
+        });
+    </script>
+
+    <script src="js/brand.js?v=5.0.17"></script>
+    <script type="module" src="js/main.js?v=5.0.17"></script>
+</body>
+</html>

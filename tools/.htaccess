@@ -1,0 +1,5 @@
+# tools/.htaccess — Scripts administrativos: protegidos por PHP + Apache
+# El acceso real está controlado por la sesión PHP (rol superadmin).
+# Este .htaccess agrega una capa adicional bloqueando acceso directo.
+# Si se necesita acceso web, el script PHP valida la sesión primero.
+Options -Indexes

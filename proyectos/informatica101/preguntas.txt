@@ -1,0 +1,265 @@
+TITLE: Fundamentos de la informática I
+AUTHOR: Prof. Luis Darwin Salina
+NIVEL: S1
+OBS: Tira los dados y contesta las pregunas
+DATE: 28/05/2026
+MAIL:darwinsalina@gmail.com
+
+1. ¿Cómo se define formalmente a la informática?
+@ *La ciencia que estudia el tratamiento automático de la información mediante dispositivos digitales. 
+@ El estudio exclusivo del diseño de piezas físicas de una computadora.
+@ La técnica de reparar cables de red y conectores telefónicos.
+
+2. ¿Cuál de las siguientes actividades forma parte del objeto de estudio de la informática?
+@ *Procesar, organizar y proteger datos digitales. 
+@ Fabricar el vidrio texturizado para las pantallas de los monitores.
+@ Redactar cartas de presentación comerciales a mano.
+
+3. Si usamos una planilla de cálculo para promediar notas automáticamente, estamos aplicando:
+@ La telegrafía eléctrica aérea.
+@ *La informática. 
+@ El almacenamiento puramente óptico.
+
+4. ¿Con qué elementos se relaciona directamente la disciplina de la Computación?
+@ Únicamente con la transmisión de señales de radio AM.
+@ Con la copia manual de manuscritos medievales.
+@ *Con el uso, funcionamiento y estudio de computadoras, algoritmos y software. 
+
+5. Crear un programa que ordene de forma automática una lista de nombres es un ejemplo de:
+@ *Computación. 
+@ Mecanografía tradicional.
+@ Telecomunicación analógica.
+
+6. ¿Qué es conceptualmente la información?
+@ Un dato numérico aislado que no posee contexto.
+@ *Un conjunto de datos organizados que tienen un significado claro. 
+@ Cualquier señal eléctrica que viaja por un cable de cobre.
+
+7. Si el número "12" es un dato aislado, ¿cuál de las siguientes opciones representa información?
+@ El dígito 12 escrito diez veces consecutivas.
+@ *"La temperatura actual es de 12°C". 
+@ Una lista aleatoria con los números 12, 45 y 7.
+
+8. En el proceso de comunicación, ¿quién se encarga de codificar y enviar el mensaje?
+@ El canal de transmisión.
+@ *El emisor. 
+@ El receptor de la información.
+
+9. Si un estudiante lee una notificación en su celular, ¿qué rol cumple en ese esquema de comunicación?
+@ Código de signos.
+@ Emisor del mensaje.
+@ *Receptor. 
+
+10. ¿Qué elemento de la comunicación representa el soporte o medio físico por donde viaja el mensaje (como la voz o WhatsApp)?
+@ El contexto institucional.
+@ *El canal. 
+@ El código lingüístico.
+
+#### Bloque 2: Historia y Evolución de los Medios de Comunicación
+
+11. ¿Cuáles fueron las primeras formas de expresión humana en la prehistoria?
+@ Los manuscritos hechos a tinta.
+@ *Los gestos, sonidos y pinturas rupestres. 
+@ El telégrafo óptico de antorchas.
+
+12. ¿Qué hito histórico de la antigüedad permitió por primera vez registrar y conservar la información a través del tiempo?
+@ *La invención de la escritura. 
+@ La creación de la televisión masiva.
+@ La aparición de los satélites geoestacionarios.
+
+13. Durante la Edad Media, ¿cómo se preservaban y reproducían los textos escritos?
+@ Mediante prensas mecánicas industriales.
+@ *Copiándolos minuciosamente a mano en manuscritos. 
+@ Utilizando impresoras de matriz de puntos.
+
+
+14. ¿Qué tecnología del siglo XV, desarrollada por Johannes Gutenberg, multiplicó los libros y difundió masivamente el conocimiento?
+@ El telégrafo eléctrico.
+@ El sistema de tarjetas perforadas.
+@ *La imprenta. 
+
+15. ¿Qué aparato del siglo XIX envió mensajes a distancia por primera vez mediante señales eléctricas usando un código de puntos y rayas?
+@ El teléfono analógico.
+@ *El telégrafo. 
+@ La televisión satelital.
+
+16. ¿Qué invento del siglo XIX permitió, a diferencia del telégrafo, transmitir directamente la voz humana a largas distancias?
+@ La imprenta de tipos móviles.
+@ *El teléfono. 
+@ El radiotransmisor digital.
+
+17. ¿Cuál fue el primer medio del siglo XX en lograr una comunicación auditiva verdaderamente masiva y en tiempo real?
+@ El cine mudo.
+@ El manuscrito ilustrado.
+@ *La radio. 
+
+18. ¿Qué tecnología del siglo XX revolucionó la comunicación de masas al combinar imagen en movimiento y sonido de forma simultánea?
+@ El telégrafo eléctrico de agujas.
+@ *La televisión. 
+@ El ábaco de cuentas de madera.
+
+19. ¿Qué avance técnico de la segunda mitad del siglo XX hizo posible la comunicación global y la transmisión de señales de televisión y datos alrededor de todo el planeta?
+@ Los cables de telegrafía submarina del siglo XIX.
+@ *Los satélites de comunicaciones. 
+@ Las prensas hidráulicas de impresión.
+
+20. ¿Qué red mundial del siglo XX-XXI logró conectar computadoras y personas unificando texto, imagen, sonido e interacción?
+@ La red nacional de telefonía fija.
+@ *Internet. 
+@ El circuito cerrado de televisión.
+
+21. ¿Qué dispositivos del siglo XXI unieron la informática móvil con la comunicación multimedia inmediata a través de redes sociales?
+@ *Los smartphones. 
+@ Las terminales de teletipo fijas.
+@ Las computadoras centrales ENIAC.
+
+22. En la evolución de la comunicación, ¿cuál fue el impacto principal de la imprenta?
+@ *Permitió reproducir y difundir la información de forma masiva. 
+@ Hizo posible la transmisión de audio a través de cables eléctricos.
+@ Automatizó el procesamiento matemático de datos censales.
+
+#### Bloque 3: Historia y Evolución de la Computación
+23. ¿Cuál es considerado uno de los más antiguos instrumentos mecánicos desarrollados por la humanidad para realizar cálculos matemáticos?
+@ La Pascalina de engranajes.
+@ *El ábaco. 
+@ El microprocesador de silicio.
+
+
+24. ¿Qué característica define a la "Pascalina", creada por Blaise Pascal en el siglo XVII?
+@ Fue la primera computadora electrónica programable.
+@ *Una máquina mecánica diseñada exclusivamente para realizar cálculos aritméticos. 
+@ Un telar que utilizaba un complejo sistema de software.
+
+25. ¿Qué innovación introdujo el Telar de Jacquard a principios del siglo XIX que luego inspiraría a la informática?
+@ El uso de corrientes de agua para mover engranajes.
+@ *El uso de tarjetas perforadas para controlar patrones y diseños de tejido. 
+@ La incorporación de válvulas de vacío de vidrio.
+
+26. ¿Por qué es célebre la Máquina Analítica diseñada por Charles Babbage en el siglo XIX?
+@ Por ser el primer radio transmisor transatlántico de la historia.
+@ Por resolver problemas de cálculo mediante el uso de transistores planos.
+@ *Por constituir el antecedente conceptual definitivo de la computadora moderna. 
+
+27. ¿Qué máquina del siglo XIX procesó con enorme éxito grandes volúmenes de datos para el censo de Estados Unidos usando tarjetas perforadas?
+@ La máquina aritmética de Leibniz.
+@ *La máquina tabuladora de Herman Hollerith. 
+@ La computadora central ENIAC.
+
+28. ¿Qué científico del siglo XX aportó los fundamentos teóricos esenciales sobre la lógica de las computadoras modernas y los algoritmos?
+@ *Alan Turing. 
+@ Blaise Pascal.
+@ Herman Hollerith.
+
+29. ¿Qué caracteriza a la ENIAC, construida a mediados del siglo XX?
+@ Fue la primera computadora personal de escritorio vendida en tiendas.
+@ *Una de las primeras computadoras puramente electrónicas y de enorme tamaño. 
+@ El primer dispositivo mecánico basado en tarjetas de Jacquard.
+
+30. ¿Qué componente electrónico reemplazó a las antiguas y frágiles válvulas de vacío, haciendo a las computadoras más pequeñas y confiables?
+@ El relé electromecánico de cobre.
+@ *El transistor. 
+@ El disco compacto óptico.
+
+31. ¿Qué avance técnico logró reunir miles de componentes electrónicos (como transistores) dentro de un solo chip de material semiconductor?
+@ La tarjeta perforada de cartón.
+@ *El circuito integrado. 
+@ El disquete flexible de lectura magnética.
+
+32. ¿Qué pieza fundamental, surgida en la década de 1970, concentró toda la unidad de procesamiento en un único chip y permitió el nacimiento de las computadoras personales?
+@ *El microprocesador. 
+@ La memoria de tambor magnético.
+@ El tubo de rayos catódicos.
+
+33. ¿Qué cambio social provocó la llegada de la computadora personal (PC) a partir de fines de los años 70 y los 80?
+@ Centralizó el uso de la computación exclusivamente en bases militares de alta seguridad.
+@ *Llevó la computación y el procesamiento de datos directamente a los hogares y oficinas. 
+@ Reemplazó por completo el uso de cables y satélites de comunicación global.
+
+34. ¿Qué fenómeno tecnológico actual integra de forma total la computación avanzada, la comunicación multimedia y la portabilidad diaria?
+@ Las computadoras de válvulas electrónicas.
+@ *La computación móvil. 
+@ Las máquinas tabuladoras mecánicas.
+
+#### Bloque 4: Medios de Almacenamiento
+
+35. ¿Cuál es la función primordial de los medios de almacenamiento en un sistema informático?
+@ Transmitir ondas de radio de alta frecuencia entre antenas.
+@ *Guardar información de forma temporal o permanente. 
+@ Traducir texto escrito de un idioma a otro automáticamente.
+
+36. ¿Cómo graba y lee la información un disco duro convencional de tipo HDD?
+@ Utilizando un haz de luz láser de alta precisión.
+@ *Mediante la alteración y lectura de campos magnéticos en sus platos. 
+@ Quemando microscópicas ranuras físicas sobre plástico.
+
+37. ¿Cuál de los siguientes dispositivos pertenece a la categoría de almacenamiento magnético antiguo?
+@ El disco de estado sólido SSD.
+@ *El disquete. 
+@ La tarjeta de memoria Micro SD.
+
+38. ¿Qué tecnología física utilizan dispositivos ópticos como el CD, el DVD y el Blu-ray para leer datos?
+@ *Luz láser de diferentes longitudes de onda. 
+@ Cabezales de fricción magnética de contacto continuo.
+@ Impulsos eléctricos directos sobre compuertas lógicas estáticas.
+
+39. ¿Qué gran ventaja técnica posee un disco de estado sólido (SSD) en comparación con un disco duro tradicional (HDD)?
+@ Su costo económico es mucho menor por cada gigabyte guardado.
+@ *Es significativamente más rápido para leer datos y muy resistente al no tener partes móviles. 
+@ Requiere ser leído obligatoriamente mediante un lector de rayo láser externo.
+
+40. ¿A qué categoría de almacenamiento pertenecen los pendrives y las tarjetas SD?
+@ Almacenamiento magnético analógico de cinta.
+@ Almacenamiento óptico de alta densidad.
+@ *Almacenamiento electrónico o de estado sólido. 
+
+41. ¿Dónde se aloja físicamente la información cuando un usuario utiliza el almacenamiento en la nube (como Google Drive)?
+@ En la memoria RAM volátil del dispositivo local.
+@ *En servidores remotos de gran escala conectados de manera permanente a Internet. 
+@ En un disquete magnético introducido en el equipo del usuario.
+
+42. ¿Cuál es la principal desventaja asociada al uso diario del almacenamiento en la nube?
+@ Es un medio sumamente frágil ante caídas y movimientos bruscos del usuario.
+@ *Su acceso depende por completo de contar con conexión a Internet y una cuenta activa. 
+@ Su capacidad máxima está limitada a unos pocos kilobytes de texto.
+
+#### Bloque 5: Unidades de Medida de la Información
+
+43. ¿Cómo se define conceptualmente al bit en la informática?
+@ Una secuencia fija de mil caracteres alfanuméricos.
+@ *La unidad mínima de información digital, que solo puede valer 0 o 1. 
+@ El peso físico exacto de un microchip de memoria.
+
+44. ¿A cuántos bits equivale exactamente un byte en la arquitectura computacional estándar?
+@ A 1024 bits de datos.
+@ A 4 bits de datos.
+@ *A 8 bits de datos. 
+
+45. En términos prácticos de almacenamiento, ¿qué puede representar comúnmente un solo byte de información?
+@ Una película completa en formato de alta definición.
+@ *Una única letra, número o carácter de un texto. 
+@ Una fotografía digital de alta resolución.
+
+46. ¿A cuántos bytes equivale de manera aproximada un Kilobyte (KB)?
+@ A 8 bytes de datos puros.
+@ *A 1024 bytes. 
+@ A un millón de megabytes.
+
+47. Si una fotografía digital estándar pesa aproximadamente 4 MB, ¿qué unidad de medida estamos empleando?
+@ Kilobytes.
+@ Gigabytes.
+@ *Megabytes. 
+
+48. ¿Cuál es la unidad de medida más adecuada y común para indicar la capacidad de almacenamiento de un disco duro moderno de gran tamaño?
+@ *Gigabytes (GB) o Terabytes (TB). 
+@ Bits o Bytes individuales.
+@ Kilobytes (KB) de texto plano.
+
+49. ¿Cuál es el orden correcto de las unidades de medida de información digital, dispuestas estrictamente de menor a mayor?
+@ Terabyte -> Gigabyte -> Megabyte -> Kilobyte.
+@ *Bit -> Byte -> Kilobyte -> Megabyte -> Gigabyte -> Terabyte. 
+@ Byte -> Bit -> Megabyte -> Kilobyte -> Terabyte.
+
+50. Si descargamos un video muy corto o una canción de música digital, ¿en qué rango de unidades se encontrará habitualmente su tamaño de archivo?
+@ En unos pocos Bits individuales.
+@ *En Megabytes (MB). 
+@ En Terabytes (TB) completos.

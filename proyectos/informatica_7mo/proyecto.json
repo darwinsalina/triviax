@@ -1,0 +1,1416 @@
+{
+    "metadata": {
+        "title": "Fundamentos de la informática I",
+        "author": "Prof. Luis Darwin Salina",
+        "nivel": "7mo",
+        "obs": "Tira los dados y contesta las pregunas",
+        "mail": "darwinsalina@gmail.com",
+        "date": "11\/06\/2026",
+        "background": "fondo.jpg"
+    },
+    "board": {
+        "type": "serpentine"
+    },
+    "challenges": [
+        {
+            "id": "mc_001",
+            "type": "multiple_choice",
+            "title": "Pregunta 1",
+            "prompt": {
+                "text": "¿Cómo se define formalmente a la informática?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "La ciencia que estudia el tratamiento automático de la información mediante dispositivos digitales.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "El estudio exclusivo del diseño de piezas físicas de una computadora.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "La técnica de reparar cables de red y conectores telefónicos.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_002",
+            "type": "multiple_choice",
+            "title": "Pregunta 2",
+            "prompt": {
+                "text": "¿Cuál de las siguientes actividades forma parte del objeto de estudio de la informática?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Procesar, organizar y proteger datos digitales.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Fabricar el vidrio texturizado para las pantallas de los monitores.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Redactar cartas de presentación comerciales a mano.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_003",
+            "type": "multiple_choice",
+            "title": "Pregunta 3",
+            "prompt": {
+                "text": "Si usamos una planilla de cálculo para promediar notas automáticamente, estamos aplicando:"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "La telegrafía eléctrica aérea.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "La informática.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El almacenamiento puramente óptico.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_004",
+            "type": "multiple_choice",
+            "title": "Pregunta 4",
+            "prompt": {
+                "text": "¿Con qué elementos se relaciona directamente la disciplina de la Computación?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Únicamente con la transmisión de señales de radio AM.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Con la copia manual de manuscritos medievales.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Con el uso, funcionamiento y estudio de computadoras, algoritmos y software.",
+                    "correct": true
+                }
+            ]
+        },
+        {
+            "id": "mc_005",
+            "type": "multiple_choice",
+            "title": "Pregunta 5",
+            "prompt": {
+                "text": "Crear un programa que ordene de forma automática una lista de nombres es un ejemplo de:"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Computación.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Mecanografía tradicional.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Telecomunicación analógica.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_006",
+            "type": "multiple_choice",
+            "title": "Pregunta 6",
+            "prompt": {
+                "text": "¿Qué es conceptualmente la información?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Un dato numérico aislado que no posee contexto.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Un conjunto de datos organizados que tienen un significado claro.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Cualquier señal eléctrica que viaja por un cable de cobre.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_007",
+            "type": "multiple_choice",
+            "title": "Pregunta 7",
+            "prompt": {
+                "text": "Si el número \"12\" es un dato aislado, ¿cuál de las siguientes opciones representa información?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El dígito 12 escrito diez veces consecutivas.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "\"La temperatura actual es de 12°C\".",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Una lista aleatoria con los números 12, 45 y 7.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_008",
+            "type": "multiple_choice",
+            "title": "Pregunta 8",
+            "prompt": {
+                "text": "En el proceso de comunicación, ¿quién se encarga de codificar y enviar el mensaje?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El canal de transmisión.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El emisor.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El receptor de la información.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_009",
+            "type": "multiple_choice",
+            "title": "Pregunta 9",
+            "prompt": {
+                "text": "Si un estudiante lee una notificación en su celular, ¿qué rol cumple en ese esquema de comunicación?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Código de signos.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Emisor del mensaje.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Receptor.",
+                    "correct": true
+                }
+            ]
+        },
+        {
+            "id": "mc_010",
+            "type": "multiple_choice",
+            "title": "Pregunta 10",
+            "prompt": {
+                "text": "¿Qué elemento de la comunicación representa el soporte o medio físico por donde viaja el mensaje (como la voz o WhatsApp)?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El contexto institucional.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El canal.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El código lingüístico.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_011",
+            "type": "multiple_choice",
+            "title": "Pregunta 11",
+            "prompt": {
+                "text": "¿Cuáles fueron las primeras formas de expresión humana en la prehistoria?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Los manuscritos hechos a tinta.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Los gestos, sonidos y pinturas rupestres.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El telégrafo óptico de antorchas.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_012",
+            "type": "multiple_choice",
+            "title": "Pregunta 12",
+            "prompt": {
+                "text": "¿Qué hito histórico de la antigüedad permitió por primera vez registrar y conservar la información a través del tiempo?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "La invención de la escritura.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "La creación de la televisión masiva.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "La aparición de los satélites geoestacionarios.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_013",
+            "type": "multiple_choice",
+            "title": "Pregunta 13",
+            "prompt": {
+                "text": "Durante la Edad Media, ¿cómo se preservaban y reproducían los textos escritos?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Mediante prensas mecánicas industriales.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Copiándolos minuciosamente a mano en manuscritos.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Utilizando impresoras de matriz de puntos.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_014",
+            "type": "multiple_choice",
+            "title": "Pregunta 14",
+            "prompt": {
+                "text": "¿Qué tecnología del siglo XV, desarrollada por Johannes Gutenberg, multiplicó los libros y difundió masivamente el conocimiento?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El telégrafo eléctrico.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El sistema de tarjetas perforadas.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "La imprenta.",
+                    "correct": true
+                }
+            ]
+        },
+        {
+            "id": "mc_015",
+            "type": "multiple_choice",
+            "title": "Pregunta 15",
+            "prompt": {
+                "text": "¿Qué aparato del siglo XIX envió mensajes a distancia por primera vez mediante señales eléctricas usando un código de puntos y rayas?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El teléfono analógico.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El telégrafo.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "La televisión satelital.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_016",
+            "type": "multiple_choice",
+            "title": "Pregunta 16",
+            "prompt": {
+                "text": "¿Qué invento del siglo XIX permitió, a diferencia del telégrafo, transmitir directamente la voz humana a largas distancias?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "La imprenta de tipos móviles.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El teléfono.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El radiotransmisor digital.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_017",
+            "type": "multiple_choice",
+            "title": "Pregunta 17",
+            "prompt": {
+                "text": "¿Cuál fue el primer medio del siglo XX en lograr una comunicación auditiva verdaderamente masiva y en tiempo real?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El cine mudo.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El manuscrito ilustrado.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "La radio.",
+                    "correct": true
+                }
+            ]
+        },
+        {
+            "id": "mc_018",
+            "type": "multiple_choice",
+            "title": "Pregunta 18",
+            "prompt": {
+                "text": "¿Qué tecnología del siglo XX revolucionó la comunicación de masas al combinar imagen en movimiento y sonido de forma simultánea?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El telégrafo eléctrico de agujas.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "La televisión.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El ábaco de cuentas de madera.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_019",
+            "type": "multiple_choice",
+            "title": "Pregunta 19",
+            "prompt": {
+                "text": "¿Qué avance técnico de la segunda mitad del siglo XX hizo posible la comunicación global y la transmisión de señales de televisión y datos alrededor de todo el planeta?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Los cables de telegrafía submarina del siglo XIX.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Los satélites de comunicaciones.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Las prensas hidráulicas de impresión.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_020",
+            "type": "multiple_choice",
+            "title": "Pregunta 20",
+            "prompt": {
+                "text": "¿Qué red mundial del siglo XX-XXI logró conectar computadoras y personas unificando texto, imagen, sonido e interacción?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "La red nacional de telefonía fija.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Internet.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El circuito cerrado de televisión.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_021",
+            "type": "multiple_choice",
+            "title": "Pregunta 21",
+            "prompt": {
+                "text": "¿Qué dispositivos del siglo XXI unieron la informática móvil con la comunicación multimedia inmediata a través de redes sociales?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Los smartphones.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Las terminales de teletipo fijas.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Las computadoras centrales ENIAC.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_022",
+            "type": "multiple_choice",
+            "title": "Pregunta 22",
+            "prompt": {
+                "text": "En la evolución de la comunicación, ¿cuál fue el impacto principal de la imprenta?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Permitió reproducir y difundir la información de forma masiva.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Hizo posible la transmisión de audio a través de cables eléctricos.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Automatizó el procesamiento matemático de datos censales.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_023",
+            "type": "multiple_choice",
+            "title": "Pregunta 23",
+            "prompt": {
+                "text": "¿Cuál es considerado uno de los más antiguos instrumentos mecánicos desarrollados por la humanidad para realizar cálculos matemáticos?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "La Pascalina de engranajes.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El ábaco.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El microprocesador de silicio.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_024",
+            "type": "multiple_choice",
+            "title": "Pregunta 24",
+            "prompt": {
+                "text": "¿Qué característica define a la \"Pascalina\", creada por Blaise Pascal en el siglo XVII?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Fue la primera computadora electrónica programable.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Una máquina mecánica diseñada exclusivamente para realizar cálculos aritméticos.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Un telar que utilizaba un complejo sistema de software.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_025",
+            "type": "multiple_choice",
+            "title": "Pregunta 25",
+            "prompt": {
+                "text": "¿Qué innovación introdujo el Telar de Jacquard a principios del siglo XIX que luego inspiraría a la informática?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El uso de corrientes de agua para mover engranajes.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El uso de tarjetas perforadas para controlar patrones y diseños de tejido.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "La incorporación de válvulas de vacío de vidrio.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_026",
+            "type": "multiple_choice",
+            "title": "Pregunta 26",
+            "prompt": {
+                "text": "¿Por qué es célebre la Máquina Analítica diseñada por Charles Babbage en el siglo XIX?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Por ser el primer radio transmisor transatlántico de la historia.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Por resolver problemas de cálculo mediante el uso de transistores planos.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Por constituir el antecedente conceptual definitivo de la computadora moderna.",
+                    "correct": true
+                }
+            ]
+        },
+        {
+            "id": "mc_027",
+            "type": "multiple_choice",
+            "title": "Pregunta 27",
+            "prompt": {
+                "text": "¿Qué máquina del siglo XIX procesó con enorme éxito grandes volúmenes de datos para el censo de Estados Unidos usando tarjetas perforadas?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "La máquina aritmética de Leibniz.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "La máquina tabuladora de Herman Hollerith.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "La computadora central ENIAC.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_028",
+            "type": "multiple_choice",
+            "title": "Pregunta 28",
+            "prompt": {
+                "text": "¿Qué científico del siglo XX aportó los fundamentos teóricos esenciales sobre la lógica de las computadoras modernas y los algoritmos?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Alan Turing.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Blaise Pascal.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Herman Hollerith.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_029",
+            "type": "multiple_choice",
+            "title": "Pregunta 29",
+            "prompt": {
+                "text": "¿Qué caracteriza a la ENIAC, construida a mediados del siglo XX?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Fue la primera computadora personal de escritorio vendida en tiendas.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Una de las primeras computadoras puramente electrónicas y de enorme tamaño.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El primer dispositivo mecánico basado en tarjetas de Jacquard.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_030",
+            "type": "multiple_choice",
+            "title": "Pregunta 30",
+            "prompt": {
+                "text": "¿Qué componente electrónico reemplazó a las antiguas y frágiles válvulas de vacío, haciendo a las computadoras más pequeñas y confiables?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El relé electromecánico de cobre.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El transistor.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El disco compacto óptico.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_031",
+            "type": "multiple_choice",
+            "title": "Pregunta 31",
+            "prompt": {
+                "text": "¿Qué avance técnico logró reunir miles de componentes electrónicos (como transistores) dentro de un solo chip de material semiconductor?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "La tarjeta perforada de cartón.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El circuito integrado.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El disquete flexible de lectura magnética.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_032",
+            "type": "multiple_choice",
+            "title": "Pregunta 32",
+            "prompt": {
+                "text": "¿Qué pieza fundamental, surgida en la década de 1970, concentró toda la unidad de procesamiento en un único chip y permitió el nacimiento de las computadoras personales?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El microprocesador.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "La memoria de tambor magnético.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "El tubo de rayos catódicos.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_033",
+            "type": "multiple_choice",
+            "title": "Pregunta 33",
+            "prompt": {
+                "text": "¿Qué cambio social provocó la llegada de la computadora personal (PC) a partir de fines de los años 70 y los 80?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Centralizó el uso de la computación exclusivamente en bases militares de alta seguridad.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Llevó la computación y el procesamiento de datos directamente a los hogares y oficinas.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Reemplazó por completo el uso de cables y satélites de comunicación global.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_034",
+            "type": "multiple_choice",
+            "title": "Pregunta 34",
+            "prompt": {
+                "text": "¿Qué fenómeno tecnológico actual integra de forma total la computación avanzada, la comunicación multimedia y la portabilidad diaria?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Las computadoras de válvulas electrónicas.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "La computación móvil.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Las máquinas tabuladoras mecánicas.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_035",
+            "type": "multiple_choice",
+            "title": "Pregunta 35",
+            "prompt": {
+                "text": "¿Cuál es la función primordial de los medios de almacenamiento en un sistema informático?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Transmitir ondas de radio de alta frecuencia entre antenas.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Guardar información de forma temporal o permanente.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Traducir texto escrito de un idioma a otro automáticamente.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_036",
+            "type": "multiple_choice",
+            "title": "Pregunta 36",
+            "prompt": {
+                "text": "¿Cómo graba y lee la información un disco duro convencional de tipo HDD?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Utilizando un haz de luz láser de alta precisión.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Mediante la alteración y lectura de campos magnéticos en sus platos.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Quemando microscópicas ranuras físicas sobre plástico.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_037",
+            "type": "multiple_choice",
+            "title": "Pregunta 37",
+            "prompt": {
+                "text": "¿Cuál de los siguientes dispositivos pertenece a la categoría de almacenamiento magnético antiguo?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El disco de estado sólido SSD.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "El disquete.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "La tarjeta de memoria Micro SD.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_038",
+            "type": "multiple_choice",
+            "title": "Pregunta 38",
+            "prompt": {
+                "text": "¿Qué tecnología física utilizan dispositivos ópticos como el CD, el DVD y el Blu-ray para leer datos?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Luz láser de diferentes longitudes de onda.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Cabezales de fricción magnética de contacto continuo.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Impulsos eléctricos directos sobre compuertas lógicas estáticas.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_039",
+            "type": "multiple_choice",
+            "title": "Pregunta 39",
+            "prompt": {
+                "text": "¿Qué gran ventaja técnica posee un disco de estado sólido (SSD) en comparación con un disco duro tradicional (HDD)?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Su costo económico es mucho menor por cada gigabyte guardado.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Es significativamente más rápido para leer datos y muy resistente al no tener partes móviles.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Requiere ser leído obligatoriamente mediante un lector de rayo láser externo.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_040",
+            "type": "multiple_choice",
+            "title": "Pregunta 40",
+            "prompt": {
+                "text": "¿A qué categoría de almacenamiento pertenecen los pendrives y las tarjetas SD?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Almacenamiento magnético analógico de cinta.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Almacenamiento óptico de alta densidad.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Almacenamiento electrónico o de estado sólido.",
+                    "correct": true
+                }
+            ]
+        },
+        {
+            "id": "mc_041",
+            "type": "multiple_choice",
+            "title": "Pregunta 41",
+            "prompt": {
+                "text": "¿Dónde se aloja físicamente la información cuando un usuario utiliza el almacenamiento en la nube (como Google Drive)?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "En la memoria RAM volátil del dispositivo local.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "En servidores remotos de gran escala conectados de manera permanente a Internet.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "En un disquete magnético introducido en el equipo del usuario.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_042",
+            "type": "multiple_choice",
+            "title": "Pregunta 42",
+            "prompt": {
+                "text": "¿Cuál es la principal desventaja asociada al uso diario del almacenamiento en la nube?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Es un medio sumamente frágil ante caídas y movimientos bruscos del usuario.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Su acceso depende por completo de contar con conexión a Internet y una cuenta activa.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Su capacidad máxima está limitada a unos pocos kilobytes de texto.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_043",
+            "type": "multiple_choice",
+            "title": "Pregunta 43",
+            "prompt": {
+                "text": "¿Cómo se define conceptualmente al bit en la informática?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Una secuencia fija de mil caracteres alfanuméricos.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "La unidad mínima de información digital, que solo puede valer 0 o 1.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "El peso físico exacto de un microchip de memoria.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_044",
+            "type": "multiple_choice",
+            "title": "Pregunta 44",
+            "prompt": {
+                "text": "¿A cuántos bits equivale exactamente un byte en la arquitectura computacional estándar?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "A 1024 bits de datos.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "A 4 bits de datos.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "A 8 bits de datos.",
+                    "correct": true
+                }
+            ]
+        },
+        {
+            "id": "mc_045",
+            "type": "multiple_choice",
+            "title": "Pregunta 45",
+            "prompt": {
+                "text": "En términos prácticos de almacenamiento, ¿qué puede representar comúnmente un solo byte de información?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Una película completa en formato de alta definición.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Una única letra, número o carácter de un texto.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Una fotografía digital de alta resolución.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_046",
+            "type": "multiple_choice",
+            "title": "Pregunta 46",
+            "prompt": {
+                "text": "¿A cuántos bytes equivale de manera aproximada un Kilobyte (KB)?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "A 8 bytes de datos puros.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "A 1024 bytes.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "A un millón de megabytes.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_047",
+            "type": "multiple_choice",
+            "title": "Pregunta 47",
+            "prompt": {
+                "text": "Si una fotografía digital estándar pesa aproximadamente 4 MB, ¿qué unidad de medida estamos empleando?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Kilobytes.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Gigabytes.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Megabytes.",
+                    "correct": true
+                }
+            ]
+        },
+        {
+            "id": "mc_048",
+            "type": "multiple_choice",
+            "title": "Pregunta 48",
+            "prompt": {
+                "text": "¿Cuál es la unidad de medida más adecuada y común para indicar la capacidad de almacenamiento de un disco duro moderno de gran tamaño?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Gigabytes (GB) o Terabytes (TB).",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Bits o Bytes individuales.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Kilobytes (KB) de texto plano.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_049",
+            "type": "multiple_choice",
+            "title": "Pregunta 49",
+            "prompt": {
+                "text": "¿Cuál es el orden correcto de las unidades de medida de información digital, dispuestas estrictamente de menor a mayor?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Terabyte -> Gigabyte -> Megabyte -> Kilobyte.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Bit -> Byte -> Kilobyte -> Megabyte -> Gigabyte -> Terabyte.",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "Byte -> Bit -> Megabyte -> Kilobyte -> Terabyte.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_050",
+            "type": "multiple_choice",
+            "title": "Pregunta 50",
+            "prompt": {
+                "text": "Si descargamos un video muy corto o una canción de música digital, ¿en qué rango de unidades se encontrará habitualmente su tamaño de archivo?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "En unos pocos Bits individuales.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "En Megabytes (MB).",
+                    "correct": true
+                },
+                {
+                    "id": "c",
+                    "text": "En Terabytes (TB) completos.",
+                    "correct": false
+                }
+            ]
+        }
+    ]
+}

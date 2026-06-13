@@ -1,0 +1,785 @@
+{
+    "metadata": {
+        "title": "Componentes de Hardware",
+        "author": "Prof. Darwin Salina",
+        "nivel": "7mo",
+        "obs": "Pon a prueba tus conocimientos sobre los componentes internos de las computadoras",
+        "date": "08\/06\/2026",
+        "mail": "darwinsalina@gmail.com",
+        "background": "fondo.jpg"
+    },
+    "board": {
+        "type": "serpentine"
+    },
+    "challenges": [
+        {
+            "id": "ch_01",
+            "type": "true_false",
+            "prompt": {
+                "text": "La memoria RAM conserva la información de manera permanente incluso si la computadora se apaga."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_02",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Cuántos bits se necesitan para formar un solo byte?"
+            },
+            "options": [
+                {
+                    "text": "2 bits",
+                    "correct": false
+                },
+                {
+                    "text": "4 bits",
+                    "correct": false
+                },
+                {
+                    "text": "8 bits",
+                    "correct": true
+                },
+                {
+                    "text": "1000 bits",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_03",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "Un archivo guardado en un [blank1] sigue allí después de apagar la computadora, pero lo que estaba abierto solo en la memoria [blank2] se puede perder."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "SSD",
+                        "RAM"
+                    ],
+                    "correct": "SSD"
+                },
+                "blank2": {
+                    "options": [
+                        "SSD",
+                        "RAM"
+                    ],
+                    "correct": "RAM"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_04",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena estos medios de almacenamiento desde el más antiguo históricamente hasta el más moderno."
+            },
+            "items": [
+                "Tarjetas perforadas",
+                "Disquetes",
+                "Discos duros (HDD)",
+                "SSD NVMe"
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Tarjetas perforadas",
+                    "Disquetes",
+                    "Discos duros (HDD)",
+                    "SSD NVMe"
+                ]
+            }
+        },
+        {
+            "id": "ch_05",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica los siguientes componentes o tecnologías según el tipo de medio al que pertenecen."
+            },
+            "categories": [
+                {
+                    "id": "cat_mag",
+                    "label": "Medios Magnéticos"
+                },
+                {
+                    "id": "cat_elec",
+                    "label": "Medios Electrónicos \/ Estado Sólido"
+                }
+            ],
+            "items": [
+                {
+                    "id": "it_1",
+                    "text": "Cinta magnética LTO",
+                    "categoryId": "cat_mag"
+                },
+                {
+                    "id": "it_2",
+                    "text": "Disquete de 3.5 pulgadas",
+                    "categoryId": "cat_mag"
+                },
+                {
+                    "id": "it_3",
+                    "text": "Tarjeta microSD",
+                    "categoryId": "cat_elec"
+                },
+                {
+                    "id": "it_4",
+                    "text": "SSD M.2 NVMe",
+                    "categoryId": "cat_elec"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_06",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Une cada unidad de medida de almacenamiento con su equivalencia aproximada."
+            },
+            "pairs": [
+                {
+                    "left": "Un byte",
+                    "right": "8 bits"
+                },
+                {
+                    "left": "Un Kilobyte (KB)",
+                    "right": "1.000 bytes aprox."
+                },
+                {
+                    "left": "Un Megabyte (MB)",
+                    "right": "1.000 KB aprox."
+                },
+                {
+                    "left": "Un Gigabyte (GB)",
+                    "right": "1.000 MB aprox."
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_07",
+            "type": "true_false",
+            "prompt": {
+                "text": "Las tarjetas perforadas eran tarjetas de cartulina que tenían la información guardada en la posición de sus agujeros."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_08",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué desventaja principal tiene la cinta magnética para acceder a un dato aislado?"
+            },
+            "options": [
+                {
+                    "text": "Tiene acceso secuencial, por lo que hay que avanzar o rebobinar la cinta.",
+                    "correct": true
+                },
+                {
+                    "text": "Se borra inmediatamente al apagar el equipo.",
+                    "correct": false
+                },
+                {
+                    "text": "Usa un láser que quema el soporte físicamente.",
+                    "correct": false
+                },
+                {
+                    "text": "No permite hacer copias de seguridad de las empresas.",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_09",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "El disco duro magnético (HDD) guarda los datos en [blank1] que giran a gran velocidad, mientras que las unidades de estado sólido (SSD) guardan los datos en [blank2]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "platos",
+                        "chips de memoria"
+                    ],
+                    "correct": "platos"
+                },
+                "blank2": {
+                    "options": [
+                        "platos",
+                        "chips de memoria"
+                    ],
+                    "correct": "chips de memoria"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_10",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Cuál era la capacidad típica de almacenamiento de un disquete común de 3.5 pulgadas?"
+            },
+            "options": [
+                {
+                    "text": "700 MB",
+                    "correct": false
+                },
+                {
+                    "text": "1,44 MB",
+                    "correct": true
+                },
+                {
+                    "text": "4,7 GB",
+                    "correct": false
+                },
+                {
+                    "text": "25 GB",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_11",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica los siguientes discos ópticos según su capacidad típica estándar."
+            },
+            "categories": [
+                {
+                    "id": "cat_mb",
+                    "label": "Capacidad en Megabytes (MB)"
+                },
+                {
+                    "id": "cat_gb",
+                    "label": "Capacidad en Gigabytes (GB)"
+                }
+            ],
+            "items": [
+                {
+                    "id": "it_cd",
+                    "text": "CD-R común (650 a 700 MB)",
+                    "categoryId": "cat_mb"
+                },
+                {
+                    "id": "it_cdrom",
+                    "text": "CD-ROM antiguo (550 MB)",
+                    "categoryId": "cat_mb"
+                },
+                {
+                    "id": "it_dvd",
+                    "text": "DVD estándar de una capa (4,7 GB)",
+                    "categoryId": "cat_gb"
+                },
+                {
+                    "id": "it_bluray",
+                    "text": "Blu-ray estándar de una capa (25 GB)",
+                    "categoryId": "cat_gb"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_12",
+            "type": "true_false",
+            "prompt": {
+                "text": "Los medios ópticos utilizan un láser para leer o grabar marcas en la superficie de un disco."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_13",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Une cada tipo de hardware con el uso recomendado según el documento de estudio."
+            },
+            "pairs": [
+                {
+                    "left": "SSD M.2 NVMe",
+                    "right": "Sistema operativo, juegos y programación moderna"
+                },
+                {
+                    "left": "HDD de gran capacidad",
+                    "right": "Respaldos grandes, almacenar películas y fotos"
+                },
+                {
+                    "left": "Pendrive USB",
+                    "right": "Traslado rápido de archivos para estudiantes"
+                },
+                {
+                    "left": "Cinta LTO",
+                    "right": "Archivo empresarial masivo y protección offline"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_14",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué significa que los componentes electrónicos o de estado sólido no tengan partes móviles?"
+            },
+            "options": [
+                {
+                    "text": "Que se rompen más rápido con los golpes.",
+                    "correct": false
+                },
+                {
+                    "text": "Que suelen ser silenciosos, rápidos y resistentes a golpes.",
+                    "correct": true
+                },
+                {
+                    "text": "Que necesitan girar para poder leer la información.",
+                    "correct": false
+                },
+                {
+                    "text": "Que consumen mucha más energía eléctrica que los discos duros.",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_15",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "La memoria [blank1] está soldada internamente en celulares y tablets, mientras que la memoria [blank2] se guarda en servidores remotos y depende de internet."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "eMMC \/ UFS",
+                        "en la nube"
+                    ],
+                    "correct": "eMMC \/ UFS"
+                },
+                "blank2": {
+                    "options": [
+                        "eMMC \/ UFS",
+                        "en la nube"
+                    ],
+                    "correct": "en la nube"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_16",
+            "type": "true_false",
+            "prompt": {
+                "text": "Un puerto es un conector físico o lógico para comunicarse, mientras que un bus es la vía interna por donde viajan los datos."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_17",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Cuál es la función principal de la placa madre o motherboard?"
+            },
+            "options": [
+                {
+                    "text": "Mostrar las imágenes y videos en la pantalla.",
+                    "correct": false
+                },
+                {
+                    "text": "Conectar el procesador, la memoria RAM, el almacenamiento y los demás componentes.",
+                    "correct": true
+                },
+                {
+                    "text": "Garantizar que la batería dure más horas en un celular.",
+                    "correct": false
+                },
+                {
+                    "text": "Convertir las señales digitales en sonido analógico.",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_18",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica las siguientes ranuras o conectores según estén integrados en la placa madre o sean puertos externos."
+            },
+            "categories": [
+                {
+                    "id": "cat_int",
+                    "label": "Conector o Bus Interno"
+                },
+                {
+                    "id": "cat_ext",
+                    "label": "Puerto Externo"
+                }
+            ],
+            "items": [
+                {
+                    "id": "it_pci",
+                    "text": "Ranuras PCI Express",
+                    "categoryId": "cat_int"
+                },
+                {
+                    "id": "it_hdmi",
+                    "text": "Puerto HDMI \/ DisplayPort",
+                    "categoryId": "cat_ext"
+                },
+                {
+                    "id": "it_rj",
+                    "text": "Ethernet RJ-45",
+                    "categoryId": "cat_ext"
+                },
+                {
+                    "id": "it_m2",
+                    "text": "Ranura M.2 para SSD",
+                    "categoryId": "cat_int"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_19",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué componente de hardware se encarga de ejecutar instrucciones, realizar cálculos y coordinar tareas en el sistema?"
+            },
+            "options": [
+                {
+                    "text": "La tarjeta de audio",
+                    "correct": false
+                },
+                {
+                    "text": "El microprocesador o CPU",
+                    "correct": true
+                },
+                {
+                    "text": "El gabinete físico",
+                    "correct": false
+                },
+                {
+                    "text": "La fuente de alimentación",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_20",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "Los smartphones y tablets usan procesadores basados en la arquitectura [blank1] por su eficiencia de energía, e integran todo en un chip llamado [blank2]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "ARM",
+                        "SoC"
+                    ],
+                    "correct": "ARM"
+                },
+                "blank2": {
+                    "options": [
+                        "ARM",
+                        "SoC"
+                    ],
+                    "correct": "SoC"
+                }
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_21",
+            "type": "true_false",
+            "prompt": {
+                "text": "El firmware como la UEFI\/BIOS en una PC es un programa guardado en una memoria flash ROM que inicia y detecta el hardware antes de cargar el sistema operativo."
+            },
+            "answer": {
+                "value": true
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_22",
+            "type": "matching_pairs",
+            "prompt": {
+                "text": "Une cada tipo de memoria RAM con su característica o uso principal."
+            },
+            "pairs": [
+                {
+                    "left": "SRAM",
+                    "right": "Muy rápida y costosa; se usa como caché interna del procesador"
+                },
+                {
+                    "left": "DDR4 \/ DDR5",
+                    "right": "Memoria de trabajo muy extendida en PC y notebooks modernas"
+                },
+                {
+                    "left": "LPDDR",
+                    "right": "Versión de bajo consumo utilizada en smartphones y tablets"
+                },
+                {
+                    "left": "Memoria ECC",
+                    "right": "Detecta y corrige errores en servidores y sistemas críticos"
+                }
+            ],
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_23",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué tipo de GPU se recomienda si el usuario necesita potencia para modelado 3D, gaming exigente o inteligencia artificial local?"
+            },
+            "options": [
+                {
+                    "text": "GPU Integrada en el procesador",
+                    "correct": false
+                },
+                {
+                    "text": "GPU Dedicada básica",
+                    "correct": false
+                },
+                {
+                    "text": "GPU Dedicada media \/ alta",
+                    "correct": true
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_24",
+            "type": "true_false",
+            "prompt": {
+                "text": "En los smartphones actuales, la memoria RAM y el almacenamiento interno se pueden cambiar y ampliar fácilmente quitando la tapa trasera."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_25",
+            "type": "sequence_order",
+            "prompt": {
+                "text": "Ordena estos dispositivos informáticos de menor a mayor tamaño físico general."
+            },
+            "items": [
+                "Smartphone",
+                "Tablet",
+                "Notebook \/ Laptop",
+                "PC de escritorio"
+            ],
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "order": [
+                    "Smartphone",
+                    "Tablet",
+                    "Notebook \/ Laptop",
+                    "PC de escritorio"
+                ]
+            }
+        },
+        {
+            "id": "ch_26",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué estructura metálica estandarizada sirve para organizar y montar servidores, switches y sistemas de almacenamiento de forma centralizada?"
+            },
+            "options": [
+                {
+                    "text": "Un gabinete de oficina",
+                    "correct": false
+                },
+                {
+                    "text": "Un Rack",
+                    "correct": true
+                },
+                {
+                    "text": "Un Mainframe",
+                    "correct": false
+                },
+                {
+                    "text": "Un SoC",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_27",
+            "type": "fill_blank_select",
+            "prompt": {
+                "text": "Para iniciar de forma rápida una computadora lenta conviene priorizar la compra de un [blank1] antes que aumentar el espacio con un [blank2]."
+            },
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "SSD",
+                        "HDD"
+                    ],
+                    "correct": "SSD"
+                },
+                "blank2": {
+                    "options": [
+                        "SSD",
+                        "HDD"
+                    ],
+                    "correct": "HDD"
+                }
+            },
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_28",
+            "type": "true_false",
+            "prompt": {
+                "text": "Un mainframe es simplemente un servidor grande que sirve para conectar las computadoras de una oficina pequeña."
+            },
+            "answer": {
+                "value": false
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_29",
+            "type": "multiple_choice",
+            "prompt": {
+                "text": "¿Qué instituciones utilizan principalmente los mainframes para el procesamiento de transacciones críticas y masivas con alta seguridad?"
+            },
+            "options": [
+                {
+                    "text": "Bancos, gobiernos y grandes corporaciones",
+                    "correct": true
+                },
+                {
+                    "text": "Escuelas primarias y liceos de barrio",
+                    "correct": false
+                },
+                {
+                    "text": "Pequeños kioscos digitales y hogares",
+                    "correct": false
+                },
+                {
+                    "text": "Estudiantes que realizan tareas básicas de oficina",
+                    "correct": false
+                }
+            ],
+            "timeLimitSeconds": 25,
+            "points": 10,
+            "difficulty": 1
+        },
+        {
+            "id": "ch_30",
+            "type": "classification",
+            "prompt": {
+                "text": "Clasifica las siguientes marcas de microprocesadores según sus familias de uso común."
+            },
+            "categories": [
+                {
+                    "id": "fam_pc",
+                    "label": "Uso común en PC y Laptops"
+                },
+                {
+                    "id": "fam_mob",
+                    "label": "Uso común en Smartphones"
+                }
+            ],
+            "items": [
+                {
+                    "id": "it_intel",
+                    "text": "Intel Core Ultra",
+                    "categoryId": "fam_pc"
+                },
+                {
+                    "id": "it_snap",
+                    "text": "Qualcomm Snapdragon",
+                    "categoryId": "fam_mob"
+                },
+                {
+                    "id": "it_amd",
+                    "text": "AMD Ryzen AI",
+                    "categoryId": "fam_pc"
+                },
+                {
+                    "id": "it_mediatek",
+                    "text": "MediaTek Dimensity",
+                    "categoryId": "fam_mob"
+                }
+            ],
+            "timeLimitSeconds": 40,
+            "points": 10,
+            "difficulty": 1
+        }
+    ]
+}

@@ -1,0 +1,137 @@
+{
+  "metadata": {
+    "title": "Estudia y responde: Memorias internas",
+    "author": "",
+    "nivel": "8vo EBI",
+    "obs": "Lee cada carta y responde.",
+    "date": "2026-06-10",
+    "background": "fondo.jpg",
+    "mode": "study_answer"
+  },
+  "board": {
+    "type": "study_deck"
+  },
+  "studyAnswer": {
+    "version": "1.0",
+    "title": "Memorias internas",
+    "description": "Cartas para comprender RAM y ROM.",
+    "source": {
+      "type": "manual",
+      "documents": []
+    },
+    "settings": {
+      "cardCount": 3,
+      "orderMode": "progressive",
+      "allowedQuestionTypes": [
+        "multiple_choice",
+        "true_false",
+        "fill_blank"
+      ],
+      "repeatPolicy": {
+        "wrong": "after_n_cards",
+        "afterCards": 2,
+        "maxAttempts": 3
+      },
+      "mastery": {
+        "mode": "leitner",
+        "masteryBox": 2,
+        "requiredCorrect": 2,
+        "resetOnWrong": true
+      },
+      "showExplanation": true,
+      "allowHints": false,
+      "timeLimit": 45
+    },
+    "cards": [
+      {
+        "id": "sa001",
+        "type": "study_card",
+        "title": "La memoria RAM",
+        "order": 1,
+        "learningObjective": "Comprender que la RAM almacena datos temporales.",
+        "studyText": "La memoria RAM es una memoria temporal que la computadora usa mientras está encendida. Allí se guardan datos e instrucciones que el procesador necesita usar rápidamente. Cuando el equipo se apaga, el contenido de la RAM se pierde.",
+        "keyIdea": "La RAM es rápida, temporal y volátil.",
+        "vocabulary": [
+          {
+            "term": "Volátil",
+            "definition": "Que pierde su contenido cuando deja de recibir energía."
+          }
+        ],
+        "assessment": {
+          "type": "multiple_choice",
+          "prompt": "Si apagas la computadora, ¿qué ocurre con los datos que estaban solo en la RAM?",
+          "options": [
+            "Se conservan para siempre",
+            "Se pierden",
+            "Se copian al monitor",
+            "Se transforman en ROM"
+          ],
+          "answer": "Se pierden"
+        },
+        "feedback": {
+          "correct": "Correcto. La RAM es volátil.",
+          "incorrect": "Revisa la idea de memoria volátil.",
+          "explanation": "La RAM conserva datos solo mientras recibe energía. Por eso se pierde al apagar la computadora."
+        },
+        "difficulty": "baja",
+        "cognitiveLevel": "comprender",
+        "tags": ["hardware", "memoria", "RAM"],
+        "estimatedReadTime": 25,
+        "estimatedAnswerTime": 20,
+        "points": 100
+      },
+      {
+        "id": "sa002",
+        "type": "study_card",
+        "title": "La memoria ROM",
+        "order": 2,
+        "learningObjective": "Diferenciar la ROM de una memoria temporal.",
+        "studyText": "La memoria ROM conserva instrucciones básicas necesarias para que la computadora pueda iniciar. A diferencia de la RAM, su contenido no se pierde al apagar el equipo. Por eso se usa para guardar información esencial del sistema.",
+        "keyIdea": "La ROM conserva información básica aunque la computadora se apague.",
+        "vocabulary": [],
+        "assessment": {
+          "type": "true_false",
+          "prompt": "La memoria ROM pierde todo su contenido cuando se apaga la computadora.",
+          "answer": false
+        },
+        "feedback": {
+          "correct": "Correcto. La ROM conserva su contenido.",
+          "incorrect": "La ROM no se borra al apagar el equipo.",
+          "explanation": "La ROM guarda instrucciones básicas permanentes o semipermanentes necesarias para el inicio del sistema."
+        },
+        "difficulty": "baja",
+        "cognitiveLevel": "recordar",
+        "tags": ["hardware", "memoria", "ROM"],
+        "estimatedReadTime": 20,
+        "estimatedAnswerTime": 15,
+        "points": 80
+      },
+      {
+        "id": "sa003",
+        "type": "study_card",
+        "title": "RAM y ROM",
+        "order": 3,
+        "learningObjective": "Comparar RAM y ROM según permanencia de datos.",
+        "studyText": "La RAM y la ROM son memorias internas, pero cumplen funciones diferentes. La RAM trabaja con datos temporales mientras la computadora está funcionando. La ROM conserva instrucciones necesarias para iniciar el sistema, incluso cuando el equipo se apaga.",
+        "keyIdea": "La RAM es temporal; la ROM conserva información básica.",
+        "vocabulary": [],
+        "assessment": {
+          "type": "fill_blank",
+          "prompt": "La memoria ____ es temporal y pierde su contenido al apagar la computadora.",
+          "answer": ["RAM", "ram"]
+        },
+        "feedback": {
+          "correct": "Correcto. La RAM es la memoria temporal.",
+          "incorrect": "Recuerda: RAM es temporal; ROM conserva información básica.",
+          "explanation": "La RAM pierde su contenido al apagarse el equipo; la ROM no."
+        },
+        "difficulty": "media",
+        "cognitiveLevel": "comprender",
+        "tags": ["hardware", "memoria", "comparación"],
+        "estimatedReadTime": 25,
+        "estimatedAnswerTime": 20,
+        "points": 100
+      }
+    ]
+  }
+}

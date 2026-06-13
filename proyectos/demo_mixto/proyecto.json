@@ -1,0 +1,184 @@
+{
+    "metadata": {
+        "title": "TRIVIAX Demo Mixto",
+        "author": "Equipo TRIVIAX",
+        "nivel": "7mo EBI",
+        "obs": "",
+        "date": "05\/06\/2026",
+        "background": "fondo.jpg",
+        "mail": ""
+    },
+    "board": {
+        "type": "serpentine"
+    },
+    "challenges": [
+        {
+            "id": "mc_001",
+            "type": "multiple_choice",
+            "title": "Dato e informacion",
+            "prompt": {
+                "text": "Cual es la diferencia mas clara entre dato e informacion?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El dato es una pieza aislada y la informacion es dato organizado con sentido.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Dato e informacion significan exactamente lo mismo.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "La informacion solo existe cuando se imprime en papel.",
+                    "correct": false
+                }
+            ],
+            "feedback": {
+                "correct": "Muy bien.",
+                "incorrect": "Recuerda que la informacion surge cuando los datos se organizan y tienen significado."
+            }
+        },
+        {
+            "id": "tf_001",
+            "type": "true_false",
+            "title": "Memoria RAM",
+            "prompt": {
+                "text": "La memoria RAM conserva todos los datos aunque la computadora se apague."
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "answer": {
+                "value": false
+            }
+        },
+        {
+            "id": "mp_001",
+            "type": "matching_pairs",
+            "title": "Relaciona componentes",
+            "prompt": {
+                "text": "Une cada componente con su funcion principal."
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1,
+            "pairs": [
+                {
+                    "left": "CPU",
+                    "right": "Procesa instrucciones"
+                },
+                {
+                    "left": "RAM",
+                    "right": "Guarda datos temporales"
+                },
+                {
+                    "left": "Disco",
+                    "right": "Almacena informacion"
+                }
+            ]
+        },
+        {
+            "id": "seq_001",
+            "type": "sequence_order",
+            "title": "Ordena el proceso",
+            "prompt": {
+                "text": "Ordena los pasos basicos para iniciar una sesion de trabajo en una computadora."
+            },
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1,
+            "items": [
+                "Encender el equipo",
+                "Esperar la carga del sistema",
+                "Ingresar usuario y contrasena",
+                "Abrir el programa de trabajo"
+            ],
+            "answer": {
+                "order": [
+                    "Encender el equipo",
+                    "Esperar la carga del sistema",
+                    "Ingresar usuario y contrasena",
+                    "Abrir el programa de trabajo"
+                ]
+            }
+        },
+        {
+            "id": "class_001",
+            "type": "classification",
+            "title": "Hardware y software",
+            "prompt": {
+                "text": "Clasifica cada elemento como hardware o software."
+            },
+            "timeLimitSeconds": 35,
+            "points": 10,
+            "difficulty": 1,
+            "categories": [
+                {
+                    "id": "hardware",
+                    "label": "Hardware"
+                },
+                {
+                    "id": "software",
+                    "label": "Software"
+                }
+            ],
+            "items": [
+                {
+                    "id": "teclado",
+                    "text": "Teclado",
+                    "categoryId": "hardware"
+                },
+                {
+                    "id": "monitor",
+                    "text": "Monitor",
+                    "categoryId": "hardware"
+                },
+                {
+                    "id": "navegador",
+                    "text": "Navegador web",
+                    "categoryId": "software"
+                },
+                {
+                    "id": "sistema",
+                    "text": "Sistema operativo",
+                    "categoryId": "software"
+                }
+            ]
+        },
+        {
+            "id": "blank_001",
+            "type": "fill_blank_select",
+            "title": "Completa la definicion",
+            "prompt": {
+                "text": "La [blank1] procesa instrucciones y la [blank2] guarda datos temporales."
+            },
+            "timeLimitSeconds": 30,
+            "points": 10,
+            "difficulty": 1,
+            "blanks": {
+                "blank1": {
+                    "options": [
+                        "CPU",
+                        "impresora",
+                        "pantalla"
+                    ],
+                    "correct": "CPU"
+                },
+                "blank2": {
+                    "options": [
+                        "RAM",
+                        "carcasa",
+                        "red"
+                    ],
+                    "correct": "RAM"
+                }
+            }
+        }
+    ]
+}

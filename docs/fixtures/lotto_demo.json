@@ -1,0 +1,156 @@
+{
+  "metadata": {
+    "title": "TRIVIAX Lotto: Memorias internas",
+    "author": "",
+    "nivel": "8vo EBI",
+    "grupo": "8vo A",
+    "date": "2026-06-11",
+    "mode": "lotto_oral"
+  },
+  "lotto": {
+    "version": "1.0",
+    "title": "Memorias internas",
+    "description": "Sorteo oral sobre RAM, ROM y almacenamiento.",
+    "settings": {
+      "sectionsCount": 4,
+      "questionsPerStudent": 3,
+      "studyMinutes": 15,
+      "responseMinutes": 5,
+      "allowTimeExtension": true,
+      "drawMode": "random_no_repeat",
+      "showFirstNamesOnHost": true,
+      "requireAllLoggedBeforeStart": true
+    },
+    "rubric": {
+      "scale": "0-12",
+      "criteria": [
+        { "id": "comprension", "label": "Comprensión del tema", "max": 3 },
+        { "id": "claridad", "label": "Claridad al explicar", "max": 3 },
+        { "id": "vocabulario", "label": "Uso de vocabulario específico", "max": 3 },
+        { "id": "repregunta", "label": "Respuesta a repregunta", "max": 3 }
+      ]
+    },
+    "students": [
+      { "number": 1, "firstName": "Sofía", "fullName": "Sofía Pérez" },
+      { "number": 2, "firstName": "Mateo", "fullName": "Mateo Rodríguez" },
+      { "number": 3, "firstName": "Valentina", "fullName": "Valentina López" },
+      { "number": 4, "firstName": "Bruno", "fullName": "Bruno Silva" }
+    ],
+    "sections": [
+      {
+        "id": "sec01",
+        "order": 1,
+        "title": "Memoria RAM",
+        "summaryText": "La RAM es una memoria temporal que la computadora usa mientras está funcionando.",
+        "keyIdeas": ["Es temporal", "Es rápida", "Pierde datos al apagar"],
+        "vocabulary": [{ "term": "Volátil", "definition": "Pierde contenido sin energía." }],
+        "difficulty": "baja"
+      },
+      {
+        "id": "sec02",
+        "order": 2,
+        "title": "Memoria ROM",
+        "summaryText": "La ROM conserva instrucciones básicas necesarias para iniciar el sistema.",
+        "keyIdeas": ["No se borra al apagar", "Ayuda al inicio", "Contiene instrucciones básicas"],
+        "vocabulary": [],
+        "difficulty": "baja"
+      },
+      {
+        "id": "sec03",
+        "order": 3,
+        "title": "Almacenamiento",
+        "summaryText": "El almacenamiento guarda datos y archivos para usarlos más adelante.",
+        "keyIdeas": ["Conserva archivos", "Puede ser interno o externo", "No depende de estar encendido"],
+        "vocabulary": [],
+        "difficulty": "media"
+      },
+      {
+        "id": "sec04",
+        "order": 4,
+        "title": "Comparación de memorias",
+        "summaryText": "RAM, ROM y almacenamiento cumplen funciones diferentes en la computadora.",
+        "keyIdeas": ["RAM es temporal", "ROM inicia el sistema", "Almacenamiento conserva archivos"],
+        "vocabulary": [],
+        "difficulty": "media"
+      }
+    ],
+    "assignments": [
+      {
+        "studentNumber": 1,
+        "sectionId": "sec01",
+        "studyText": "La memoria RAM es una memoria temporal y rápida. La computadora la usa mientras está encendida para trabajar con datos e instrucciones. Cuando el equipo se apaga, la información que estaba solo en la RAM se pierde.",
+        "keyIdeas": ["La RAM es temporal", "La RAM es rápida", "La RAM se borra al apagar"],
+        "studentQuestions": [
+          "Explica qué es la RAM.",
+          "¿Por qué se dice que la RAM es volátil?",
+          "Da un ejemplo de uso de la RAM."
+        ],
+        "oralMainQuestion": "Explica con tus palabras para qué sirve la memoria RAM.",
+        "teacherExpectedAnswers": [
+          "Debe mencionar que es temporal.",
+          "Debe indicar que se usa mientras la computadora está encendida.",
+          "Debe explicar que se pierde al apagar."
+        ],
+        "oralFollowups": [
+          "¿La RAM guarda archivos para siempre?",
+          "¿Por qué es importante que sea rápida?"
+        ],
+        "difficulty": "baja"
+      },
+      {
+        "studentNumber": 2,
+        "sectionId": "sec02",
+        "studyText": "La memoria ROM guarda instrucciones básicas que la computadora necesita para arrancar. A diferencia de la RAM, su contenido no se borra al apagar el equipo y normalmente no se modifica durante el uso diario.",
+        "keyIdeas": ["La ROM no se borra al apagar", "Contiene instrucciones de arranque"],
+        "studentQuestions": [
+          "Define con tus palabras qué es la ROM.",
+          "¿Qué pasa con la ROM cuando se apaga la computadora?",
+          "¿Para qué usa la computadora la ROM al encender?"
+        ],
+        "oralMainQuestion": "Explica para qué sirve la memoria ROM y en qué momento la usa la computadora.",
+        "teacherExpectedAnswers": [
+          "Debe mencionar que guarda instrucciones de arranque.",
+          "Debe indicar que no se borra al apagar."
+        ],
+        "oralFollowups": ["¿Se puede borrar la ROM al apagar la máquina?"],
+        "difficulty": "baja"
+      },
+      {
+        "studentNumber": 3,
+        "sectionId": "sec03",
+        "studyText": "El almacenamiento guarda archivos y programas de forma permanente, hasta que el usuario decide borrarlos. Puede ser interno, como un disco duro o SSD, o externo, como un pendrive. No necesita energía para conservar la información.",
+        "keyIdeas": ["Conserva archivos en forma permanente", "Puede ser interno o externo"],
+        "studentQuestions": [
+          "Explica qué es el almacenamiento.",
+          "Da dos ejemplos de dispositivos de almacenamiento.",
+          "¿En qué se diferencia el almacenamiento de la RAM?"
+        ],
+        "oralMainQuestion": "Compara el almacenamiento con la memoria RAM usando un ejemplo.",
+        "teacherExpectedAnswers": [
+          "Debe mencionar que el almacenamiento es permanente y la RAM temporal.",
+          "Debe dar al menos un ejemplo de dispositivo."
+        ],
+        "oralFollowups": ["¿Qué pasa con un archivo guardado cuando se apaga la computadora?"],
+        "difficulty": "media"
+      },
+      {
+        "studentNumber": 4,
+        "sectionId": "sec04",
+        "studyText": "RAM, ROM y almacenamiento cumplen funciones distintas: la RAM es la memoria de trabajo temporal, la ROM contiene las instrucciones para arrancar y el almacenamiento conserva los archivos en forma permanente. Juntas permiten que la computadora funcione.",
+        "keyIdeas": ["Cada memoria cumple una función distinta", "Trabajan en conjunto"],
+        "studentQuestions": [
+          "Nombra las tres memorias y di para qué sirve cada una.",
+          "¿Cuál de las tres pierde su contenido al apagar el equipo?",
+          "Relaciona las tres memorias con el momento en que se usan."
+        ],
+        "oralMainQuestion": "Diferencia RAM, ROM y almacenamiento explicando qué hace cada una.",
+        "teacherExpectedAnswers": [
+          "Debe diferenciar las tres memorias.",
+          "Debe indicar que solo la RAM pierde su contenido al apagar."
+        ],
+        "oralFollowups": ["¿Dónde queda guardado un trabajo que entregaste la semana pasada?"],
+        "difficulty": "media"
+      }
+    ]
+  }
+}

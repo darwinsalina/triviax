@@ -1,0 +1,40 @@
+# ── graphify ──────────────────────────────────────────────
+# Grafo de conocimiento generado (se reconstruye con `graphify update .`)
+graphify-out/
+
+# ── TRIVIAX: datos de runtime y trabajo temporal ──────────
+# Borradores y artefactos de prueba (ver memoria del proyecto)
+scratch/
+
+# Reportes y estadísticas generados por el modo filesystem
+proyectos/*/reportes/
+proyectos/*/stats.json
+
+# ── Secretos / credenciales ───────────────────────────────
+# La conexión real vive fuera del repo (C:/wamp64/dbconn/), pero por las dudas:
+**/dbkey_*.php
+*.env
+.env
+
+# ── Material que NO se sube ────────────────────────────────
+# "NoSubir" lo dice su nombre; trash/ son descartes
+NoSubir/
+trash/
+
+# ── Herramientas de agentes / skills instaladas ───────────
+.codex/
+.agents/
+.claude/
+skills-lock.json
+
+# ── Sistema operativo / editores ──────────────────────────
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*~
+.vscode/
+.idea/
+
+# ── Logs ──────────────────────────────────────────────────
+*.log

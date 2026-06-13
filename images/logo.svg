@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="50%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+  
+  <!-- Fondo con bordes redondeados tipo app móvil -->
+  <rect width="512" height="512" rx="115" fill="url(#bg-grad)" />
+  
+  <!-- Camino de tablero sutil de fondo -->
+  <path d="M 100,380 C 60,200 180,90 256,90 C 350,90 440,200 400,360 C 370,440 200,420 180,300" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-dasharray="12 18" opacity="0.2" />
+  
+  <!-- Dado 3D Isométrico -->
+  <g filter="url(#shadow)" transform="translate(60, 40)">
+    <!-- Cara Superior -->
+    <path d="M 200,50 L 290,0 L 380,50 L 290,100 Z" fill="#ffffff" />
+    <!-- Cara Izquierda -->
+    <path d="M 200,50 L 290,100 L 290,200 L 200,150 Z" fill="#f1f5f9" />
+    <!-- Cara Derecha -->
+    <path d="M 290,100 L 380,50 L 380,150 L 290,200 Z" fill="#e2e8f0" />
+    
+    <!-- Punto Cara Superior (Valor 1) -->
+    <circle cx="290" cy="50" r="12" fill="#4f46e5" />
+    
+    <!-- Puntos Cara Izquierda (Valor 3) -->
+    <circle cx="230" cy="90" r="9" fill="#1e293b" />
+    <circle cx="245" cy="105" r="9" fill="#1e293b" />
+    <circle cx="260" cy="120" r="9" fill="#1e293b" />
+    
+    <!-- Puntos Cara Derecha (Valor 2) -->
+    <circle cx="325" cy="115" r="9" fill="#1e293b" />
+    <circle cx="345" cy="105" r="9" fill="#1e293b" />
+  </g>
+  
+  <!-- Iniciales de la Marca -->
+  <text x="256" y="460" font-family="'Outfit', 'Inter', sans-serif" font-weight="900" font-size="240" fill="#ffffff" text-anchor="middle" filter="url(#shadow)">X</text>
+  <text x="256" y="325" font-family="'Outfit', 'Inter', sans-serif" font-weight="900" font-size="200" fill="#ffb703" text-anchor="middle" filter="url(#shadow)">T</text>
+</svg>

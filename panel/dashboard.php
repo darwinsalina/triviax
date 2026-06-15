@@ -455,6 +455,8 @@ $estadoColor = [
                 <a href="/triviax/panel/live_sessions.php" class="btn-legado">Ver partidas en vivo</a>
                 <a href="/triviax/panel/study_answer.php" class="btn-legado">Estudia y responde</a>
                 <a href="/triviax/panel/lotto.php" class="btn-legado">TRIVIAX Lotto</a>
+                <a href="/triviax/panel/jigsaw.php" class="btn-legado">🧩 Puzle</a>
+                <a href="/triviax/panel/etiquetar.php" class="btn-legado">🏷️ Etiquetar</a>
                 <a href="/triviax/admin.php" class="btn-legado">⚙️ Panel de Actividades</a>
                 <a href="/triviax/estadisticas.php" class="btn-legado">📊 Estadísticas</a>
             </div>

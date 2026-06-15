@@ -1360,6 +1360,24 @@ if (strpos($action, 'lotto_') === 0) {
 }
 
 // ══════════════════════════════════════════════════════════════════
+// MODALIDAD "PUZLE" (jigsaw_*) — actividad con imágenes, fuera del tablero.
+// ══════════════════════════════════════════════════════════════════
+if (strpos($action, 'jigsaw_') === 0) {
+    require_once __DIR__ . '/php/jigsaw_api.php';
+    triviax_jigsaw_api_handle($action);
+    exit;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MODALIDAD "ETIQUETAR" (etiquetar_*) — actividad con imágenes.
+// ══════════════════════════════════════════════════════════════════
+if (strpos($action, 'etiquetar_') === 0) {
+    require_once __DIR__ . '/php/etiquetar_api.php';
+    triviax_etiquetar_api_handle($action);
+    exit;
+}
+
+// ══════════════════════════════════════════════════════════════════
 
 http_response_code(400);
 echo json_encode([

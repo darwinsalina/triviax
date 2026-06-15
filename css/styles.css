@@ -4082,6 +4082,7 @@ input[type="number"]:focus {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+    overflow: hidden;
     animation: splashFadeOut 0.7s ease forwards;
     animation-delay: 3.3s;
 }
@@ -4097,14 +4098,17 @@ input[type="number"]:focus {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    width: 100%;
+    gap: 0.18em;
     max-width: 100%;
-    overflow: hidden;
+    text-align: center;
+    transform-origin: center center;
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: helice-grow 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .triviax-brand-splash {
-    text-align: center;
     isolation: isolate;
 }
 
@@ -4115,17 +4119,13 @@ input[type="number"]:focus {
     --logo-main-a: #ffffff;
     --logo-main-b: #bff3ff;
     --logo-main-c: #48d6ff;
-    --logo-x-a: var(--triviax-x-color);
-    --logo-x-b: var(--triviax-x-color);
-    --logo-x-c: var(--triviax-x-color);
-    --logo-version-a: var(--triviax-version-accent, #fff56d);
-    --logo-version-b: #ffffff;
 
     position: relative;
     margin: 0;
     padding: 0.08em 0.14em 0.16em;
     font-family: var(--font-brand);
-    font-size: clamp(5rem, 9vw, 180pt);
+    /* 90% del lado menor de la pantalla (el experimento usaba 16vmin → 80%). */
+    font-size: clamp(2.8rem, 18vmin, 240px);
     font-weight: 400;
     color: transparent;
     -webkit-text-stroke: 0;
@@ -4144,24 +4144,7 @@ input[type="number"]:focus {
 }
 
 .intro-splash-text span {
-    --letter-final-x: 0;
-    --letter-final-y: 0;
-    --letter-rotate: 0deg;
-    --letter-start-scale: 0.9;
-    --letter-bounce-scale: 1.045;
-    --letter-settle-scale: 0.985;
-    --letter-final-scale: 1;
-
     display: inline-block;
-    opacity: 0;
-    transform:
-        translateX(120vw)
-        translateY(var(--letter-final-y))
-        rotate(var(--letter-rotate))
-        scale(var(--letter-start-scale));
-    animation: letter-enter 0.96s cubic-bezier(0.2, 1.2, 0.34, 1) forwards;
-    animation-delay: calc(var(--i) * 0.22s);
-    will-change: transform, opacity;
 }
 
 .triviax-logo__main,
@@ -4183,13 +4166,8 @@ input[type="number"]:focus {
 }
 
 .triviax-logo__x {
-    --letter-rotate: -3deg;
-    --letter-start-scale: 0.98;
-    --letter-bounce-scale: 1.15;
-    --letter-settle-scale: 1.055;
-    --letter-final-scale: 1.08;
-
     margin-left: -0.025em;
+    transform: rotate(-3deg) scale(1.08);
     transform-origin: 50% 65%;
     background: none;
     color: var(--triviax-x-color);
@@ -4200,15 +4178,9 @@ input[type="number"]:focus {
 }
 
 .triviax-logo__version {
-    --letter-final-y: -0.46em;
-    --letter-rotate: -5deg;
-    --letter-start-scale: 0.88;
-    --letter-bounce-scale: 1.035;
-    --letter-settle-scale: 0.975;
-    --letter-final-scale: 1;
-
     display: inline-block;
     margin-left: 0.14em;
+    transform: translateY(-0.46em) rotate(-5deg);
     font-family: var(--font-brand);
     font-size: 0.27em;
     line-height: 1;
@@ -4235,15 +4207,11 @@ input[type="number"]:focus {
 .intro-splash-subtitle,
 .triviax-tagline {
     font-family: var(--font-brand);
-    font-size: clamp(1.35rem, 2.43vw, 48pt);
+    font-size: clamp(1.1rem, 4.84vmin, 48pt);
     font-weight: 400;
     color: #e9fbff;
     -webkit-text-stroke: 0.035em rgba(28, 24, 86, 0.82);
     paint-order: stroke fill;
-    opacity: 0;
-    transform: translateY(16px);
-    animation: subtitle-fade-in 0.9s ease forwards;
-    animation-delay: 2.2s;
     letter-spacing: 0.025em;
     text-transform: uppercase;
     text-align: center;
@@ -4252,64 +4220,18 @@ input[type="number"]:focus {
         0 2px 0 rgba(16, 13, 53, 0.88);
 }
 
-/* Animaciones del Splash */
-@keyframes letter-enter {
+/* Animaciones del Splash — hélice: crece desde el centro girando lento */
+@keyframes helice-grow {
     0% {
+        transform: scale(0) rotate(0deg);
         opacity: 0;
-        transform:
-            translateX(120vw)
-            translateY(var(--letter-final-y))
-            rotate(var(--letter-rotate))
-            scale(var(--letter-start-scale));
     }
-    64% {
+    12% {
         opacity: 1;
-        transform:
-            translateX(-0.08em)
-            translateY(var(--letter-final-y))
-            rotate(var(--letter-rotate))
-            scale(var(--letter-bounce-scale));
-    }
-    82% {
-        opacity: 1;
-        transform:
-            translateX(0.035em)
-            translateY(var(--letter-final-y))
-            rotate(var(--letter-rotate))
-            scale(var(--letter-settle-scale));
     }
     100% {
+        transform: scale(1) rotate(720deg);
         opacity: 1;
-        transform:
-            translateX(var(--letter-final-x))
-            translateY(var(--letter-final-y))
-            rotate(var(--letter-rotate))
-            scale(var(--letter-final-scale));
-    }
-}
-
-@keyframes subtitle-fade-in {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes triviaxLogoShine {
-    0%,
-    62%,
-    100% {
-        transform: translateX(-115%);
-        opacity: 0;
-    }
-
-    72% {
-        opacity: 0.75;
-    }
-
-    88% {
-        transform: translateX(115%);
-        opacity: 0;
     }
 }
 
@@ -4380,14 +4302,14 @@ input[type="number"]:focus {
         max-width: 100%;
         justify-content: center;
         gap: 0;
-        font-size: clamp(3.1rem, 17vw, 5rem) !important;
+        font-size: clamp(2.6rem, 20vmin, 5rem) !important;
         letter-spacing: 0 !important;
     }
 
     .triviax-logo__version {
-        --letter-final-y: -0.38em;
         margin-left: 0.08em;
         font-size: 0.24em;
+        transform: translateY(-0.38em) rotate(-5deg);
     }
 
     .intro-splash-subtitle {
@@ -4883,10 +4805,10 @@ input[type="number"]:focus {
         transform: none;
     }
 
-    .intro-splash-text span,
-    .intro-splash-subtitle {
-        animation-duration: 0.01ms;
-        animation-delay: 0ms;
+    .intro-splash-stack {
+        animation: none;
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
     }
 }
 

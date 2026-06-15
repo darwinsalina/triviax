@@ -21,6 +21,17 @@ proyectos/*/stats.json
 NoSubir/
 trash/
 
+# Laboratorio local de experimentos (splash, jigsaw, etiquetados): NO se sube.
+# Las versiones definitivas viven fuera de experimental/ (modalidades reales).
+experimental/
+
+# ── Actividades con imágenes (v6.0): imágenes subidas en runtime ──────────
+# Se conserva la estructura de carpetas (.gitkeep) pero no las imágenes.
+media/jigsaw/*
+media/etiquetar/*
+!media/jigsaw/.gitkeep
+!media/etiquetar/.gitkeep
+
 # ── Herramientas de agentes / skills instaladas ───────────
 .codex/
 .agents/

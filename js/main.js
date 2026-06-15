@@ -356,7 +356,9 @@ function setupIntroSplash() {
         }
     });
 
-    window.setTimeout(finishSplash, 4000);
+    // Respaldo: la coreografía hélice es crecer (2.4s) + sostener + desvanecer
+    // (delay 3.3s + 0.7s = 4.0s). El cierre real lo dispara 'splashFadeOut'.
+    window.setTimeout(finishSplash, 4500);
 }
 
 function setupBoardAndVictoryControls() {

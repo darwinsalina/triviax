@@ -1396,6 +1396,12 @@ Aquí está el documento de estudio:";
                 <a href="estadisticas.php" class="btn btn-secondary" style="text-decoration: none; padding: 10px 16px;">
                     📊 Ver Estadísticas
                 </a>
+                <a href="panel/jigsaw.php" class="btn btn-secondary" style="text-decoration: none; padding: 10px 16px;">
+                    🧩 Puzle
+                </a>
+                <a href="panel/etiquetar.php" class="btn btn-secondary" style="text-decoration: none; padding: 10px 16px;">
+                    🏷️ Etiquetar
+                </a>
                 <a href="index.html" class="btn btn-primary" style="text-decoration: none; padding: 10px 16px;">
                     🎮 Ir al Juego
                 </a>

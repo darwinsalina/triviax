@@ -192,16 +192,41 @@ export class ApiClient {
      * @param {Array<{jugador_id, puntaje, correctas, incorrectas, posicion}>} resultados
      * @returns {Promise<boolean>}
      */
+    /**
+     * Devuelve cualquier player_token almacenado para la sesión dada, leyendo
+     * las claves triviax_session_<id>_player_<jid>_token de localStorage.
+     * Sirve como prueba de identidad ante el servidor. '' si no hay ninguno.
+     * @param {number} sesionId
+     * @returns {string}
+     */
+    static _anyPlayerTokenFor(sesionId) {
+        try {
+            const prefix = `triviax_session_${sesionId}_player_`;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith(prefix) && key.endsWith('_token')) {
+                    const token = localStorage.getItem(key);
+                    if (token) return token;
+                }
+            }
+        } catch (e) { /* localStorage no disponible */ }
+        return '';
+    }
+
     static async guardarResultados(sesionId, resultados) {
         try {
             const headers = { 'Content-Type': 'application/json' };
             if (this.csrfToken) {
                 headers['X-CSRF-Token'] = this.csrfToken;
             }
+            // Identidad: el servidor exige un token de jugador de esta sesión.
+            // Los tokens se guardan en localStorage al unirse (clave
+            // triviax_session_<id>_player_<jid>_token); tomamos cualquiera.
+            const playerToken = this._anyPlayerTokenFor(sesionId);
             const response = await fetch(`${this.API_URL}?action=guardar_resultados`, {
                 method: 'POST',
                 headers: headers,
-                body: JSON.stringify({ sesion_id: sesionId, resultados })
+                body: JSON.stringify({ sesion_id: sesionId, resultados, player_token: playerToken })
             });
             return response.ok;
         } catch (e) {

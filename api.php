@@ -1351,11 +1351,15 @@ if ($action === 'guardar_resultados') {
         exit;
     }
 
+    // Anti-abuso: limita por IP la enumeración/sobrescritura de sesiones.
+    triviax_api_throttle('guardar_resultados', 60, 300, 300);
+
     $input     = json_decode(file_get_contents('php://input'), true) ?: [];
     $sesionId  = (int)($input['sesion_id']  ?? 0);
     $resultados = $input['resultados'] ?? [];
+    $playerToken = trim((string)($input['player_token'] ?? ''));
 
-    if ($sesionId <= 0 || !is_array($resultados) || count($resultados) === 0) {
+    if ($sesionId <= 0 || strlen($playerToken) < 32 || !is_array($resultados) || count($resultados) === 0) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Datos de resultados inválidos.'], JSON_UNESCAPED_UNICODE);
         exit;
@@ -1372,6 +1376,22 @@ if ($action === 'guardar_resultados') {
             echo json_encode(['success' => false, 'error' => 'Sesión no encontrada o no activa.'], JSON_UNESCAPED_UNICODE);
             exit;
         }
+
+        // Identidad: el llamante debe poseer un token de jugador de ESTA sesión.
+        // Evita que un tercero (con solo el sesion_id) inyecte puntajes o finalice
+        // partidas ajenas. El token se guarda hasheado en unirse_sesion.
+        $stmtAuth = $pdo->prepare('SELECT 1 FROM sesion_jugadores WHERE sesion_id = ? AND player_token = ? LIMIT 1');
+        $stmtAuth->execute([$sesionId, triviax_api_token_hash($playerToken)]);
+        if (!$stmtAuth->fetchColumn()) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'error' => 'No autorizado para esta sesión.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        // Propiedad: solo se aceptan jugador_id que pertenezcan a la sesión.
+        $stmtJ = $pdo->prepare('SELECT id FROM sesion_jugadores WHERE sesion_id = ?');
+        $stmtJ->execute([$sesionId]);
+        $validJugadorIds = array_map('intval', $stmtJ->fetchAll(PDO::FETCH_COLUMN));
 
         $stmtR = $pdo->prepare('
             INSERT INTO resultados (sesion_id, jugador_id, puntaje, correctas, incorrectas, posicion)
@@ -1390,7 +1410,7 @@ if ($action === 'guardar_resultados') {
             $incorrectas= (int)($r['incorrectas']  ?? 0);
             $posicion   = isset($r['posicion']) ? (int)$r['posicion'] : null;
 
-            if ($jugadorId <= 0) continue;
+            if ($jugadorId <= 0 || !in_array($jugadorId, $validJugadorIds, true)) continue;
             $stmtR->execute([$sesionId, $jugadorId, $puntaje, $correctas, $incorrectas, $posicion]);
         }
 

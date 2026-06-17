@@ -5,10 +5,11 @@
  * y copiar el prompt de IA para generar baterías de preguntas.
  */
 
-// Habilitar reporte de errores para diagnóstico en el servidor web (evita pantalla en blanco si hay fallos)
+// Reporte de errores: nunca se muestran en producción (evita fuga de rutas,
+// credenciales y trazas). Solo se activan en pantalla bajo APP_DEBUG (ver más abajo).
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 
 // Cabeceras de seguridad
 header("X-Content-Type-Options: nosniff");
@@ -19,6 +20,12 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 
 require_once __DIR__ . '/php/triviax_core.php';
 require_once __DIR__ . '/php/auth.php';
+
+// Solo en entornos de desarrollo se muestran los errores en pantalla.
+if (triviax_env_bool('APP_DEBUG', false)) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+}
 
 triviax_requerir_auth(TRIVIAX_ROL_DOCENTE);
 

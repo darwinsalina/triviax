@@ -67,6 +67,21 @@ function triviax_api_require_post(): void {
     }
 }
 
+/**
+ * Limita por IP la tasa de un endpoint público de la API. Reutiliza la
+ * infraestructura de auth.php (tabla rate_limits) y falla en modo abierto si
+ * la BD no está disponible, igual que las APIs de actividades.
+ * Los límites son generosos para no afectar a una clase tras un mismo IP (NAT
+ * escolar) pero sí cortar abuso scriptado.
+ */
+function triviax_api_throttle(string $scope, int $maxPerWindow, int $windowSeconds, int $blockSeconds = 120): void {
+    $ip = (string)($_SERVER['REMOTE_ADDR'] ?? 'local');
+    if (!triviax_rate_limit_check($scope, $ip, $maxPerWindow, $windowSeconds)) {
+        triviax_api_error('RATE_LIMITED', 'Demasiadas solicitudes. Esperá un momento e intentá de nuevo.', 429);
+    }
+    triviax_rate_limit_hit($scope, $ip, $windowSeconds, $blockSeconds, $maxPerWindow);
+}
+
 function triviax_api_check_maintenance(): void {
     if (triviax_maintenance_mode() && !triviax_es_superadmin()) {
         triviax_api_error('MAINTENANCE_MODE', 'TRIVIAX está en mantenimiento. Intenta nuevamente más tarde.', 503);
@@ -717,6 +732,11 @@ if ($action === 'save_stat') {
     }
     triviax_verify_csrf_json();
 
+    // Anti-abuso: limita escrituras a stats.json por IP. Cargar db.php hace
+    // efectivo el límite cuando hay BD; si no la hay, falla en modo abierto.
+    require_once __DIR__ . '/php/db.php';
+    triviax_api_throttle('save_stat', 180, 60, 120);
+
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
 
@@ -863,6 +883,10 @@ if ($action === 'unirse_sesion') {
         echo json_encode(['success' => false, 'error' => 'Base de datos no disponible.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
+
+    // Anti-abuso: limita intentos por IP (fuerza bruta de códigos / alta masiva
+    // de jugadores). 60/5min tolera una clase entera tras un mismo IP escolar.
+    triviax_api_throttle('unirse_sesion', 60, 300, 300);
 
     $input = json_decode(file_get_contents('php://input'), true) ?: [];
     $codigo    = strtoupper(trim((string)($input['codigo']    ?? '')));

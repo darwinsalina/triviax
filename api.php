@@ -20,6 +20,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 
 require_once __DIR__ . '/php/triviax_core.php';
 require_once __DIR__ . '/php/auth.php';
+require_once __DIR__ . '/php/board_eval.php'; // #1: evaluación autoritativa del tablero
 
 if (triviax_env_bool('APP_DEBUG', false)) {
     ini_set('display_errors', 1);
@@ -81,6 +82,7 @@ function triviax_api_throttle(string $scope, int $maxPerWindow, int $windowSecon
     }
     triviax_rate_limit_hit($scope, $ip, $windowSeconds, $blockSeconds, $maxPerWindow);
 }
+
 
 function triviax_api_check_maintenance(): void {
     if (triviax_maintenance_mode() && !triviax_es_superadmin()) {
@@ -1148,6 +1150,21 @@ if ($action === 'submit_answer') {
         $timeMs = isset($input['time_ms']) ? (int)$input['time_ms'] : null;
         // Posición final: el cliente la envía tras resolver todas las animaciones y casillas especiales
         $boardPositionAfter = isset($input['board_position_after']) ? (int)$input['board_position_after'] : null;
+
+        // ── #1: veredicto y puntaje autoritativos (no confiar en el cliente) ──
+        $challengeType = mb_substr(trim((string)($input['challenge_type'] ?? 'multiple_choice')), 0, 50);
+        $selectedText  = (isset($input['answer_payload']) && is_array($input['answer_payload']))
+            ? (string)($input['answer_payload']['selectedText'] ?? '')
+            : '';
+        $stmtSes = $pdo->prepare('SELECT proyecto_id FROM sesiones WHERE id = ? LIMIT 1');
+        $stmtSes->execute([$sesionId]);
+        $proyectoSlug = (string)($stmtSes->fetchColumn() ?: '');
+        $serverEval = triviax_board_authoritative_result(
+            $baseProjectsDir, $proyectoSlug, $challengeKey, $challengeType, $resultado, $pointsDelta, $selectedText
+        );
+        $resultado   = $serverEval['resultado'];
+        $pointsDelta = $serverEval['points_delta'];
+
         $pdo->prepare('
             INSERT INTO intentos
                 (sesion_id, jugador_id, turno_id, challenge_key, prompt_text, challenge_type,
@@ -1160,7 +1177,7 @@ if ($action === 'submit_answer') {
             $turnoId,
             $challengeKey,
             mb_substr(trim((string)($input['prompt_text'] ?? '')), 0, 1000),
-            mb_substr(trim((string)($input['challenge_type'] ?? 'multiple_choice')), 0, 50),
+            $challengeType,
             json_encode($input['answer_payload'] ?? null, JSON_UNESCAPED_UNICODE),
             $resultado,
             $pointsDelta,
@@ -1174,7 +1191,12 @@ if ($action === 'submit_answer') {
         $pdo->prepare('UPDATE sesion_turnos SET estado = \'answered\', answered_at = NOW(), board_position_after = COALESCE(?, board_position_after) WHERE id = ?')
             ->execute([$boardPositionAfter, $turnoId]);
         $pdo->commit();
-        triviax_api_success(['turno_id' => $turnoId, 'points_delta' => $pointsDelta]);
+        triviax_api_success([
+            'turno_id'     => $turnoId,
+            'points_delta' => $pointsDelta,
+            'resultado'    => $resultado,
+            'overridden'   => $serverEval['overridden'],
+        ]);
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) {
             $pdo->rollBack();

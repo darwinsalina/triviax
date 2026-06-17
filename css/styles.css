@@ -1366,7 +1366,7 @@ select:focus {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.35; /* No tapar demasiado la interfaz */
+    opacity: 1.0; /* Mostrar los tableros con la claridad y luminosidad original */
     z-index: 1;
 }
 
@@ -1422,42 +1422,42 @@ select:focus {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: none; /* Sin blur para ver el tablero con total claridad */
+    -webkit-backdrop-filter: none;
     transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Colores vibrantes tipo Oca / Ciudad Convivencia con semitransparencia y sombras de relieve 3D */
+/* Colores vibrantes tipo Oca / Ciudad Convivencia con opacidad del 20% para transparencia máxima y claridad del tablero */
 .board-space:nth-child(7n+1) {
-    background: rgba(239, 68, 68, 0.55); /* Rojo */
-    box-shadow: 0 4px 0 rgba(153, 27, 27, 0.7), 0 6px 10px rgba(0, 0, 0, 0.35);
+    background: rgba(239, 68, 68, 0.2); /* Rojo */
+    box-shadow: 0 4px 0 rgba(153, 27, 27, 0.4), 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 .board-space:nth-child(7n+2) {
-    background: rgba(249, 115, 22, 0.55); /* Naranja */
-    box-shadow: 0 4px 0 rgba(154, 52, 18, 0.7), 0 6px 10px rgba(0, 0, 0, 0.35);
+    background: rgba(249, 115, 22, 0.2); /* Naranja */
+    box-shadow: 0 4px 0 rgba(154, 52, 18, 0.4), 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 .board-space:nth-child(7n+3) {
-    background: rgba(253, 224, 71, 0.58); /* Amarillo */
-    box-shadow: 0 4px 0 rgba(161, 98, 7, 0.7), 0 6px 10px rgba(0, 0, 0, 0.35);
+    background: rgba(253, 224, 71, 0.2); /* Amarillo */
+    box-shadow: 0 4px 0 rgba(161, 98, 7, 0.4), 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 .board-space:nth-child(7n+3) .space-number {
-    color: #1e293b !important;
+    color: #ffffff !important; /* Texto blanco para mejor contraste en amarillo translúcido */
 }
 .board-space:nth-child(7n+4) {
-    background: rgba(34, 197, 94, 0.55); /* Verde */
-    box-shadow: 0 4px 0 rgba(22, 101, 52, 0.7), 0 6px 10px rgba(0, 0, 0, 0.35);
+    background: rgba(34, 197, 94, 0.2); /* Verde */
+    box-shadow: 0 4px 0 rgba(22, 101, 52, 0.4), 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 .board-space:nth-child(7n+5) {
-    background: rgba(6, 182, 212, 0.55); /* Celeste / Cyan */
-    box-shadow: 0 4px 0 rgba(21, 94, 117, 0.7), 0 6px 10px rgba(0, 0, 0, 0.35);
+    background: rgba(6, 182, 212, 0.2); /* Celeste / Cyan */
+    box-shadow: 0 4px 0 rgba(21, 94, 117, 0.4), 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 .board-space:nth-child(7n+6) {
-    background: rgba(168, 85, 247, 0.55); /* Violeta / Púrpura */
-    box-shadow: 0 4px 0 rgba(107, 33, 168, 0.7), 0 6px 10px rgba(0, 0, 0, 0.35);
+    background: rgba(168, 85, 247, 0.2); /* Violeta / Púrpura */
+    box-shadow: 0 4px 0 rgba(107, 33, 168, 0.4), 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 .board-space:nth-child(7n) {
-    background: rgba(236, 72, 153, 0.55); /* Rosa / Magenta */
-    box-shadow: 0 4px 0 rgba(157, 23, 77, 0.7), 0 6px 10px rgba(0, 0, 0, 0.35);
+    background: rgba(236, 72, 153, 0.2); /* Rosa / Magenta */
+    box-shadow: 0 4px 0 rgba(157, 23, 77, 0.4), 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 
 .board-space:hover {
@@ -1485,13 +1485,13 @@ select:focus {
 
 /* Casillas Especiales */
 .board-space.space-start {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(29, 78, 216, 0.95) 100%) !important;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.4) 0%, rgba(29, 78, 216, 0.4) 100%) !important;
     border-color: #ffffff !important;
     border-width: 3px !important;
     width: 6.2%;
     height: 11%;
     border-radius: 16px !important;
-    box-shadow: 0 5px 0 rgba(23, 37, 84, 0.95), 0 8px 16px rgba(0, 0, 0, 0.45) !important;
+    box-shadow: 0 5px 0 rgba(23, 37, 84, 0.4), 0 8px 16px rgba(0, 0, 0, 0.35) !important;
 }
 
 .board-space.space-start .space-label {
@@ -1501,13 +1501,13 @@ select:focus {
 }
 
 .board-space.space-meta {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(4, 120, 87, 0.95) 100%) !important;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.4) 0%, rgba(4, 120, 87, 0.4) 100%) !important;
     border-color: #ffffff !important;
     border-width: 3px !important;
     width: 6.2%;
     height: 11%;
     border-radius: 16px !important;
-    box-shadow: 0 5px 0 rgba(6, 78, 59, 0.95), 0 8px 16px rgba(0, 0, 0, 0.45) !important;
+    box-shadow: 0 5px 0 rgba(6, 78, 59, 0.4), 0 8px 16px rgba(0, 0, 0, 0.35) !important;
 }
 
 .board-space.space-meta .space-label {

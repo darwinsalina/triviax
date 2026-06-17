@@ -200,6 +200,46 @@ function triviax_read_project_list_metadata($projectPath, $folderName) {
     return $metadata;
 }
 
+/**
+ * Fusiona el sidecar board.json (si existe) en el objeto board del proyecto.
+ * Permite fijar un tablero a la actividad sin depender del formato (proyecto.json
+ * o preguntas.txt). El juego lee board.lockedId.
+ */
+function triviax_merge_board_sidecar($projectPath, array $board) {
+    $sidecar = $projectPath . '/board.json';
+    if (is_file($sidecar)) {
+        $bj = json_decode(@file_get_contents($sidecar), true);
+        if (is_array($bj) && !empty($bj['lockedId'])) {
+            $board['lockedId'] = (string)$bj['lockedId'];
+        }
+    }
+    return $board;
+}
+
+// Acción: Listar tableros de juego personalizados
+if ($action === 'list_boards') {
+    $boards = [];
+    $dir = __DIR__ . '/images/tableros';
+    if (is_dir($dir)) {
+        $files = glob($dir . '/*.json');
+        foreach ($files as $file) {
+            $content = @file_get_contents($file);
+            if ($content !== false) {
+                $json = json_decode($content, true);
+                if (is_array($json) && isset($json['id'])) {
+                    $boards[] = $json;
+                }
+            }
+        }
+    }
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'success' => true,
+        'boards' => $boards
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 // Acción: Listar proyectos disponibles
 if ($action === 'list') {
     $projects = [];
@@ -275,11 +315,13 @@ if ($action === 'get') {
 
         try {
             $parsedJsonProject = triviax_parse_project_json($jsonContent);
+            $boardOut = is_array($parsedJsonProject['board']) ? $parsedJsonProject['board'] : [];
+            $boardOut = triviax_merge_board_sidecar($projectPath, $boardOut);
             echo json_encode([
                 'success' => true,
                 'metadata' => $parsedJsonProject['metadata'],
                 'questions' => $parsedJsonProject['challenges'],
-                'board' => $parsedJsonProject['board']
+                'board' => $boardOut
             ], JSON_UNESCAPED_UNICODE);
             exit;
         } catch (Exception $e) {
@@ -317,7 +359,8 @@ if ($action === 'get') {
         echo json_encode([
             'success' => true,
             'metadata' => $parsedProject['metadata'],
-            'questions' => $parsedProject['questions']
+            'questions' => $parsedProject['questions'],
+            'board' => triviax_merge_board_sidecar($projectPath, [])
         ], JSON_UNESCAPED_UNICODE);
     } catch (Exception $e) {
         http_response_code(400);

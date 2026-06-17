@@ -612,6 +612,7 @@ $csrf = triviax_csrf_token();
     <a href="?tab=trash"    class="super-tab <?= $activeTab === 'trash'    ? 'active' : '' ?>">
         🗑 Papelera<?= count($papelera) > 0 ? ' (' . count($papelera) . ')' : '' ?>
     </a>
+    <a href="/triviax/panel/generador_tableros.php" class="super-tab">🗺️ Tableros</a>
 </nav>
 
 <!-- ══ CONTENIDO ═══════════════════════════════════════════════════ -->

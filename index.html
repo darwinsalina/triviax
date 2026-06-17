@@ -363,13 +363,24 @@
                             <h3 class="setup-col-label">Configuración de partida</h3>
 
                             <div class="game-mode-config">
-                                <label for="board-profile-select">Tipo de tablero:</label>
-                                <select id="board-profile-select">
-                                    <option value="oca" selected>Oca tradicional - 50 casillas</option>
-                                    <option value="monopoly">Monopoly educativo - 40 casillas</option>
-                                    <option value="circular">Circular - 36 casillas</option>
-                                </select>
-                                <p id="board-profile-help" class="form-hint">Recorrido clásico de 50 casillas. Permite jugar por meta o por puntos.</p>
+                                <div id="board-profile-group">
+                                    <label for="board-profile-select">Tipo de tablero:</label>
+                                    <select id="board-profile-select">
+                                        <option value="oca" selected>Oca tradicional - 50 casillas</option>
+                                        <option value="monopoly">Monopoly educativo - 40 casillas</option>
+                                        <option value="circular">Circular - 36 casillas</option>
+                                    </select>
+                                    <p id="board-profile-help" class="form-hint">Recorrido clásico de 50 casillas. Permite jugar por meta o por puntos.</p>
+                                </div>
+
+                                <p id="board-locked-note" class="form-hint hidden">
+                                    Esta actividad se juega en un tablero fijado por el docente: <strong id="board-locked-name"></strong>.
+                                </p>
+
+                                <div id="board-trace-toggle" class="board-trace-toggle hidden" style="display:flex; align-items:center; gap:8px; margin:6px 0 14px;">
+                                    <input type="checkbox" id="board-trace-checkbox" style="width:18px; height:18px; cursor:pointer;">
+                                    <label for="board-trace-checkbox" style="font-size:0.9rem; color:var(--text-secondary); cursor:pointer; user-select:none;">Mostrar el recorrido de la ficha al avanzar</label>
+                                </div>
 
                                 <label for="victory-mode-select">Modalidad de juego:</label>
                                 <select id="victory-mode-select">

@@ -58,7 +58,8 @@ $formValues = [
     'mail' => '',
     'activity_name' => '',
     'questions_text' => '',
-    'activity_json' => ''
+    'activity_json' => '',
+    'board_locked_id' => ''
 ];
 
 function triviax_prepare_ai_json_text($content) {
@@ -218,7 +219,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             'mail' => $mail,
             'activity_name' => '',
             'questions_text' => $questionsText,
-            'activity_json' => $activityJsonText
+            'activity_json' => $activityJsonText,
+            'board_locked_id' => trim($_POST['board_locked_id'] ?? '')
         ];
     
     // Validaciones obligatorias
@@ -323,7 +325,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                             @copy(__DIR__ . '/images/background.jpg', $folderPath . '/fondo.jpg');
                         }
                     }
-                    
+
+                    // Tablero fijado por la actividad (opcional)
+                    triviax_guardar_tablero_actividad($folderPath, $_POST['board_locked_id'] ?? '');
+
                     // Notificar a darwinsalina@gmail.com
                     $mailTo = 'darwinsalina@gmail.com';
                     $mailSubject = 'TRIVIAX - Nueva actividad creada: ' . $title;
@@ -543,6 +548,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         exit;
     }
 
+    // Tablero fijado por la actividad (solo si el formulario lo envía).
+    if (isset($_POST['board_locked_id'])) {
+        triviax_guardar_tablero_actividad($projectPath, $_POST['board_locked_id']);
+    }
+
     // Sincronizar metadatos actualizados con la BD
     if ($pdo !== null) {
         try { triviax_sync_single_project($pdo, $project, $projectPath, false); } catch (\Throwable $_) {}
@@ -553,6 +563,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // Optimizar y guardar imagen a formato JPG exclusivamente
+/**
+ * Lista los tableros personalizados disponibles (archivos JSON del generador
+ * visual en images/tableros/). Devuelve [{id, label}, ...].
+ */
+function triviax_listar_tableros_disponibles() {
+    $out = [];
+    $dir = __DIR__ . '/images/tableros';
+    if (is_dir($dir)) {
+        foreach (glob($dir . '/*.json') as $file) {
+            $j = json_decode(@file_get_contents($file), true);
+            if (is_array($j) && !empty($j['id'])) {
+                $out[] = ['id' => (string)$j['id'], 'label' => (string)($j['label'] ?? $j['id'])];
+            }
+        }
+    }
+    return $out;
+}
+
+/**
+ * Persiste (o elimina) el sidecar board.json que fija el tablero de la actividad.
+ * Lo lee api.php al servir el proyecto y lo consume el juego (board.lockedId).
+ * Valida que el id corresponda a un tablero existente.
+ */
+function triviax_guardar_tablero_actividad($folderPath, $lockedBoardIdRaw) {
+    $lockedBoardId = preg_replace('/[^a-zA-Z0-9_-]/', '', (string)$lockedBoardIdRaw);
+    $sidecar = $folderPath . '/board.json';
+    if ($lockedBoardId !== '' && in_array($lockedBoardId, array_column(triviax_listar_tableros_disponibles(), 'id'), true)) {
+        file_put_contents($sidecar, json_encode(['lockedId' => $lockedBoardId], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    } elseif (is_file($sidecar)) {
+        @unlink($sidecar); // se volvió a "estándar": quitar el bloqueo
+    }
+}
+
 function optimizeAndSaveBackgroundToJpg($sourcePath, $destFolder) {
     $destPath = $destFolder . '/fondo.jpg';
     
@@ -1402,6 +1445,9 @@ Aquí está el documento de estudio:";
                 <a href="panel/etiquetar.php" class="btn btn-secondary" style="text-decoration: none; padding: 10px 16px;">
                     🏷️ Etiquetar
                 </a>
+                <a href="panel/generador_tableros.php" class="btn btn-secondary" style="text-decoration: none; padding: 10px 16px;">
+                    🗺️ Tableros
+                </a>
                 <a href="index.html" class="btn btn-primary" style="text-decoration: none; padding: 10px 16px;">
                     🎮 Ir al Juego
                 </a>
@@ -1524,12 +1570,34 @@ Aquí está el documento de estudio:";
                                     <input type="text" id="date_display" class="form-control" value="<?php echo date("d/m/Y"); ?>" disabled style="opacity: 0.6;">
                                 </div>
 
-                                <!-- Archivo de Imagen de Fondo (Opcional) -->
+                                <!-- Tablero del juego (Opcional) -->
                                 <div class="form-group-full">
+                                    <label for="board_locked_id">Tablero del juego</label>
+                                    <select name="board_locked_id" id="board_locked_id" class="form-control" onchange="onBoardLockChange()">
+                                        <option value="">Tableros estándar — el jugador elige (Oca, Monopoly, Circular)</option>
+                                        <?php foreach (triviax_listar_tableros_disponibles() as $b): ?>
+                                            <option value="<?php echo htmlspecialchars($b['id'], ENT_QUOTES, 'UTF-8'); ?>"<?php echo (($formValues['board_locked_id'] ?? '') === $b['id']) ? ' selected' : ''; ?>>
+                                                Tablero fijo: <?php echo htmlspecialchars($b['label'], ENT_QUOTES, 'UTF-8'); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <span class="form-help">Si eliges un tablero personalizado, la actividad se jugará <strong>solo</strong> en ese tablero (los jugadores no podrán cambiarlo) y no necesitas subir fondo: el tablero ya trae su propia imagen.</span>
+                                </div>
+
+                                <!-- Archivo de Imagen de Fondo (Opcional) -->
+                                <div class="form-group-full" id="bg-upload-group">
                                     <label for="background_file">Imagen de Fondo (Opcional)</label>
                                     <input type="file" name="background_file" id="background_file" accept="image/*" class="form-control" style="padding: 8px 12px;">
                                     <span class="form-help">Imagen para ambientar el juego. Se recomienda JPG/PNG horizontal (16:9) menor a 1MB. Si se omite, se usará el fondo espacial predeterminado.</span>
                                 </div>
+                                <script>
+                                    function onBoardLockChange() {
+                                        var sel = document.getElementById('board_locked_id');
+                                        var bg  = document.getElementById('bg-upload-group');
+                                        if (sel && bg) { bg.style.display = sel.value ? 'none' : ''; }
+                                    }
+                                    document.addEventListener('DOMContentLoaded', onBoardLockChange);
+                                </script>
                             </div>
 
                             <div style="margin-top: 30px; display: flex; justify-content: flex-end; border-top: 1px solid var(--border-color); padding-top: 20px;">
@@ -1930,6 +1998,16 @@ Aquí está el documento de estudio:";
                                     <div class="form-group-full">
                                         <label>Observaciones / Consigna para jugadores</label>
                                         <textarea id="ep-obs" rows="2" class="form-control" style="resize:vertical;" placeholder="Instrucciones que verán los jugadores al iniciar…"></textarea>
+                                    </div>
+                                    <div class="form-group-full">
+                                        <label for="ep-board-locked">Tablero del juego</label>
+                                        <select id="ep-board-locked" class="form-control">
+                                            <option value="">Tableros estándar — el jugador elige (Oca, Monopoly, Circular)</option>
+                                            <?php foreach (triviax_listar_tableros_disponibles() as $b): ?>
+                                                <option value="<?php echo htmlspecialchars($b['id'], ENT_QUOTES, 'UTF-8'); ?>">Tablero fijo: <?php echo htmlspecialchars($b['label'], ENT_QUOTES, 'UTF-8'); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <span class="form-help">Si fijas un tablero personalizado, la actividad se jugará solo en ese tablero y usará su propia imagen (no hace falta fondo).</span>
                                     </div>
                                 </div>
 
@@ -2833,6 +2911,8 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
             document.getElementById('ep-nivel').value  = meta.nivel  || '';
             document.getElementById('ep-mail').value   = meta.mail   || '';
             document.getElementById('ep-obs').value    = meta.obs    || '';
+            const epBoard = document.getElementById('ep-board-locked');
+            if (epBoard) epBoard.value = (data.board && data.board.lockedId) ? data.board.lockedId : '';
 
             // Normalizar challenges (soporta formato json y txt parseado)
             const raw = data.questions || [];
@@ -3485,6 +3565,7 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
             payload.append('obs',           document.getElementById('ep-obs').value.trim());
             payload.append('mail',          document.getElementById('ep-mail').value.trim());
             payload.append('activity_json', JSON.stringify({ challenges: _ep.challenges }));
+            payload.append('board_locked_id', document.getElementById('ep-board-locked')?.value || '');
 
             fetch('admin.php', { method:'POST', body: payload })
                 .then(r => r.json())

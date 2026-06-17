@@ -35,6 +35,12 @@ export class BoardEngine {
         this.loop = Boolean(boardConfig.loop);
         this.specialCells = boardConfig.specialCells || [];
         this.customPositions = boardConfig.customPositions || [];
+        this.cellShape = boardConfig.cellShape || 'rounded';
+        this.smoothPath = Boolean(boardConfig.smoothPath);
+        // Tablero "pelado" (editor visual): la imagen ya trae el recorrido y los
+        // números pintados, así que no dibujamos casillas ni línea encima. Las
+        // fichas se mueven por las coordenadas guardadas (customPositions).
+        this.bareBoard = Boolean(boardConfig.bareBoard);
 
         // Limpiar
         this.container.innerHTML = '';
@@ -64,9 +70,11 @@ export class BoardEngine {
         this.tokensLayer.className = 'board-tokens-layer';
         this.container.appendChild(this.tokensLayer);
 
-        // Dibujar
-        this.renderPath();
-        this.renderSpaces();
+        // Dibujar (en tableros pelados no se pinta recorrido ni casillas)
+        if (!this.bareBoard) {
+            this.renderPath();
+            this.renderSpaces();
+        }
 
         window.removeEventListener('resize', this.handleResize);
         window.addEventListener('resize', this.handleResize);
@@ -78,6 +86,12 @@ export class BoardEngine {
      * @returns {Object} { x, y }
      */
     getSpaceCoords(index) {
+        // Coordenadas de mapa personalizadas (editor visual): cubren TODAS las
+        // casillas, incluida la 0 (Salida), por eso se comprueba antes que nada.
+        if (this.layoutType === 'map' && this.customPositions[index]) {
+            return this.customPositions[index];
+        }
+
         if (index === 0) {
             if (this.layoutType === 'rectangular-loop') {
                 return { x: 8, y: 88 };
@@ -86,11 +100,6 @@ export class BoardEngine {
                 return { x: 50, y: 8 };
             }
             return this.isPortrait ? { x: 12, y: 95.5 } : { x: 3.5, y: 84 };
-        }
-
-        // Si hay coordenadas de mapa personalizadas especificadas
-        if (this.layoutType === 'map' && this.customPositions[index]) {
-            return this.customPositions[index];
         }
 
         const idx = index - 1;
@@ -188,24 +197,62 @@ export class BoardEngine {
     }
 
     /**
+     * Genera un string de path SVG con curvas suavizadas Bézier usando Catmull-Rom
+     */
+    getCurvePath(points) {
+        if (points.length < 2) return '';
+        let d = `M ${points[0].x} ${points[0].y}`;
+        for (let i = 0; i < points.length - 1; i++) {
+            const p0 = points[i - 1] || points[i];
+            const p1 = points[i];
+            const p2 = points[i + 1];
+            const p3 = points[i + 2] || p2;
+
+            const cp1x = p1.x + (p2.x - p0.x) / 6;
+            const cp1y = p1.y + (p2.y - p0.y) / 6;
+            const cp2x = p2.x - (p3.x - p1.x) / 6;
+            const cp2y = p2.y - (p3.y - p1.y) / 6;
+
+            d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+        }
+        return d;
+    }
+
+    /**
      * Dibuja la línea que conecta todas las casillas
      */
     renderPath() {
-        const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-        polyline.setAttribute('class', 'board-path-line');
-        
-        let pointsStr = '';
-        for (let i = 0; i <= this.boardSize; i++) {
-            const coords = this.getSpaceCoords(i);
-            pointsStr += `${coords.x},${coords.y} `;
+        if (this.smoothPath) {
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('class', 'board-path-line');
+            
+            const points = [];
+            for (let i = 0; i <= this.boardSize; i++) {
+                points.push(this.getSpaceCoords(i));
+            }
+            if (this.loop) {
+                points.push(this.getSpaceCoords(0));
+            }
+            
+            path.setAttribute('d', this.getCurvePath(points));
+            this.svgLayer.appendChild(path);
+        } else {
+            const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+            polyline.setAttribute('class', 'board-path-line');
+            
+            let pointsStr = '';
+            for (let i = 0; i <= this.boardSize; i++) {
+                const coords = this.getSpaceCoords(i);
+                pointsStr += `${coords.x},${coords.y} `;
+            }
+            if (this.loop) {
+                const coords = this.getSpaceCoords(0);
+                pointsStr += `${coords.x},${coords.y} `;
+            }
+            
+            polyline.setAttribute('points', pointsStr.trim());
+            this.svgLayer.appendChild(polyline);
         }
-        if (this.loop) {
-            const coords = this.getSpaceCoords(0);
-            pointsStr += `${coords.x},${coords.y} `;
-        }
-        
-        polyline.setAttribute('points', pointsStr.trim());
-        this.svgLayer.appendChild(polyline);
     }
 
     /**
@@ -216,6 +263,12 @@ export class BoardEngine {
             const coords = this.getSpaceCoords(i);
             const spaceDiv = document.createElement('div');
             spaceDiv.className = `board-space space-${i}`;
+            
+            if (this.cellShape === 'circle') {
+                spaceDiv.style.borderRadius = '50%';
+            } else if (this.cellShape === 'rounded') {
+                spaceDiv.style.borderRadius = '12px';
+            }
             
             if (i === 0) {
                 spaceDiv.classList.add('space-start');
@@ -378,10 +431,12 @@ export class BoardEngine {
     handleResize() {
         if (!this.spacesLayer) return;
         if (this.updateLayoutMode()) {
-            if (this.svgLayer) this.svgLayer.innerHTML = '';
-            this.renderPath();
-            if (this.spacesLayer) this.spacesLayer.innerHTML = '';
-            this.renderSpaces();
+            if (!this.bareBoard) {
+                if (this.svgLayer) this.svgLayer.innerHTML = '';
+                this.renderPath();
+                if (this.spacesLayer) this.spacesLayer.innerHTML = '';
+                this.renderSpaces();
+            }
             this.updateTokens(this.lastPlayersList);
         }
     }

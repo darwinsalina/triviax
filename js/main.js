@@ -290,8 +290,24 @@ async function initApp() {
         syncTimerRadiosState();
     }
 
+    // Cargar tableros personalizados ANTES de construir el desplegable de
+    // tableros, para que aparezcan junto a los de fábrica (oca/monopoly/circular).
+    try {
+        const response = await fetch('api.php?action=list_boards');
+        const data = await response.json();
+        if (data && data.success && Array.isArray(data.boards)) {
+            data.boards.forEach(customBoard => {
+                if (!BOARD_PROFILES.some(b => b.id === customBoard.id)) {
+                    BOARD_PROFILES.push(customBoard);
+                }
+            });
+        }
+    } catch (err) {
+        console.error('No se pudieron cargar los tableros personalizados:', err);
+    }
+
     setupBoardAndVictoryControls();
-    
+
     // Sincronizar re-nombres interactivos
     ui.onPlayerRename = (player) => {
         const idx = player.id - 1;
@@ -401,6 +417,12 @@ function setupBoardAndVictoryControls() {
             boardProfileHelp.innerText = currentBoardProfile.description;
         }
 
+        // El switch de "mostrar recorrido" solo aplica a tableros pelados
+        const traceToggle = qs('#board-trace-toggle');
+        if (traceToggle) {
+            traceToggle.classList.toggle('hidden', !currentBoardProfile.bareBoard);
+        }
+
         const mode = victoryModeSelect.value;
         scoreTargetConfig.classList.toggle('hidden', mode !== 'points');
         victoryModeHelp.innerText = helpByMode[mode] || helpByMode.race;
@@ -409,6 +431,39 @@ function setupBoardAndVictoryControls() {
     boardProfileSelect.addEventListener('change', update);
     victoryModeSelect.addEventListener('change', update);
     update();
+}
+
+/**
+ * Aplica el bloqueo de tablero definido por la actividad.
+ * Si la actividad fija un tablero (lockedBoardId), oculta el desplegable y lo
+ * deja seleccionado de forma fija; si no, restaura la elección libre.
+ */
+function applyBoardLock() {
+    const select = qs('#board-profile-select');
+    if (!select) return;
+
+    const group   = qs('#board-profile-group');
+    const note    = qs('#board-locked-note');
+    const nameEl  = qs('#board-locked-name');
+
+    const lockedId      = activeProjectMetadata?.lockedBoardId || null;
+    const lockedProfile = lockedId ? BOARD_PROFILES.find(b => b.id === lockedId) : null;
+
+    if (lockedProfile) {
+        select.value = lockedProfile.id;
+        group?.classList.add('hidden');
+        note?.classList.remove('hidden');
+        if (nameEl) nameEl.textContent = lockedProfile.label;
+    } else {
+        if (lockedId) {
+            console.warn(`Tablero fijado "${lockedId}" no encontrado; se permite elección libre.`);
+        }
+        group?.classList.remove('hidden');
+        note?.classList.add('hidden');
+    }
+
+    // Refresca modalidad de victoria, ayuda y el switch de recorrido
+    select.dispatchEvent(new Event('change'));
 }
 /**
  * Sincroniza los reportes locales guardados offline al recuperar la conexiÃ³n
@@ -681,7 +736,13 @@ async function loadProjectData(projectName) {
         projectData.questions = normalizeProjectChallenges(projectData.questions || projectData.challenges || []);
         challengeEngine.init(projectData.questions);
         activeProjectMetadata = projectData.metadata;
-        
+
+        // Tablero fijado por la actividad (si lo hay): bloquea la elección.
+        if (activeProjectMetadata) {
+            activeProjectMetadata.lockedBoardId = projectData.board?.lockedId || null;
+        }
+        applyBoardLock();
+
         // Guardar en la UI para la pantalla de diagnÃ³stico tÃ©cnico
         ui.activeProjectData = {
             name: projectName,
@@ -971,15 +1032,21 @@ async function startGameFlow() {
     game.setupGame(playerSetupList, baseTime, penaltyMode, gameRules);
 
     // Inicializar visualmente el tablero modular
-    const bgPath = activeProjectMetadata.background 
+    let bgPath = activeProjectMetadata.background 
         ? `./proyectos/${activeProjectName}/${activeProjectMetadata.background}`
         : `${PROJECTS_BASE_PATH}${activeProjectName}/fondo.jpg`;
+
+    // Si el perfil de tablero tiene su propia imagen, la usamos
+    if (boardProfile.image) {
+        bgPath = boardProfile.image;
+    }
 
     const boardConfig = {
         ...boardProfile,
         type: boardProfile.type,
+        bareBoard: Boolean(boardProfile.bareBoard),
         specialCells: activeProjectMetadata.specialCells || [],
-        customPositions: activeProjectMetadata.customPositions || []
+        customPositions: boardProfile.customPositions || activeProjectMetadata.customPositions || []
     };
 
     board.init(bgPath, boardConfig);
@@ -1114,10 +1181,18 @@ async function resolveTurn(result, challenge, diceValue) {
 
         // Avanzar ficha segun la modalidad configurada
         const targetPos = game.advancePlayer(diceValue);
-        if (game.lastMove?.path?.length > 0 && typeof board.animateTokenPath === 'function') {
-            await board.animateTokenPath(player, game.lastMove.path);
+        // En tableros pelados (editor visual) la animación de recorrido está
+        // desactivada por defecto; el switch del jugador puede reactivarla.
+        const traceOn = board.bareBoard ? Boolean(qs('#board-trace-checkbox')?.checked) : true;
+        if (traceOn) {
+            if (game.lastMove?.path?.length > 0 && typeof board.animateTokenPath === 'function') {
+                await board.animateTokenPath(player, game.lastMove.path);
+            } else {
+                await board.animateTokenMove(player, originalPos, targetPos);
+            }
         } else {
-            await board.animateTokenMove(player, originalPos, targetPos);
+            // Sin animación: colocar la ficha directamente en su casilla final
+            board.updateTokens(game.players);
         }
 
         if (game.victoryMode === 'exact' && originalPos + diceValue > game.boardSize) {

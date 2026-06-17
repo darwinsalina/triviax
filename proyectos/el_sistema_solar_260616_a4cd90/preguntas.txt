@@ -1,0 +1,377 @@
+TITLE: El sistema Solar
+AUTHOR: Darwin Salina
+NIVEL: 9no
+OBS: Cuánto sabes sobre nuestro sistema solar
+DATE: 16/06/2026
+
+1. ¿Cuál es el nombre del curso optativo presentado en el documento?
+   @ *Ciencias del Espacio y Tecnologías Aplicadas.
+   @ Biología del Universo.
+   @ Tecnología Robótica Espacial.
+   @ Ciencias Naturales Aplicadas.
+
+2. ¿A qué año de Bachillerato corresponde el programa?
+   @ Primer año.
+   @ Segundo año.
+   @ *Tercer año.
+   @ Cuarto año.
+
+3. ¿Qué institución aparece en la portada del documento?
+   @ Universidad de la República.
+   @ Ministerio de Ciencia.
+   @ *ANEP Educación Secundaria.
+   @ NASA Educación.
+
+4. ¿Cuál es una finalidad general del curso?
+   @ Enseñar únicamente programación.
+   @ *Profundizar temas de ciencias del espacio y tecnologías aplicadas.
+   @ Sustituir todas las asignaturas científicas.
+   @ Estudiar solamente el sistema solar.
+
+5. ¿Por qué el programa permite que cada docente seleccione contenidos?
+   @ Porque no hay contenidos definidos.
+   @ Porque todos los grupos son iguales.
+   @ *Porque el programa es amplio y debe adaptarse al grupo.
+   @ Porque solo se trabaja con libros.
+
+6. ¿Qué debe tener en cuenta el docente al planificar el curso?
+   @ Solamente la cantidad de computadoras.
+   @ *Las características del grupo y las posibilidades reales de trabajo.
+   @ Solo los temas más difíciles.
+   @ Las vacaciones escolares.
+
+7. ¿Cuál es una unidad del programa?
+   @ Programación de videojuegos.
+   @ *Historia de la Astronomía.
+   @ Matemática financiera.
+   @ Diseño gráfico.
+
+8. ¿Qué estudia la unidad Historia de la Astronomía?
+   @ El funcionamiento de los satélites artificiales solamente.
+   @ *La evolución de las ideas y el conocimiento astronómico.
+   @ La construcción de cohetes.
+   @ Las partes de una computadora.
+
+9. ¿Qué culturas se mencionan como aportes al desarrollo de la Astronomía?
+   @ Vikinga, romana y australiana.
+   @ *Mesopotámica, egipcia, griega, china, islámica y precolombina.
+   @ Francesa, inglesa y alemana.
+   @ Únicamente griega y romana.
+
+10. ¿Qué busca analizar la unidad Historia de la Astronomía?
+    @ Cómo se fabrican telescopios modernos.
+    @ *Cómo distintas culturas contribuyeron a la Astronomía.
+    @ Cómo se nombran los planetas.
+    @ Cómo se viaja a Marte.
+
+11. ¿Qué son los hitos en la historia de la Astronomía?
+    @ Errores sin importancia.
+    @ *Momentos o descubrimientos importantes.
+    @ Instrumentos de laboratorio.
+    @ Planetas pequeños.
+
+12. ¿Qué tipo de fuentes se propone interpretar en Historia de la Astronomía?
+    @ Recetas de cocina antiguas.
+    @ *Fuentes históricas, modelos antiguos y mapas celestes.
+    @ Publicidades de telescopios.
+    @ Manuales de teléfonos móviles.
+
+13. ¿Qué impacto de los avances astronómicos se propone reflexionar?
+    @ Solo el impacto deportivo.
+    @ *El impacto cultural, social y epistemológico.
+    @ El impacto en la moda.
+    @ El impacto en los videojuegos.
+
+14. ¿Cuál es la primera etapa histórica de la Astronomía mencionada?
+    @ Etapa digital.
+    @ Etapa espacial.
+    @ *Prehistoria.
+    @ Etapa informática.
+
+15. ¿Qué etapa se relaciona con la consolidación de la Astronomía como ciencia en la antigua Grecia?
+    @ Etapa moderna.
+    @ *Etapa clásica.
+    @ Etapa industrial.
+    @ Etapa tecnológica.
+
+16. ¿Qué etapa se analiza después de la etapa clásica?
+    @ Etapa medieval solamente.
+    @ *Etapa moderna post-telescopio.
+    @ Etapa prehistórica.
+    @ Etapa de navegación terrestre.
+
+17. ¿Qué instrumento tuvo gran impacto en los avances astronómicos posteriores?
+    @ El microscopio.
+    @ La brújula.
+    @ *El telescopio.
+    @ La calculadora.
+
+18. ¿Qué disciplina estudia la relación entre culturas y conocimientos astronómicos?
+    @ Geometría financiera.
+    @ *Etnoastronomía.
+    @ Informática básica.
+    @ Botánica espacial.
+
+19. ¿Qué disciplina se menciona junto con la etnoastronomía?
+    @ Paleontología marina.
+    @ *Arqueoastronomía.
+    @ Meteorología urbana.
+    @ Química orgánica.
+
+20. ¿Qué actividad práctica se sugiere para Historia de la Astronomía?
+    @ Diseñar una aplicación bancaria.
+    @ *Observar el movimiento aparente de los planetas.
+    @ Reparar computadoras.
+    @ Hacer una maqueta de una célula.
+
+21. ¿Qué experimento se sugiere en la unidad Historia de la Astronomía?
+    @ Experimento de Newton con manzanas.
+    @ *Experimento de Eratóstenes.
+    @ Experimento de Mendel.
+    @ Experimento de Pasteur.
+
+22. ¿Qué herramienta se sugiere para mostrar la historia de la Astronomía?
+    @ Hoja de cálculo solamente.
+    @ *Líneas de tiempo.
+    @ Editor de audio.
+    @ Programa de dibujo técnico.
+
+23. ¿Cuál es otra unidad del programa?
+    @ Ecología costera.
+    @ *Estrellas.
+    @ Sistemas operativos.
+    @ Robótica industrial.
+
+24. ¿Cuál es el tema central de la unidad Estrellas?
+    @ La clasificación de planetas.
+    @ *La evolución estelar.
+    @ La historia de los calendarios escolares.
+    @ La navegación marítima.
+
+25. ¿Qué factor condiciona la evolución de una estrella?
+    @ Su nombre.
+    @ Su distancia al salón de clase.
+    @ *Su masa inicial.
+    @ La cantidad de telescopios que la observan.
+
+26. ¿Qué aspecto de una estrella puede estar condicionado por su masa inicial?
+    @ Su nacionalidad.
+    @ *Su estructura interna.
+    @ Su idioma.
+    @ Su forma de escritura.
+
+27. ¿Desde dónde comienza la formación de las estrellas según la unidad?
+    @ Desde océanos terrestres.
+    @ Desde montañas.
+    @ *Desde nubes moleculares.
+    @ Desde volcanes.
+
+28. ¿Qué diagrama se propone interpretar en la unidad Estrellas?
+    @ Diagrama de barras.
+    @ *Diagrama Hertzsprung-Russell.
+    @ Diagrama de flujo escolar.
+    @ Diagrama de red social.
+
+29. ¿Para qué sirve interpretar el diagrama Hertzsprung-Russell?
+    @ Para ordenar planetas por tamaño.
+    @ *Para reconocer patrones de evolución estelar.
+    @ Para calcular notas escolares.
+    @ Para dibujar constelaciones imaginarias.
+
+30. ¿Qué relación se propone estudiar en la unidad Estrellas?
+    @ Estrellas y deportes.
+    @ *Evolución estelar y síntesis de elementos químicos.
+    @ Estrellas y comercio.
+    @ Estrellas y lenguaje publicitario.
+
+31. ¿Qué rol cumplen las estrellas en el Universo según el programa?
+    @ Producen solamente luz decorativa.
+    @ *Participan en la evolución química del Universo.
+    @ Detienen la expansión del Universo.
+    @ Eliminan las galaxias.
+
+32. ¿Por qué son importantes las etapas finales de la evolución estelar?
+    @ Porque hacen desaparecer toda la materia.
+    @ *Porque pueden generar nuevas estrellas.
+    @ Porque convierten planetas en satélites.
+    @ Porque impiden observar el cielo.
+
+33. ¿Qué contenido aparece en la unidad Estrellas?
+    @ Leyes de tránsito.
+    @ *Origen, evolución y estados finales.
+    @ Historia del arte.
+    @ Programación web.
+
+34. ¿Cuál de estos ejemplos aparece como estrella exótica o fenómeno relacionado?
+    @ Cometa.
+    @ *Supernova.
+    @ Asteroide.
+    @ Satélite artificial.
+
+35. ¿Cuál de estos objetos compactos se menciona en la unidad Estrellas?
+    @ Planeta rocoso.
+    @ *Agujero negro.
+    @ Meteorito.
+    @ Nave espacial.
+
+36. ¿Qué leyes se mencionan como desafío de profundización en Estrellas?
+    @ Leyes laborales.
+    @ *Leyes de radiación.
+    @ Leyes de tránsito.
+    @ Leyes gramaticales.
+
+37. ¿Qué curvas se mencionan en la unidad Estrellas?
+    @ Curvas de nivel terrestre.
+    @ *Curvas de Planck.
+    @ Curvas de rutas.
+    @ Curvas de aprendizaje escolar.
+
+38. ¿Qué efecto se estudia en relación con el análisis espectral?
+    @ Efecto invernadero.
+    @ *Efecto Doppler-Fizeau.
+    @ Efecto dominó.
+    @ Efecto memoria.
+
+39. ¿Qué proceso se relaciona con la generación de energía estelar?
+    @ Fotosíntesis.
+    @ *Nucleosíntesis.
+    @ Evaporación.
+    @ Oxidación escolar.
+
+40. ¿Qué herramienta se sugiere para la unidad Estrellas?
+    @ Procesador de texto solamente.
+    @ *Star in a box.
+    @ Calculadora de sueldos.
+    @ Editor de videos musicales.
+
+41. ¿Qué software aparece como recurso para Estrellas?
+    @ Scratch.
+    @ *Software CLEA.
+    @ WordPad.
+    @ Paint.
+
+42. ¿Qué actividad práctica se sugiere en la unidad Estrellas?
+    @ Construir una brújula con cartón.
+    @ *Construir espectroscopios caseros.
+    @ Hacer una encuesta deportiva.
+    @ Programar un videojuego de carreras.
+
+43. ¿Qué se puede reconocer con espectroscopios caseros?
+    @ Países del mundo.
+    @ *Espectros de diferentes elementos químicos.
+    @ Tipos de nubes meteorológicas.
+    @ Edades de los estudiantes.
+
+44. ¿Qué simulador se sugiere usar como fuente de información científica?
+    @ Simulador de tránsito.
+    @ *Stellarium.
+    @ Simulador de cocina.
+    @ Simulador financiero.
+
+45. ¿Cuál es la tercera gran unidad del programa?
+    @ Animales y ecosistemas.
+    @ *Universo y Cosmología.
+    @ Diseño de páginas web.
+    @ Historia del deporte.
+
+46. ¿Cuál es el título de la unidad Universo y Cosmología?
+    @ Planetas y satélites.
+    @ *Origen, estructura y evolución del Universo.
+    @ Tecnología y redes.
+    @ Historia de la Tierra.
+
+47. ¿Cómo se construye el conocimiento cosmológico según el programa?
+    @ Solo con opiniones personales.
+    @ *A partir de observaciones y modelos teóricos.
+    @ Solo con relatos antiguos.
+    @ A partir de mapas políticos.
+
+48. ¿Qué papel se valora en la construcción del conocimiento cosmológico?
+    @ El papel de la publicidad.
+    @ *El papel de la tecnología.
+    @ El papel de la moda.
+    @ El papel del azar.
+
+49. ¿Qué concepto fundamental se propone explorar en Universo y Cosmología?
+    @ Sistema digestivo.
+    @ *Expansión del Universo.
+    @ Dibujo técnico.
+    @ Economía familiar.
+
+50. ¿Qué otro concepto se menciona en la unidad Universo y Cosmología?
+    @ Materia escolar.
+    @ *Materia oscura.
+    @ Materia orgánica de plantas.
+    @ Materia prima industrial.
+
+51. ¿Qué concepto aparece junto con materia oscura?
+    @ Energía eléctrica doméstica.
+    @ *Energía oscura.
+    @ Energía muscular.
+    @ Energía térmica de una estufa.
+
+52. ¿Qué se analiza a gran escala en la unidad Universo y Cosmología?
+    @ La distribución de estudiantes en el aula.
+    @ *La distribución de la materia en el Universo.
+    @ La distribución de libros en una biblioteca.
+    @ La distribución de países en un mapa.
+
+53. ¿Qué estructuras del Universo se mencionan?
+    @ Calles, barrios y ciudades.
+    @ *Galaxias, cúmulos, supercúmulos, filamentos y vacíos.
+    @ Montañas, ríos y lagos.
+    @ Átomos, células y tejidos.
+
+54. ¿Qué galaxia se toma como caso de referencia?
+    @ Andrómeda.
+    @ *La Vía Láctea.
+    @ Triángulo.
+    @ Nube Mayor de Magallanes.
+
+55. ¿Qué aspectos de la Vía Láctea se proponen estudiar?
+    @ Precio, tamaño comercial y marca.
+    @ *Forma, composición y dinámica.
+    @ Color de bandera y población.
+    @ Idioma, gobierno y cultura.
+
+56. ¿Qué contenido se incluye sobre las galaxias?
+    @ Recetas con nombres de galaxias.
+    @ *Clasificación y formas de galaxias.
+    @ Leyendas de constelaciones solamente.
+    @ Tamaño de telescopios escolares.
+
+57. ¿Qué ley aparece como contenido de Universo y Cosmología?
+    @ Ley de Ohm.
+    @ *Ley de Hubble-Lemaître.
+    @ Ley de Newton únicamente.
+    @ Ley de Murphy.
+
+58. ¿Qué fenómeno se aplica al corrimiento al rojo cosmológico?
+    @ Efecto espejo.
+    @ *Efecto Doppler-Fizeau.
+    @ Efecto lupa.
+    @ Efecto sombra.
+
+59. ¿Qué teoría cosmológica se menciona en los desafíos?
+    @ Teoría celular.
+    @ *Big-Bang.
+    @ Teoría de la deriva continental.
+    @ Teoría musical.
+
+60. ¿Qué se propone estudiar sobre el futuro del Universo?
+    @ Los horarios de clase.
+    @ *Evidencias e hipótesis sobre posibles futuros.
+    @ Las próximas vacaciones.
+    @ Los nombres de nuevas constelaciones.
+
+61. ¿Qué actividad práctica se sugiere en Universo y Cosmología?
+    @ Medir la temperatura del aula.
+    @ *Trabajar con el calendario cósmico de Carl Sagan.
+    @ Dibujar circuitos eléctricos.
+    @ Clasificar tipos de computadoras.
+
+62. ¿Qué galaxias cercanas se sugieren observar?
+    @ Júpiter y Saturno.
+    @ *Nubes de Magallanes y Andrómeda.
+    @ Orión y Casiopea.
+    @ Marte y Venus.

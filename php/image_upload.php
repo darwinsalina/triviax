@@ -35,6 +35,7 @@ function triviax_img_load(string $path, ?int &$type = null) {
         case IMAGETYPE_PNG:  return @imagecreatefrompng($path);
         case IMAGETYPE_WEBP: return function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($path) : null;
         case IMAGETYPE_GIF:  return @imagecreatefromgif($path);
+        case IMAGETYPE_BMP:  return function_exists('imagecreatefrombmp') ? @imagecreatefrombmp($path) : null;
         default:             return null;
     }
 }

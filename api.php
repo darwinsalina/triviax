@@ -78,7 +78,7 @@ function triviax_api_require_post(): void {
 function triviax_api_throttle(string $scope, int $maxPerWindow, int $windowSeconds, int $blockSeconds = 120): void {
     $ip = (string)($_SERVER['REMOTE_ADDR'] ?? 'local');
     if (!triviax_rate_limit_check($scope, $ip, $maxPerWindow, $windowSeconds)) {
-        triviax_api_error('RATE_LIMITED', 'Demasiadas solicitudes. Esperá un momento e intentá de nuevo.', 429);
+        triviax_api_error('RATE_LIMITED', 'Demasiadas solicitudes. Espera un momento e intenta de nuevo.', 429);
     }
     triviax_rate_limit_hit($scope, $ip, $windowSeconds, $blockSeconds, $maxPerWindow);
 }

@@ -757,11 +757,21 @@ function triviax_rate_limit_hit(string $scope, string $identifier, int $windowSe
             return;
         }
         $attempts = ((int)$row['attempts']) + 1;
-        $pdo->prepare(
-            'UPDATE rate_limits
-             SET attempts = ?, last_attempt_at = ?, blocked_until = IF(? >= ?, ?, blocked_until)
-             WHERE scope = ? AND identifier = ?'
-        )->execute([$attempts, $now, $attempts, $blockAfter, $blockedUntil, $scope, $identifier]);
+        // La comparación se hace en PHP (numérica). Hacerla en SQL con
+        // parámetros ligados como strings comparaba lexicográficamente
+        // ('7' >= '60' == true), bloqueando muchísimo antes de blockAfter
+        // cuando este tiene más de un dígito.
+        if ($attempts >= $blockAfter) {
+            $pdo->prepare(
+                'UPDATE rate_limits SET attempts = ?, last_attempt_at = ?, blocked_until = ?
+                 WHERE scope = ? AND identifier = ?'
+            )->execute([$attempts, $now, $blockedUntil, $scope, $identifier]);
+        } else {
+            $pdo->prepare(
+                'UPDATE rate_limits SET attempts = ?, last_attempt_at = ?
+                 WHERE scope = ? AND identifier = ?'
+            )->execute([$attempts, $now, $scope, $identifier]);
+        }
     } catch (\Throwable $e) {
         return;
     }

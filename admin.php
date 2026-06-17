@@ -336,8 +336,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     // Tablero fijado por la actividad (opcional)
                     triviax_guardar_tablero_actividad($folderPath, $_POST['board_locked_id'] ?? '');
 
-                    // Notificar a darwinsalina@gmail.com
-                    $mailTo = 'darwinsalina@gmail.com';
+                    // Notificar al administrador configurado (ADMIN_EMAIL en triviax.env)
+                    $mailTo = triviax_admin_email();
                     $mailSubject = 'TRIVIAX - Nueva actividad creada: ' . $title;
                     $mailMessage = "Se ha creado una nueva actividad en TRIVIAX.\r\n\r\n";
                     $mailMessage .= "Detalles:\r\n";

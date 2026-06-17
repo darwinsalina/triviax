@@ -422,7 +422,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         echo json_encode(['success' => false, 'error' => 'Ruta de proyecto inválida o prohibida.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
-    
+
+    // Propiedad: un docente no puede mover a la papelera proyectos de otro.
+    if (function_exists('triviax_docente_puede_gestionar_proyecto')
+        && !triviax_docente_puede_gestionar_proyecto($pdo, $project, $docenteId)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'No tienes permiso para gestionar esta actividad.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     // Papelera en triviax/trash/ (fuera de proyectos/)
     $trashBaseDir = __DIR__ . '/trash';
     if (!is_dir($trashBaseDir)) {
@@ -478,6 +486,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     if (!isSafePath($projectPath) || !is_dir($projectPath)) {
         http_response_code(404);
         echo json_encode(['success' => false, 'error' => 'Proyecto no encontrado.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    // Propiedad: un docente no puede editar proyectos de otro.
+    if (function_exists('triviax_docente_puede_gestionar_proyecto')
+        && !triviax_docente_puede_gestionar_proyecto($pdo, $project, $docenteId)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'No tienes permiso para editar esta actividad.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
 

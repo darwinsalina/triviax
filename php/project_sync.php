@@ -139,6 +139,46 @@ function triviax_sync_single_project(
 }
 
 /**
+ * Determina si un docente puede gestionar (editar/borrar) un proyecto clásico.
+ *
+ * Reglas:
+ *  - El superadmin siempre puede.
+ *  - El dueño registrado (proyectos.docente_id) puede.
+ *  - Si el proyecto no tiene dueño registrado (docente_id NULL, propio del
+ *    modelo filesystem-first heredado) o aún no está en la BD, se permite, para
+ *    no romper proyectos antiguos. La auth de docente ya es requisito previo.
+ *  - Si pertenece a OTRO docente, se deniega.
+ *  - Ante error de consulta se deniega (modo seguro), salvo superadmin.
+ *
+ * @param PDO|null $pdo        Conexión (null = panel sin BD: no hay datos de propiedad).
+ * @param string   $slug       Id/carpeta del proyecto.
+ * @param int|null $docenteId  Docente autenticado.
+ */
+function triviax_docente_puede_gestionar_proyecto(?PDO $pdo, string $slug, ?int $docenteId): bool {
+    if (function_exists('triviax_es_superadmin') && triviax_es_superadmin()) {
+        return true;
+    }
+    if ($pdo === null) {
+        return true; // sin BD no hay propiedad que verificar
+    }
+    try {
+        $stmt = $pdo->prepare('SELECT docente_id FROM proyectos WHERE id = ? LIMIT 1');
+        $stmt->execute([$slug]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row === false) {
+            return true; // aún no registrado (solo filesystem)
+        }
+        $owner = isset($row['docente_id']) && $row['docente_id'] !== null ? (int)$row['docente_id'] : null;
+        if ($owner === null) {
+            return true; // sin dueño registrado (heredado)
+        }
+        return $docenteId !== null && $owner === $docenteId;
+    } catch (\Throwable $e) {
+        return false; // modo seguro: ante error, denegar
+    }
+}
+
+/**
  * Marca un proyecto como en papelera en la BD (cuando se mueve su carpeta a trash/).
  */
 function triviax_mark_project_trashed(PDO $pdo, string $slug): void {

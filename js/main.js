@@ -1045,6 +1045,7 @@ async function startGameFlow() {
         ...boardProfile,
         type: boardProfile.type,
         bareBoard: Boolean(boardProfile.bareBoard),
+        showPath: Boolean(qs('#board-trace-checkbox')?.checked),
         specialCells: activeProjectMetadata.specialCells || [],
         customPositions: boardProfile.customPositions || activeProjectMetadata.customPositions || []
     };
@@ -1181,18 +1182,12 @@ async function resolveTurn(result, challenge, diceValue) {
 
         // Avanzar ficha segun la modalidad configurada
         const targetPos = game.advancePlayer(diceValue);
-        // En tableros pelados (editor visual) la animación de recorrido está
-        // desactivada por defecto; el switch del jugador puede reactivarla.
-        const traceOn = board.bareBoard ? Boolean(qs('#board-trace-checkbox')?.checked) : true;
-        if (traceOn) {
-            if (game.lastMove?.path?.length > 0 && typeof board.animateTokenPath === 'function') {
-                await board.animateTokenPath(player, game.lastMove.path);
-            } else {
-                await board.animateTokenMove(player, originalPos, targetPos);
-            }
+        // La ficha SIEMPRE se mueve saltando casilla a casilla (también en
+        // tableros pelados, donde el salto se ve sobre las coordenadas del mapa).
+        if (game.lastMove?.path?.length > 0 && typeof board.animateTokenPath === 'function') {
+            await board.animateTokenPath(player, game.lastMove.path);
         } else {
-            // Sin animación: colocar la ficha directamente en su casilla final
-            board.updateTokens(game.players);
+            await board.animateTokenMove(player, originalPos, targetPos);
         }
 
         if (game.victoryMode === 'exact' && originalPos + diceValue > game.boardSize) {

@@ -37,10 +37,14 @@ export class BoardEngine {
         this.customPositions = boardConfig.customPositions || [];
         this.cellShape = boardConfig.cellShape || 'rounded';
         this.smoothPath = Boolean(boardConfig.smoothPath);
-        // Tablero "pelado" (editor visual): la imagen ya trae el recorrido y los
-        // números pintados, así que no dibujamos casillas ni línea encima. Las
-        // fichas se mueven por las coordenadas guardadas (customPositions).
+        // Tablero "pelado" (editor visual): la imagen ya trae las casillas y los
+        // números pintados, así que NUNCA dibujamos casillas ni números encima.
+        // Las fichas igualmente se mueven SALTANDO casilla a casilla por las
+        // coordenadas guardadas (customPositions); eso siempre se anima.
         this.bareBoard = Boolean(boardConfig.bareBoard);
+        // Línea del recorrido: en tableros pelados está oculta por defecto; el
+        // docente puede mostrarla con showPath (la imagen ya suele traer su ruta).
+        this.showPath = Boolean(boardConfig.showPath);
 
         // Limpiar
         this.container.innerHTML = '';
@@ -70,9 +74,12 @@ export class BoardEngine {
         this.tokensLayer.className = 'board-tokens-layer';
         this.container.appendChild(this.tokensLayer);
 
-        // Dibujar (en tableros pelados no se pinta recorrido ni casillas)
-        if (!this.bareBoard) {
+        // Línea del recorrido: en pelados solo si showPath. Casillas/números:
+        // nunca en pelados (la imagen ya los trae).
+        if (!this.bareBoard || this.showPath) {
             this.renderPath();
+        }
+        if (!this.bareBoard) {
             this.renderSpaces();
         }
 
@@ -431,9 +438,9 @@ export class BoardEngine {
     handleResize() {
         if (!this.spacesLayer) return;
         if (this.updateLayoutMode()) {
+            if (this.svgLayer) this.svgLayer.innerHTML = '';
+            if (!this.bareBoard || this.showPath) this.renderPath();
             if (!this.bareBoard) {
-                if (this.svgLayer) this.svgLayer.innerHTML = '';
-                this.renderPath();
                 if (this.spacesLayer) this.spacesLayer.innerHTML = '';
                 this.renderSpaces();
             }

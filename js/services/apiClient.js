@@ -262,6 +262,31 @@ export class ApiClient {
         return this.postSessionAction('submit_answer', payload);
     }
 
+    /**
+     * Evaluación autoritativa SIN estado de una respuesta (#1 Etapa 2).
+     * Devuelve { correct, gradable, solution } para que el cliente no necesite
+     * conocer la respuesta correcta de antemano. Lanza si la petición falla
+     * (el llamador decide el fallback al veredicto local).
+     * @param {string} project
+     * @param {string|number} challengeKey
+     * @param {Object} raw - respuesta cruda estructurada del renderer
+     */
+    static async grade(project, challengeKey, raw) {
+        const headers = { 'Content-Type': 'application/json' };
+        if (this.csrfToken) {
+            headers['X-CSRF-Token'] = this.csrfToken;
+        }
+        const response = await fetch(`${this.API_URL}?action=grade`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ project, challenge_key: String(challengeKey), raw: raw || {} })
+        });
+        if (!response.ok) {
+            throw new Error(`grade HTTP ${response.status}`);
+        }
+        return await response.json();
+    }
+
     static async endTurn(sesionId, jugadorId, turnoId, playerToken) {
         return this.postSessionAction('end_turn', { sesion_id: sesionId, jugador_id: jugadorId, turno_id: turnoId, player_token: playerToken });
     }

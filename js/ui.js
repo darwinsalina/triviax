@@ -7,6 +7,7 @@ import { escapeHTML, qs, qsa } from './utils.js';
 import { playWarningBeep, playQuestionPopupSound, playOptionSelectSound, playHomepageFanfareSound } from './sound.js';
 import { ActivityRendererRegistry } from './activityRenderers/activityRendererRegistry.js';
 import { FeedbackEngine } from './engines/feedbackEngine.js';
+import { ApiClient } from './services/apiClient.js';
 import { DiagnosticsService } from './services/diagnosticsService.js';
 import { getChallengeTypeLabel, getChallengeInstruction } from './validators/challengeValidators.js';
 
@@ -335,7 +336,7 @@ export class UIManager {
         const startTime = Date.now();
 
         // Callback interno al responder
-        const handleUserSubmission = (isCorrect, responseText, isTimeout = false, raw = null) => {
+        const handleUserSubmission = (isCorrect, responseText, isTimeout = false, raw = null, solution = null) => {
             clearInterval(this.timerInterval);
             timerText.classList.remove('timer-warning');
 
@@ -345,10 +346,20 @@ export class UIManager {
             const inputs = optionsContainer.querySelectorAll('button, select, input');
             inputs.forEach(i => i.disabled = true);
 
+            // Texto del botón correcto: si el servidor envió la solución se usa esa
+            // (action=get ya no expone data-correct); si no, fallback al atributo.
+            let correctBtnText = null;
+            if (solution) {
+                if (solution.type === 'true_false') correctBtnText = solution.value ? 'Verdadero' : 'Falso';
+                else if (solution.correctText) correctBtnText = solution.correctText;
+            }
+
             // Resaltar opciones correctas e incorrectas en los botones option-btn
             const optionButtons = optionsContainer.querySelectorAll('.option-btn');
             optionButtons.forEach(btn => {
-                const isBtnCorrect = btn.getAttribute('data-correct') === 'true';
+                const isBtnCorrect = correctBtnText != null
+                    ? (btn.textContent.trim() === correctBtnText.trim())
+                    : (btn.getAttribute('data-correct') === 'true');
                 if (isBtnCorrect) {
                     btn.classList.add('opt-correct');
                 } else if (btn.innerText === responseText && !isCorrect) {
@@ -357,7 +368,7 @@ export class UIManager {
             });
 
             // Mostrar feedback visual y detalles
-            FeedbackEngine.show(isCorrect, penaltyMode, isTimeout, feedbackPanel, feedbackMsg, challenge, responseText, feedbackDetails);
+            FeedbackEngine.show(isCorrect, penaltyMode, isTimeout, feedbackPanel, feedbackMsg, challenge, responseText, feedbackDetails, solution);
 
             // Vinculación única al botón Siguiente
             const newNextBtn = nextBtn.cloneNode(true);
@@ -376,8 +387,26 @@ export class UIManager {
         };
 
         // Renderizar el contenido específico del desafío desde la Registry
+        // #1 Etapa 2: el veredicto y la solución los decide el SERVIDOR (action=grade);
+        // el cliente ya no necesita conocer la respuesta correcta. Si la red falla
+        // (modo offline / sin servidor), se cae al veredicto local del renderer.
+        const resolveAndShow = async (res, isTimeout) => {
+            let verdict = isTimeout ? false : !!res.isCorrect;
+            let solution = null;
+            try {
+                const g = await ApiClient.grade(projectName, challenge.id, res.raw || {});
+                if (g && g.success !== false) {
+                    if (!isTimeout) verdict = !!g.correct;
+                    solution = g.solution || null;
+                }
+            } catch (e) {
+                console.warn('[TRIVIAX] grade falló, se usa el veredicto local:', e.message);
+            }
+            handleUserSubmission(verdict, res.selectedText, isTimeout, res.raw || null, solution);
+        };
+
         this.activityRegistry.renderChallenge(challenge, optionsContainer, projectName, (res) => {
-            handleUserSubmission(res.isCorrect, res.selectedText, false, res.raw || null);
+            resolveAndShow(res, false);
         });
 
         // Loop del temporizador
@@ -396,7 +425,8 @@ export class UIManager {
 
                 if (timeLeft <= 0) {
                     clearInterval(this.timerInterval);
-                    handleUserSubmission(false, 'Tiempo agotado', true);
+                    // Timeout: veredicto false, pero pedimos la solución para el feedback.
+                    resolveAndShow({ isCorrect: false, selectedText: 'Tiempo agotado', raw: null }, true);
                 }
             }, 1000);
         }

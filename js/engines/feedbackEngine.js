@@ -18,7 +18,7 @@ export class FeedbackEngine {
      * @param {string} selectedText - Respuesta seleccionada por el estudiante
      * @param {HTMLElement} feedbackDetails - Elemento de detalles del feedback (#feedback-details)
      */
-    static show(isCorrect, penaltyMode, isTimeout, feedbackPanel, feedbackMsg, challenge = null, selectedText = '', feedbackDetails = null) {
+    static show(isCorrect, penaltyMode, isTimeout, feedbackPanel, feedbackMsg, challenge = null, selectedText = '', feedbackDetails = null, solution = null) {
         if (!feedbackPanel || !feedbackMsg) return;
 
         feedbackPanel.classList.remove('hidden');
@@ -55,7 +55,11 @@ export class FeedbackEngine {
             } else {
                 feedbackDetails.classList.remove('hidden');
                 
-                const correctText = FeedbackEngine.getCorrectAnswerText(challenge);
+                // #1 Etapa 2: si el servidor envió la solución, se usa esa (cuando
+                // action=get ya no expone las respuestas). Si no, fallback al challenge.
+                const correctText = solution
+                    ? FeedbackEngine.getCorrectAnswerTextFromSolution(solution)
+                    : FeedbackEngine.getCorrectAnswerText(challenge);
                 let detailsHTML = '';
                 
                 if (!isTimeout && selectedText) {
@@ -75,8 +79,43 @@ export class FeedbackEngine {
     }
 
     /**
+     * Construye el texto de la respuesta correcta a partir de la SOLUCIÓN que
+     * devuelve el servidor (action=grade), espejo de getCorrectAnswerText pero
+     * sin depender de que el challenge traiga las respuestas.
+     * @param {Object} solution - { type, ... } de triviax_board_solution_for_client
+     * @returns {string}
+     */
+    static getCorrectAnswerTextFromSolution(solution) {
+        if (!solution || !solution.type) return '';
+        switch (solution.type) {
+            case 'multiple_choice':
+            case 'media_choice':
+                return solution.correctText || '';
+            case 'true_false':
+                return solution.value ? 'Verdadero' : 'Falso';
+            case 'sequence_order':
+                return (solution.order || []).join(' → ');
+            case 'matching_pairs':
+                return (solution.pairs || []).map(p => `• "${p.left}" con "${p.right}"`).join('<br>');
+            case 'drag_drop': {
+                const cats = {};
+                (solution.categories || []).forEach(c => { cats[c.id] = c.label; });
+                return (solution.items || []).map(it => `• "${it.text}" → "${cats[it.categoryId] || it.categoryId}"`).join('<br>');
+            }
+            case 'fill_blank':
+                return Object.entries(solution.blanks || {}).map(([k, v]) => `• ${k}: ${v}`).join('<br>');
+            case 'image_hotspot':
+                return 'Zona correcta señalada en la imagen';
+            case 'code_challenge':
+                return (solution.lines || []).join('\n');
+            default:
+                return '';
+        }
+    }
+
+    /**
      * Obtiene el texto representativo de la respuesta correcta de un desafío
-     * @param {Object} challenge 
+     * @param {Object} challenge
      * @returns {string}
      */
     static getCorrectAnswerText(challenge) {

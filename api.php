@@ -318,6 +318,20 @@ if ($action === 'get') {
     $jsonPath = $projectPath . '/proyecto.json';
     $filePath = $projectPath . '/preguntas.txt';
 
+    // #7: si la actividad está importada, los desafíos son AUTORITATIVOS desde la
+    // BD (tabla `desafios`). Metadata y board siguen del archivo (no es lo
+    // sensible). Fallback a filesystem si la BD no responde o no está importada.
+    $dbChallenges = null;
+    try {
+        require_once __DIR__ . '/php/db.php';
+        require_once __DIR__ . '/php/project_import.php';
+        if (triviax_db_available()) {
+            $dbChallenges = triviax_db_load_challenges(triviax_db(), $project);
+        }
+    } catch (\Throwable $e) {
+        $dbChallenges = null;
+    }
+
     // 1. SOPORTE DE NUEVO FORMATO: Cargar proyecto.json si existe
     if (file_exists($jsonPath)) {
         $jsonContent = file_get_contents($jsonPath);
@@ -337,7 +351,7 @@ if ($action === 'get') {
             echo json_encode([
                 'success' => true,
                 'metadata' => $parsedJsonProject['metadata'],
-                'questions' => $parsedJsonProject['challenges'],
+                'questions' => $dbChallenges ?? $parsedJsonProject['challenges'],
                 'board' => $boardOut
             ], JSON_UNESCAPED_UNICODE);
             exit;
@@ -376,7 +390,7 @@ if ($action === 'get') {
         echo json_encode([
             'success' => true,
             'metadata' => $parsedProject['metadata'],
-            'questions' => $parsedProject['questions'],
+            'questions' => $dbChallenges ?? $parsedProject['questions'],
             'board' => triviax_merge_board_sidecar($projectPath, [])
         ], JSON_UNESCAPED_UNICODE);
     } catch (Exception $e) {
@@ -1160,7 +1174,7 @@ if ($action === 'submit_answer') {
         $stmtSes->execute([$sesionId]);
         $proyectoSlug = (string)($stmtSes->fetchColumn() ?: '');
         $serverEval = triviax_board_authoritative_result(
-            $baseProjectsDir, $proyectoSlug, $challengeKey, $challengeType, $resultado, $pointsDelta, $selectedText
+            $baseProjectsDir, $proyectoSlug, $challengeKey, $challengeType, $resultado, $pointsDelta, $selectedText, $pdo
         );
         $resultado   = $serverEval['resultado'];
         $pointsDelta = $serverEval['points_delta'];

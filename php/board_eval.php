@@ -26,19 +26,35 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/triviax_core.php';
+require_once __DIR__ . '/project_import.php'; // #7: lectura del desafío desde BD
 
 /** Constantes de puntaje — espejo de js/config.js. */
 if (!defined('TRIVIAX_POINTS_CORRECT'))   define('TRIVIAX_POINTS_CORRECT', 10);
 if (!defined('TRIVIAX_POINTS_INCORRECT')) define('TRIVIAX_POINTS_INCORRECT', 5);
 
 /**
- * Carga un desafío del proyecto (filesystem) por su id/clave, o null.
- * El acceso queda confinado a $baseProjectsDir (anti path traversal).
+ * Carga un desafío del proyecto por su id/clave, o null.
+ *
+ * #7: si se pasa $pdo y el proyecto está importado, el desafío se lee de la BD
+ * (fuente autoritativa). Si no, fallback al filesystem, confinado a
+ * $baseProjectsDir (anti path traversal).
  */
-function triviax_board_find_challenge(string $baseProjectsDir, string $slug, string $challengeKey): ?array {
+function triviax_board_find_challenge(string $baseProjectsDir, string $slug, string $challengeKey, ?PDO $pdo = null): ?array {
     if ($slug === '' || !preg_match('/^[a-zA-Z0-9_-]+$/', $slug)) {
         return null;
     }
+    // 1) Preferir la BD (importador #7) cuando esté disponible.
+    if ($pdo !== null) {
+        try {
+            $fromDb = triviax_db_find_challenge($pdo, $slug, $challengeKey);
+            if ($fromDb !== null) {
+                return $fromDb;
+            }
+        } catch (\Throwable $e) {
+            // fallback silencioso a filesystem
+        }
+    }
+    // 2) Fallback: filesystem.
     $base = realpath($baseProjectsDir);
     $projectPath = realpath($baseProjectsDir . '/' . $slug);
     if ($base === false || $projectPath === false || strpos($projectPath, $base) !== 0 || !is_dir($projectPath)) {
@@ -115,10 +131,11 @@ function triviax_board_choice_is_correct(array $challenge, string $selectedText)
  */
 function triviax_board_authoritative_result(
     string $baseProjectsDir, string $slug, string $challengeKey,
-    string $challengeType, string $resultado, int $pointsDelta, string $selectedText
+    string $challengeType, string $resultado, int $pointsDelta, string $selectedText,
+    ?PDO $pdo = null
 ): array {
     $overridden = false;
-    $challenge  = triviax_board_find_challenge($baseProjectsDir, $slug, $challengeKey);
+    $challenge  = triviax_board_find_challenge($baseProjectsDir, $slug, $challengeKey, $pdo);
 
     // Solo se intenta degradar un "correct" reclamado, y solo en tipos de opción.
     if ($resultado === 'correct' && $challenge !== null) {

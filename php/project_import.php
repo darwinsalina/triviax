@@ -99,6 +99,53 @@ function triviax_load_project_challenges(string $projectDir): array {
 }
 
 /**
+ * Carga los desafíos de un proyecto DESDE LA BD (tabla `desafios`), en el mismo
+ * formato que produce el parser del filesystem: el payload completo de cada
+ * desafío se guardó en `data_json` al importar, así que decodificarlo reproduce
+ * el desafío normalizado. Orden estable por `orden` (= orden del archivo).
+ *
+ * @return array|null lista de desafíos, o null si el proyecto no tiene ninguno
+ *                    en BD (→ el llamador hace fallback a filesystem).
+ */
+function triviax_db_load_challenges(PDO $pdo, string $slug): ?array {
+    if (!preg_match('/^[a-zA-Z0-9_-]+$/', $slug)) {
+        return null;
+    }
+    $stmt = $pdo->prepare('SELECT data_json FROM desafios WHERE proyecto_id = ? ORDER BY orden, id');
+    $stmt->execute([$slug]);
+    $rows = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    if (!$rows) {
+        return null;
+    }
+    $challenges = [];
+    foreach ($rows as $json) {
+        $c = json_decode((string)$json, true);
+        if (is_array($c)) {
+            $challenges[] = $c;
+        }
+    }
+    return $challenges ?: null;
+}
+
+/**
+ * Busca un desafío puntual por su clave en la BD (tabla `desafios`). Devuelve el
+ * desafío normalizado (data_json decodificado) o null si no está importado.
+ */
+function triviax_db_find_challenge(PDO $pdo, string $slug, string $challengeKey): ?array {
+    if (!preg_match('/^[a-zA-Z0-9_-]+$/', $slug) || $challengeKey === '') {
+        return null;
+    }
+    $stmt = $pdo->prepare('SELECT data_json FROM desafios WHERE proyecto_id = ? AND challenge_key = ? LIMIT 1');
+    $stmt->execute([$slug, $challengeKey]);
+    $json = $stmt->fetchColumn();
+    if ($json === false) {
+        return null;
+    }
+    $c = json_decode((string)$json, true);
+    return is_array($c) ? $c : null;
+}
+
+/**
  * Importa (upsert idempotente) los desafíos de un proyecto a la tabla `desafios`.
  * Elimina de la BD los desafíos que ya no están en el archivo. Transaccional.
  * El proyecto debe existir en `proyectos` (FK).

@@ -1170,11 +1170,16 @@ if ($action === 'submit_answer') {
         $selectedText  = (isset($input['answer_payload']) && is_array($input['answer_payload']))
             ? (string)($input['answer_payload']['selectedText'] ?? '')
             : '';
+        // Respuesta cruda estructurada (#1 Etapa 2): habilita la evaluación
+        // autoritativa de TODOS los tipos. Ausente → fallback Etapa 1.
+        $rawAnswer = (isset($input['answer_payload']['raw']) && is_array($input['answer_payload']['raw']))
+            ? $input['answer_payload']['raw']
+            : null;
         $stmtSes = $pdo->prepare('SELECT proyecto_id FROM sesiones WHERE id = ? LIMIT 1');
         $stmtSes->execute([$sesionId]);
         $proyectoSlug = (string)($stmtSes->fetchColumn() ?: '');
         $serverEval = triviax_board_authoritative_result(
-            $baseProjectsDir, $proyectoSlug, $challengeKey, $challengeType, $resultado, $pointsDelta, $selectedText, $pdo
+            $baseProjectsDir, $proyectoSlug, $challengeKey, $challengeType, $resultado, $pointsDelta, $selectedText, $pdo, $rawAnswer
         );
         $resultado   = $serverEval['resultado'];
         $pointsDelta = $serverEval['points_delta'];

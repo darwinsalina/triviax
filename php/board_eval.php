@@ -83,18 +83,24 @@ function triviax_board_find_challenge(string $baseProjectsDir, string $slug, str
 }
 
 /**
+ * Normaliza texto para comparaciones tolerantes (trim, colapso de espacios,
+ * NFC). Espejo del criterio del cliente al emparejar opciones/respuestas.
+ */
+function triviax_board_norm_text($s): string {
+    $s = (string)$s;
+    if (class_exists('Normalizer')) {
+        $s = \Normalizer::normalize($s, \Normalizer::FORM_C) ?: $s;
+    }
+    return (string)preg_replace('/\s+/u', ' ', trim($s));
+}
+
+/**
  * Para opción múltiple / multimedia: ¿el texto elegido (selectedText) coincide
  * con la opción correcta? Devuelve true/false si se puede decidir, o null si no
  * (tipo sin opciones, o selectedText que no empareja con ninguna → fallback).
  */
 function triviax_board_choice_is_correct(array $challenge, string $selectedText): ?bool {
-    $norm = static function ($s): string {
-        $s = (string)$s;
-        if (class_exists('Normalizer')) {
-            $s = \Normalizer::normalize($s, \Normalizer::FORM_C) ?: $s;
-        }
-        return (string)preg_replace('/\s+/u', ' ', trim($s));
-    };
+    $norm = 'triviax_board_norm_text';
     $sel = $norm($selectedText);
     if ($sel === '') {
         return null;
@@ -125,6 +131,172 @@ function triviax_board_choice_is_correct(array $challenge, string $selectedText)
 }
 
 /**
+ * Evalúa AUTORITATIVAMENTE la respuesta cruda del estudiante contra el desafío,
+ * para TODOS los tipos (cierre de #1 Etapa 2). Es el espejo server-side de la
+ * lógica de acierto de los renderers (js/activityRenderers/activityRendererRegistry.js).
+ *
+ * Contrato de $raw (lo que el cliente debe enviar en answer_payload.raw):
+ *   · multiple_choice / media_choice → { optionId } (o { optionText })
+ *   · true_false                     → { boolValue: bool }
+ *   · sequence_order                 → { order: [texto, …] }
+ *   · matching_pairs                 → { pairs: { leftText: rightText, … } }
+ *   · drag_drop (classification)     → { placements: { itemId: categoryId, … } }
+ *   · fill_blank (fill_blank_select) → { blanks: { blankKey: valor, … } }
+ *   · image_hotspot                  → { point: { x, y } }  (porcentajes 0..100)
+ *   · code_challenge                 → { lines: [texto, …] }
+ *
+ * @return bool|null  true/false si se puede decidir; null si no (→ se respeta al cliente).
+ */
+function triviax_board_grade_answer(array $challenge, array $raw): ?bool {
+    if (!$raw) {
+        return null;
+    }
+    $type = triviax_normalize_challenge_type($challenge['type'] ?? '');
+
+    switch ($type) {
+        case 'multiple_choice':
+        case 'media_choice':
+            $options = $challenge['options'] ?? ($challenge['answers'] ?? []);
+            if (!is_array($options) || count($options) === 0) {
+                return null;
+            }
+            $correctId = $challenge['answer']['correctOptionId'] ?? null;
+            if (isset($raw['optionId']) && $raw['optionId'] !== '') {
+                foreach ($options as $o) {
+                    if (is_array($o) && (string)($o['id'] ?? '') === (string)$raw['optionId']) {
+                        return !empty($o['correct'])
+                            || ($correctId !== null && ($o['id'] ?? null) === $correctId);
+                    }
+                }
+                return null; // id no reconocido → no decidir
+            }
+            if (isset($raw['optionText'])) {
+                return triviax_board_choice_is_correct($challenge, (string)$raw['optionText']);
+            }
+            return null;
+
+        case 'true_false':
+            if (!isset($challenge['answer']['value']) || !array_key_exists('boolValue', $raw)) {
+                return null;
+            }
+            return ((bool)$challenge['answer']['value']) === ((bool)$raw['boolValue']);
+
+        case 'sequence_order':
+            $expected = $challenge['answer']['order'] ?? ($challenge['items'] ?? null);
+            if (!is_array($expected) || !isset($raw['order']) || !is_array($raw['order'])) {
+                return null;
+            }
+            if (count($expected) !== count($raw['order'])) {
+                return false;
+            }
+            foreach (array_values($expected) as $i => $v) {
+                if (triviax_board_norm_text($v) !== triviax_board_norm_text($raw['order'][$i] ?? '')) {
+                    return false;
+                }
+            }
+            return true;
+
+        case 'matching_pairs':
+            $pairs = $challenge['pairs'] ?? null;
+            if (!is_array($pairs) || count($pairs) === 0 || !isset($raw['pairs']) || !is_array($raw['pairs'])) {
+                return null;
+            }
+            // raw['pairs']: mapa { leftText: rightText } o lista [{left,right}].
+            $userMap = [];
+            if (array_is_list($raw['pairs'])) {
+                foreach ($raw['pairs'] as $p) {
+                    if (is_array($p) && isset($p['left'])) {
+                        $userMap[triviax_board_norm_text($p['left'])] = triviax_board_norm_text($p['right'] ?? '');
+                    }
+                }
+            } else {
+                foreach ($raw['pairs'] as $l => $r) {
+                    $userMap[triviax_board_norm_text($l)] = triviax_board_norm_text($r);
+                }
+            }
+            if (count($userMap) !== count($pairs)) {
+                return false;
+            }
+            foreach ($pairs as $p) {
+                if (!is_array($p)) {
+                    continue;
+                }
+                $l = triviax_board_norm_text($p['left'] ?? '');
+                $r = triviax_board_norm_text($p['right'] ?? '');
+                if (!array_key_exists($l, $userMap) || $userMap[$l] !== $r) {
+                    return false;
+                }
+            }
+            return true;
+
+        case 'drag_drop': // classification
+            $items = $challenge['items'] ?? null;
+            if (!is_array($items) || count($items) === 0 || !isset($raw['placements']) || !is_array($raw['placements'])) {
+                return null;
+            }
+            $expected = [];
+            foreach ($items as $it) {
+                if (is_array($it) && isset($it['id'])) {
+                    $expected[(string)$it['id']] = (string)($it['categoryId'] ?? '');
+                }
+            }
+            if (count($expected) === 0 || count($raw['placements']) !== count($expected)) {
+                return false;
+            }
+            foreach ($expected as $id => $cat) {
+                if ((string)($raw['placements'][$id] ?? '') !== $cat) {
+                    return false;
+                }
+            }
+            return true;
+
+        case 'fill_blank': // fill_blank_select
+            $blanks = $challenge['blanks'] ?? null;
+            if (!is_array($blanks) || count($blanks) === 0 || !isset($raw['blanks']) || !is_array($raw['blanks'])) {
+                return null;
+            }
+            foreach ($blanks as $key => $def) {
+                if (!is_array($def)) {
+                    continue;
+                }
+                $correct = triviax_board_norm_text($def['correct'] ?? '');
+                $given   = triviax_board_norm_text($raw['blanks'][$key] ?? '');
+                if ($given === '' || $given !== $correct) {
+                    return false;
+                }
+            }
+            return true;
+
+        case 'image_hotspot':
+            $h = $challenge['answer']['hotspot'] ?? null;
+            if (!is_array($h) || !isset($raw['point']['x'], $raw['point']['y'])) {
+                return null;
+            }
+            $x = (float)$raw['point']['x'];
+            $y = (float)$raw['point']['y'];
+            return $x >= (float)($h['xMin'] ?? 0) && $x <= (float)($h['xMax'] ?? 100)
+                && $y >= (float)($h['yMin'] ?? 0) && $y <= (float)($h['yMax'] ?? 100);
+
+        case 'code_challenge':
+            $expected = $challenge['answer']['lines'] ?? ($challenge['lines'] ?? null);
+            if (!is_array($expected) || !isset($raw['lines']) || !is_array($raw['lines'])) {
+                return null;
+            }
+            if (count($expected) !== count($raw['lines'])) {
+                return false;
+            }
+            foreach (array_values($expected) as $i => $v) {
+                if (triviax_board_norm_text($v) !== triviax_board_norm_text($raw['lines'][$i] ?? '')) {
+                    return false;
+                }
+            }
+            return true;
+    }
+
+    return null; // tipo no cubierto → respetar al cliente
+}
+
+/**
  * Recalcula veredicto y puntaje de forma autoritativa.
  *
  * @return array{resultado:string, points_delta:int, overridden:bool}
@@ -132,19 +304,25 @@ function triviax_board_choice_is_correct(array $challenge, string $selectedText)
 function triviax_board_authoritative_result(
     string $baseProjectsDir, string $slug, string $challengeKey,
     string $challengeType, string $resultado, int $pointsDelta, string $selectedText,
-    ?PDO $pdo = null
+    ?PDO $pdo = null, ?array $raw = null
 ): array {
     $overridden = false;
     $challenge  = triviax_board_find_challenge($baseProjectsDir, $slug, $challengeKey, $pdo);
 
-    // Solo se intenta degradar un "correct" reclamado, y solo en tipos de opción.
+    // Solo se intenta DEGRADAR un "correct" reclamado (anti-inflación de puntaje).
     if ($resultado === 'correct' && $challenge !== null) {
-        $type = triviax_normalize_challenge_type($challenge['type'] ?? ($challengeType ?: 'multiple_choice'));
-        if (in_array($type, ['multiple_choice', 'media_choice'], true)) {
-            if (triviax_board_choice_is_correct($challenge, $selectedText) === false) {
-                $resultado  = 'incorrect';
-                $overridden = true;
+        // 1) Respuesta cruda estructurada → veredicto autoritativo de TODOS los tipos.
+        $verdict = (is_array($raw) && $raw) ? triviax_board_grade_answer($challenge, $raw) : null;
+        // 2) Fallback Etapa 1 (sin cruda): opción múltiple/multimedia desde selectedText.
+        if ($verdict === null) {
+            $type = triviax_normalize_challenge_type($challenge['type'] ?? ($challengeType ?: 'multiple_choice'));
+            if (in_array($type, ['multiple_choice', 'media_choice'], true)) {
+                $verdict = triviax_board_choice_is_correct($challenge, $selectedText);
             }
+        }
+        if ($verdict === false) {
+            $resultado  = 'incorrect';
+            $overridden = true;
         }
     }
 

@@ -335,7 +335,7 @@ export class UIManager {
         const startTime = Date.now();
 
         // Callback interno al responder
-        const handleUserSubmission = (isCorrect, responseText, isTimeout = false) => {
+        const handleUserSubmission = (isCorrect, responseText, isTimeout = false, raw = null) => {
             clearInterval(this.timerInterval);
             timerText.classList.remove('timer-warning');
 
@@ -369,14 +369,15 @@ export class UIManager {
                     isCorrect,
                     selectedText: responseText,
                     isTimeout,
-                    timeUsed: elapsedSeconds
+                    timeUsed: elapsedSeconds,
+                    raw // #1 Etapa 2: respuesta cruda estructurada para validación server-side
                 });
             };
         };
 
         // Renderizar el contenido específico del desafío desde la Registry
         this.activityRegistry.renderChallenge(challenge, optionsContainer, projectName, (res) => {
-            handleUserSubmission(res.isCorrect, res.selectedText, false);
+            handleUserSubmission(res.isCorrect, res.selectedText, false, res.raw || null);
         });
 
         // Loop del temporizador

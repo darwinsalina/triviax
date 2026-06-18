@@ -70,7 +70,7 @@ export class ActivityRendererRegistry {
                     btn.setAttribute('data-correct', isCorrect ? 'true' : 'false');
 
                     btn.onclick = () => {
-                        onSubmit({ isCorrect, selectedText: opt.text });
+                        onSubmit({ isCorrect, selectedText: opt.text, raw: { optionId: opt.id, optionText: opt.text } });
                     };
                     optionsGrid.appendChild(btn);
                 });
@@ -104,7 +104,7 @@ export class ActivityRendererRegistry {
                     btn.setAttribute('data-correct', isCorrect ? 'true' : 'false');
 
                     btn.onclick = () => {
-                        onSubmit({ isCorrect, selectedText: opt.text });
+                        onSubmit({ isCorrect, selectedText: opt.text, raw: { boolValue: opt.value } });
                     };
                     optionsGrid.appendChild(btn);
                 });
@@ -339,9 +339,13 @@ export class ActivityRendererRegistry {
                     });
 
                     const isAllCorrect = (correctCount === pairs.length);
+                    // Respuesta cruda: mapa { textoIzquierda: textoDerecha } elegido por el alumno.
+                    const rawPairs = {};
+                    connections.forEach((rIdx, lIdx) => { rawPairs[pairs[lIdx].left] = pairs[rIdx].right; });
                     onSubmit({
                         isCorrect: isAllCorrect,
-                        selectedText: `Pares formados (${correctCount}/${pairs.length} correctos)`
+                        selectedText: `Pares formados (${correctCount}/${pairs.length} correctos)`,
+                        raw: { pairs: rawPairs }
                     });
                 };
                 container.appendChild(confirmBtn);
@@ -481,7 +485,8 @@ export class ActivityRendererRegistry {
                     
                     onSubmit({
                         isCorrect: isCorrect,
-                        selectedText: currentOrder.join(' -> ')
+                        selectedText: currentOrder.join(' -> '),
+                        raw: { order: [...currentOrder] }
                     });
                 };
                 container.appendChild(confirmBtn);
@@ -702,7 +707,8 @@ export class ActivityRendererRegistry {
                     const isAllCorrect = correctCount === draggables.length;
                     onSubmit({
                         isCorrect: isAllCorrect,
-                        selectedText: `Elementos clasificados (${correctCount}/${draggables.length} correctos)`
+                        selectedText: `Elementos clasificados (${correctCount}/${draggables.length} correctos)`,
+                        raw: { placements: Object.fromEntries(placements) }
                     });
                 };
                 container.appendChild(confirmBtn);
@@ -755,11 +761,12 @@ export class ActivityRendererRegistry {
                     
                     const isCorrect = (challenge.answer && challenge.answer.correctOptionId === opt.id);
                     btn.setAttribute('data-correct', isCorrect ? 'true' : 'false');
-                    
+
                     btn.onclick = () => {
                         onSubmit({
                             isCorrect: isCorrect,
-                            selectedText: opt.text
+                            selectedText: opt.text,
+                            raw: { optionId: opt.id, optionText: opt.text }
                         });
                     };
                     optionsGrid.appendChild(btn);
@@ -826,7 +833,8 @@ export class ActivityRendererRegistry {
                     setTimeout(() => {
                         onSubmit({
                             isCorrect: inside,
-                            selectedText: `Clic en coordenadas (${x.toFixed(0)}%, ${y.toFixed(0)}%)`
+                            selectedText: `Clic en coordenadas (${x.toFixed(0)}%, ${y.toFixed(0)}%)`,
+                            raw: { point: { x, y } }
                         });
                     }, 800);
                 };
@@ -887,7 +895,7 @@ export class ActivityRendererRegistry {
                             select.appendChild(o);
                         });
 
-                        selectElements.push({ select, correct: blankConfig.correct });
+                        selectElements.push({ select, correct: blankConfig.correct, blankId });
                         textBlock.appendChild(select);
                     } else {
                         const textSpan = document.createElement('span');
@@ -923,9 +931,12 @@ export class ActivityRendererRegistry {
                     }
 
                     const isAllCorrect = (correctCount === selectElements.length);
+                    const rawBlanks = {};
+                    selectElements.forEach(item => { rawBlanks[item.blankId] = item.select.value; });
                     onSubmit({
                         isCorrect: isAllCorrect,
-                        selectedText: selectElements.map(item => item.select.value).join(', ')
+                        selectedText: selectElements.map(item => item.select.value).join(', '),
+                        raw: { blanks: rawBlanks }
                     });
                 };
                 container.appendChild(confirmBtn);
@@ -1072,7 +1083,8 @@ export class ActivityRendererRegistry {
                     const isCorrect = JSON.stringify(currentLines) === JSON.stringify(challenge.answer?.lines || challenge.lines);
                     onSubmit({
                         isCorrect: isCorrect,
-                        selectedText: currentLines.join('; ')
+                        selectedText: currentLines.join('; '),
+                        raw: { lines: [...currentLines] }
                     });
                 };
                 container.appendChild(confirmBtn);

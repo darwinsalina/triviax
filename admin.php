@@ -35,6 +35,7 @@ $docenteId = (int)($_SESSION['triviax_user_id'] ?? 0) ?: null;
 try {
     require_once __DIR__ . '/php/db.php';
     require_once __DIR__ . '/php/project_sync.php';
+    require_once __DIR__ . '/php/project_import.php';
     $pdo = triviax_db();
 } catch (\Throwable $_bdErr) {
     $pdo = null;
@@ -359,10 +360,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     $successMsg = "¡La actividad se ha creado correctamente!";
                     $createdActivityName = $activityName;
 
-                    // Registrar la nueva actividad en la BD
+                    // Registrar la nueva actividad en la BD + importar sus desafíos.
+                    // El sync debe ir primero: `desafios.proyecto_id` tiene FK a
+                    // `proyectos.id`, así que el proyecto debe existir antes.
                     if ($pdo !== null) {
                         try {
                             triviax_sync_single_project($pdo, $activityName, $folderPath, false, $docenteId);
+                            triviax_import_project($pdo, $activityName, $folderPath);
                         } catch (\Throwable $_) {}
                     }
                 }
@@ -576,9 +580,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         triviax_guardar_tablero_actividad($projectPath, $_POST['board_locked_id']);
     }
 
-    // Sincronizar metadatos actualizados con la BD
+    // Sincronizar metadatos actualizados con la BD + reimportar desafíos
+    // (sync primero por la FK desafios.proyecto_id → proyectos.id).
     if ($pdo !== null) {
-        try { triviax_sync_single_project($pdo, $project, $projectPath, false); } catch (\Throwable $_) {}
+        try {
+            triviax_sync_single_project($pdo, $project, $projectPath, false);
+            triviax_import_project($pdo, $project, $projectPath);
+        } catch (\Throwable $_) {}
     }
 
     echo json_encode(['success' => true, 'title' => $title], JSON_UNESCAPED_UNICODE);

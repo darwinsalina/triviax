@@ -108,5 +108,57 @@ check('SOL fill blanks', $s($fb)['blanks'], ['blank1' => 'CPU', 'blank2' => 'RAM
 check('SOL hotspot', $s($hs)['hotspot']['xMax'], 40);
 check('SOL code lines', $s($code)['lines'], ['inicio', 'paso', 'fin']);
 
+// ── saneador para el cliente (6.3c) ────────────────────────────
+// Nada de respuestas correctas debe sobrevivir a action=get.
+$san = 'triviax_board_sanitize_challenge_for_client';
+
+// multiple_choice: sin 'correct' en opciones ni 'correctOptionId'.
+$mcSan = $san($mc);
+$mcAnyCorrect = false;
+foreach ($mcSan['options'] as $o) { if (array_key_exists('correct', $o)) { $mcAnyCorrect = true; } }
+check('SAN mc sin opt.correct', $mcAnyCorrect, false);
+check('SAN mc conserva opciones', count($mcSan['options']), 2);
+check('SAN media sin correctOptionId', isset($san($media)['answer']['correctOptionId']), false);
+
+// true_false: sin answer.value (y answer vacío se elimina).
+check('SAN tf sin answer.value', isset($san($tf)['answer']), false);
+
+// sequence_order: sin answer.order.
+check('SAN seq sin answer.order', isset($san($seq)['answer']['order']), false);
+
+// matching_pairs: desacoplado (la asociación left↔right ya no es la correcta).
+$mpSan = $san($mp);
+$mpCoupled = true;
+foreach ($mpSan['pairs'] as $i => $p) { if (($p['right'] ?? null) !== ($mp['pairs'][$i]['right'] ?? null)) { $mpCoupled = false; } }
+check('SAN mp desacoplado', $mpCoupled, false);
+check('SAN mp conserva los rights', (function() use ($mpSan, $mp) {
+    $a = array_map(fn($p) => $p['right'], $mpSan['pairs']); sort($a);
+    $b = array_map(fn($p) => $p['right'], $mp['pairs']);    sort($b);
+    return $a === $b;
+})(), true);
+
+// classification: sin categoryId en items.
+$clSan = $san($cl);
+$clAnyCat = false;
+foreach ($clSan['items'] as $it) { if (array_key_exists('categoryId', $it)) { $clAnyCat = true; } }
+check('SAN class sin categoryId', $clAnyCat, false);
+check('SAN class conserva items', count($clSan['items']), 2);
+
+// fill_blank: sin 'correct' en blanks.
+$fbSan = $san($fb);
+$fbAnyCorrect = false;
+foreach ($fbSan['blanks'] as $b) { if (array_key_exists('correct', $b)) { $fbAnyCorrect = true; } }
+check('SAN fill sin blank.correct', $fbAnyCorrect, false);
+
+// image_hotspot: sin answer.hotspot.
+check('SAN hotspot sin answer.hotspot', isset($san($hs)['answer']['hotspot']), false);
+
+// code_challenge: sin answer.lines.
+check('SAN code sin answer.lines', isset($san($code)['answer']['lines']), false);
+
+// El saneador NO altera el grader autoritativo (recibe el desafío ORIGINAL).
+check('SAN no rompe grader mc', $g($mc, ['optionId' => 'a']), true);
+check('SAN no rompe grader mp', $g($mp, ['pairs' => ['CPU' => 'Procesa', 'RAM' => 'Memoria']]), true);
+
 echo "\n== board_grade: {$pass} OK, {$fail} FAIL ==\n";
 exit($fail > 0 ? 1 : 0);

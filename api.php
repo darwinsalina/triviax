@@ -351,7 +351,8 @@ if ($action === 'get') {
             echo json_encode([
                 'success' => true,
                 'metadata' => $parsedJsonProject['metadata'],
-                'questions' => $dbChallenges ?? $parsedJsonProject['challenges'],
+                // 6.3c: nunca exponer las respuestas correctas al cliente.
+                'questions' => array_map('triviax_board_sanitize_challenge_for_client', $dbChallenges ?? $parsedJsonProject['challenges']),
                 'board' => $boardOut
             ], JSON_UNESCAPED_UNICODE);
             exit;
@@ -390,7 +391,8 @@ if ($action === 'get') {
         echo json_encode([
             'success' => true,
             'metadata' => $parsedProject['metadata'],
-            'questions' => $dbChallenges ?? $parsedProject['questions'],
+            // 6.3c: nunca exponer las respuestas correctas al cliente.
+            'questions' => array_map('triviax_board_sanitize_challenge_for_client', $dbChallenges ?? $parsedProject['questions']),
             'board' => triviax_merge_board_sidecar($projectPath, [])
         ], JSON_UNESCAPED_UNICODE);
     } catch (Exception $e) {

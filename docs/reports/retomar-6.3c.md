@@ -1,8 +1,23 @@
-# Punto de suspensión — Épica #7 / #1 Etapa 2 (retomar en 6.3c)
+# Épica #7 / #1 Etapa 2 — COMPLETADA (incluye 6.3c)
 
-**Fecha de suspensión:** 2026-06-18
+> **ESTADO: cerrado el 2026-06-18.** El paso 6.3c ya está implementado y
+> verificado (`action=get` saneado; el servidor sigue evaluando contra los datos
+> originales). La fuga #1 queda cerrada por completo. El resto del documento se
+> conserva como registro de diseño y verificación.
+>
+> **Implementado en 6.3c:**
+> - `php/board_eval.php`: `triviax_board_sanitize_challenge_for_client()` (por tipo).
+> - `api.php` (`action=get`): ambas ramas (json y txt) pasan por el saneador.
+> - `tests/board_grade_test.php`: casos del saneador (56 OK, 0 FAIL).
+> - Verificado por HTTP en :8123 (demo_mixto, 6 tipos): SIN fugas; `grade`
+>   sigue dando `correct:true` para la opción buena y revela la solución solo
+>   en el feedback.
+
+---
+
+**Fecha de suspensión (histórico):** 2026-06-18
 **Rama:** `master` · árbol **limpio** (todo commiteado)
-**Último commit:** `06a7e14` (paso 6.3b)
+**Último commit al suspender:** `06a7e14` (paso 6.3b)
 
 ---
 

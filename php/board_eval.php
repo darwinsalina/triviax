@@ -374,6 +374,127 @@ function triviax_board_solution_for_client(array $challenge): array {
 }
 
 /**
+ * Sanea un desafío para enviarlo al cliente (`action=get`) SIN filtrar la
+ * respuesta correcta (cierre de la fuga #1, paso 6.3c). El veredicto ya es
+ * autoritativo en el servidor (endpoints `grade`/`submit_answer`), así que el
+ * cliente no necesita —ni debe— recibir la solución.
+ *
+ * Estrategia por tipo (normalizado con triviax_normalize_challenge_type):
+ *   · Siempre: se quita `correct` de cada opción de `options[]`/`answers[]`.
+ *   · choice/media: se borra `answer.correctOptionId`.
+ *   · true_false: se borra `answer.value`.
+ *   · sequence_order: se borra `answer.order` y se baraja `items` (su orden filtra).
+ *   · matching_pairs: se DESACOPLA barajando la columna derecha entre entradas
+ *     (la asociación left↔right ES la respuesta). El servidor evalúa contra los
+ *     pares ORIGINALES (recarga el desafío), no contra esto.
+ *   · drag_drop (classification): se quita `categoryId` de cada item y se barajan.
+ *   · fill_blank: se quita `correct` de cada blank (se conservan sus `options`).
+ *   · image_hotspot: se borra `answer.hotspot`.
+ *   · code_challenge: se borra `answer.lines` y se baraja `lines`.
+ *   · Al final, si `answer` quedó vacío, se elimina.
+ *
+ * Función PURA (no toca BD ni filesystem). Pensada para `array_map`.
+ */
+function triviax_board_sanitize_challenge_for_client(array $c): array {
+    $type = triviax_normalize_challenge_type($c['type'] ?? '');
+
+    // Siempre: quitar la marca de acierto de las opciones (cubre choice/media/
+    // true_false/txt clásico, que llevan options[] o answers[]).
+    foreach (['options', 'answers'] as $optKey) {
+        if (isset($c[$optKey]) && is_array($c[$optKey])) {
+            foreach ($c[$optKey] as &$opt) {
+                if (is_array($opt)) {
+                    unset($opt['correct']);
+                }
+            }
+            unset($opt);
+        }
+    }
+
+    switch ($type) {
+        case 'multiple_choice':
+        case 'media_choice':
+            unset($c['answer']['correctOptionId']);
+            break;
+
+        case 'true_false':
+            unset($c['answer']['value']);
+            break;
+
+        case 'sequence_order':
+            unset($c['answer']['order']);
+            if (isset($c['items']) && is_array($c['items'])) {
+                shuffle($c['items']);
+            }
+            break;
+
+        case 'matching_pairs':
+            // Barajar SOLO la columna derecha entre las entradas para romper la
+            // asociación posicional pairs[i].left↔pairs[i].right (la respuesta).
+            if (isset($c['pairs']) && is_array($c['pairs']) && count($c['pairs']) > 1) {
+                $rights = [];
+                foreach ($c['pairs'] as $p) {
+                    $rights[] = is_array($p) ? ($p['right'] ?? null) : null;
+                }
+                $orig = $rights;
+                shuffle($rights);
+                if ($rights === $orig) { // quedó idéntico → forzar desorden
+                    [$rights[0], $rights[1]] = [$rights[1], $rights[0]];
+                }
+                $i = 0;
+                foreach ($c['pairs'] as &$p) {
+                    if (is_array($p)) {
+                        $p['right'] = $rights[$i];
+                    }
+                    $i++;
+                }
+                unset($p);
+            }
+            break;
+
+        case 'drag_drop': // classification
+            if (isset($c['items']) && is_array($c['items'])) {
+                foreach ($c['items'] as &$it) {
+                    if (is_array($it)) {
+                        unset($it['categoryId']);
+                    }
+                }
+                unset($it);
+                shuffle($c['items']);
+            }
+            break;
+
+        case 'fill_blank': // fill_blank_select
+            if (isset($c['blanks']) && is_array($c['blanks'])) {
+                foreach ($c['blanks'] as &$b) {
+                    if (is_array($b)) {
+                        unset($b['correct']);
+                    }
+                }
+                unset($b);
+            }
+            break;
+
+        case 'image_hotspot':
+            unset($c['answer']['hotspot']);
+            break;
+
+        case 'code_challenge':
+            unset($c['answer']['lines']);
+            if (isset($c['lines']) && is_array($c['lines'])) {
+                shuffle($c['lines']);
+            }
+            break;
+    }
+
+    if (isset($c['answer']) && is_array($c['answer']) && count($c['answer']) === 0) {
+        unset($c['answer']);
+    }
+
+    return $c;
+}
+
+/**
  * Recalcula veredicto y puntaje de forma autoritativa.
  *
  * @return array{resultado:string, points_delta:int, overridden:bool}

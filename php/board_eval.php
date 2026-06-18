@@ -297,6 +297,83 @@ function triviax_board_grade_answer(array $challenge, array $raw): ?bool {
 }
 
 /**
+ * Devuelve la SOLUCIÓN del desafío para el feedback al alumno (se revela recién
+ * DESPUÉS de responder). Es lo que el cliente necesita para mostrar "la
+ * respuesta correcta era…" cuando `action=get` ya no expone las respuestas.
+ *
+ * @return array estructura por tipo con la clave 'type' + los datos de solución.
+ */
+function triviax_board_solution_for_client(array $challenge): array {
+    $type = triviax_normalize_challenge_type($challenge['type'] ?? '');
+
+    switch ($type) {
+        case 'multiple_choice':
+        case 'media_choice':
+            $options   = $challenge['options'] ?? ($challenge['answers'] ?? []);
+            $correctId = $challenge['answer']['correctOptionId'] ?? null;
+            $text = '';
+            $id   = $correctId;
+            foreach ($options as $o) {
+                if (!is_array($o)) {
+                    continue;
+                }
+                $isC = !empty($o['correct']) || ($correctId !== null && ($o['id'] ?? null) === $correctId);
+                if ($isC) {
+                    $text = (string)($o['text'] ?? '');
+                    $id   = $o['id'] ?? $id;
+                    break;
+                }
+            }
+            return ['type' => $type, 'correctOptionId' => $id, 'correctText' => $text];
+
+        case 'true_false':
+            return ['type' => $type, 'value' => (bool)($challenge['answer']['value'] ?? false)];
+
+        case 'sequence_order':
+            return ['type' => $type, 'order' => array_values($challenge['answer']['order'] ?? ($challenge['items'] ?? []))];
+
+        case 'matching_pairs':
+            $pairs = [];
+            foreach (($challenge['pairs'] ?? []) as $p) {
+                if (is_array($p)) {
+                    $pairs[] = ['left' => (string)($p['left'] ?? ''), 'right' => (string)($p['right'] ?? '')];
+                }
+            }
+            return ['type' => $type, 'pairs' => $pairs];
+
+        case 'drag_drop': // classification
+            $items = [];
+            foreach (($challenge['items'] ?? []) as $it) {
+                if (is_array($it) && isset($it['id'])) {
+                    $items[] = [
+                        'id'         => (string)$it['id'],
+                        'text'       => (string)($it['text'] ?? ''),
+                        'categoryId' => (string)($it['categoryId'] ?? ''),
+                    ];
+                }
+            }
+            return ['type' => $type, 'items' => $items, 'categories' => $challenge['categories'] ?? []];
+
+        case 'fill_blank': // fill_blank_select
+            $blanks = [];
+            foreach (($challenge['blanks'] ?? []) as $k => $def) {
+                if (is_array($def)) {
+                    $blanks[$k] = (string)($def['correct'] ?? '');
+                }
+            }
+            return ['type' => $type, 'blanks' => $blanks];
+
+        case 'image_hotspot':
+            return ['type' => $type, 'hotspot' => $challenge['answer']['hotspot'] ?? null];
+
+        case 'code_challenge':
+            return ['type' => $type, 'lines' => array_values($challenge['answer']['lines'] ?? ($challenge['lines'] ?? []))];
+    }
+
+    return ['type' => $type];
+}
+
+/**
  * Recalcula veredicto y puntaje de forma autoritativa.
  *
  * @return array{resultado:string, points_delta:int, overridden:bool}

@@ -95,5 +95,18 @@ check('CODE lines en challenge.lines', $g(['type' => 'code_challenge', 'lines' =
 check('raw vacío → null', $g($mc, []), null);
 check('tipo desconocido → null', $g(['type' => 'lo_que_sea'], ['x' => 1]), null);
 
+// ── solución para feedback ─────────────────────────────────────
+$s = 'triviax_board_solution_for_client';
+check('SOL mc correctText', $s($mc)['correctText'], 'Cuatro');
+check('SOL mc correctOptionId', $s($mc)['correctOptionId'], 'a');
+check('SOL media correctOptionId', $s($media)['correctOptionId'], 'y');
+check('SOL tf value', $s($tf)['value'], false);
+check('SOL seq order', $s($seq)['order'], ['Uno', 'Dos', 'Tres']);
+check('SOL mp pairs', $s($mp)['pairs'], [['left' => 'CPU', 'right' => 'Procesa'], ['left' => 'RAM', 'right' => 'Memoria']]);
+check('SOL class items', count($s($cl)['items']), 2);
+check('SOL fill blanks', $s($fb)['blanks'], ['blank1' => 'CPU', 'blank2' => 'RAM']);
+check('SOL hotspot', $s($hs)['hotspot']['xMax'], 40);
+check('SOL code lines', $s($code)['lines'], ['inicio', 'paso', 'fin']);
+
 echo "\n== board_grade: {$pass} OK, {$fail} FAIL ==\n";
 exit($fail > 0 ? 1 : 0);

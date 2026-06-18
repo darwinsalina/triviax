@@ -520,6 +520,48 @@ if ($action === 'get') {
     exit;
 }
 
+// Acción: Evaluación autoritativa SIN ESTADO de una respuesta (#1 Etapa 2).
+// Permite que el cliente delegue el veredicto al servidor y obtenga la solución
+// para el feedback, sin exponer las respuestas en action=get. No requiere sesión
+// (sirve a modo pantalla-única y a sesión en vivo por igual).
+if ($action === 'grade') {
+    triviax_api_require_post();
+    triviax_verify_csrf_json();
+    triviax_api_throttle('grade', 600, 60); // generoso: ~1 por respuesta
+
+    $input        = triviax_api_input();
+    $project      = trim((string)($input['project'] ?? ''));
+    $challengeKey = mb_substr(trim((string)($input['challenge_key'] ?? '')), 0, 100);
+    $raw          = (isset($input['raw']) && is_array($input['raw'])) ? $input['raw'] : [];
+
+    if ($project === '' || !preg_match('/^[a-zA-Z0-9_-]+$/', $project) || $challengeKey === '') {
+        triviax_api_error('VALIDATION_ERROR', 'Solicitud de evaluación inválida.', 400);
+    }
+
+    // BD-first para hallar el desafío (fallback a filesystem si no hay BD).
+    $pdo = null;
+    try {
+        require_once __DIR__ . '/php/db.php';
+        if (triviax_db_available()) {
+            $pdo = triviax_db();
+        }
+    } catch (\Throwable $e) {
+        $pdo = null;
+    }
+
+    $challenge = triviax_board_find_challenge($baseProjectsDir, $project, $challengeKey, $pdo);
+    if ($challenge === null) {
+        triviax_api_error('NOT_FOUND', 'Desafío no encontrado.', 404);
+    }
+
+    $verdict = triviax_board_grade_answer($challenge, $raw);
+    triviax_api_success([
+        'correct'  => ($verdict === true),
+        'gradable' => ($verdict !== null), // false si la respuesta cruda no permite decidir
+        'solution' => triviax_board_solution_for_client($challenge),
+    ]);
+}
+
 // Acción: Enviar reporte de partida por correo al docente
 if ($action === 'send_report') {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

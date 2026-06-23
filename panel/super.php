@@ -243,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Redirect POST → GET
-    $loc = '/triviax/panel/super.php?tab=' . urlencode($tab);
+    $loc = TRIVIAX_BASE . '/panel/super.php?tab=' . urlencode($tab);
     if ($actionMsg !== '') $loc .= '&msg=' . urlencode($actionMsg);
     if ($actionErr !== '') $loc .= '&err=' . urlencode($actionErr);
     header('Location: ' . $loc);
@@ -376,7 +376,7 @@ $csrf = triviax_csrf_token();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Superadmin — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         body { overflow: auto; }
 
@@ -598,8 +598,8 @@ $csrf = triviax_csrf_token();
     </div>
     <div class="super-header-user">
         <span><?= htmlspecialchars($usuario['email'], ENT_QUOTES, 'UTF-8') ?></span>
-        <a href="/triviax/panel/test_mail.php" style="color:var(--text-muted)" title="Diagnóstico de correo">📧 Test mail</a>
-        <a href="/triviax/auth/logout.php">Cerrar sesión</a>
+        <a href="<?= TRIVIAX_BASE ?>/panel/test_mail.php" style="color:var(--text-muted)" title="Diagnóstico de correo">📧 Test mail</a>
+        <a href="<?= TRIVIAX_BASE ?>/auth/logout.php">Cerrar sesión</a>
     </div>
 </header>
 
@@ -612,7 +612,7 @@ $csrf = triviax_csrf_token();
     <a href="?tab=trash"    class="super-tab <?= $activeTab === 'trash'    ? 'active' : '' ?>">
         🗑 Papelera<?= count($papelera) > 0 ? ' (' . count($papelera) . ')' : '' ?>
     </a>
-    <a href="/triviax/panel/generador_tableros.php" class="super-tab">🗺️ Tableros</a>
+    <a href="<?= TRIVIAX_BASE ?>/panel/generador_tableros.php" class="super-tab">🗺️ Tableros</a>
 </nav>
 
 <!-- ══ CONTENIDO ═══════════════════════════════════════════════════ -->
@@ -951,6 +951,6 @@ function closeRename(slug) {
     if (rf) rf.classList.remove('open');
 }
 </script>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

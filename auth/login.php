@@ -25,11 +25,11 @@ if (triviax_esta_autenticado()) {
     } else {
         // Sesión normal activa → redirigir a su panel propio
         if (triviax_es_superadmin()) {
-            header('Location: /triviax/panel/super.php');
+            header('Location: ' . TRIVIAX_BASE . '/panel/super.php');
         } elseif (triviax_es_docente()) {
-            header('Location: /triviax/panel/dashboard.php');
+            header('Location: ' . TRIVIAX_BASE . '/panel/dashboard.php');
         } else {
-            header('Location: /triviax/index.html');
+            header('Location: ' . TRIVIAX_BASE . '/index.html');
         }
         exit;
     }
@@ -50,12 +50,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: ' . $resultado['redirect']);
             exit;
         }
-        $destino = '/triviax/index.html';
+        $destino = TRIVIAX_BASE . '/index.html';
         if ($resultado['usuario']['rol'] === TRIVIAX_ROL_DOCENTE) {
-            $destino = '/triviax/panel/dashboard.php';
+            $destino = TRIVIAX_BASE . '/panel/dashboard.php';
         }
-        // Respetar redirección solicitada si es segura
-        if ($redir !== '' && strpos($redir, '/triviax/') === 0) {
+        // Respetar redirección solicitada si es segura: debe ser una ruta
+        // interna bajo la base de la app y nunca un destino protocol-relative
+        // ("//otro-host") que abriría un open-redirect.
+        $baseSafe = TRIVIAX_BASE . '/';
+        if (strncmp($redir, $baseSafe, strlen($baseSafe)) === 0
+            && strncmp($redir, '//', 2) !== 0) {
             $destino = $redir;
         }
         header('Location: ' . $destino);
@@ -73,7 +77,7 @@ $csrfToken = triviax_csrf_token();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ingresar — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         .auth-screen {
             display: flex;
@@ -281,14 +285,14 @@ $csrfToken = triviax_csrf_token();
         <hr class="auth-divider">
 
         <div class="auth-links">
-            <a href="/triviax/auth/recuperar.php">¿Olvidaste tu contraseña? <span>Recuperar acceso</span></a>
-            <a href="/triviax/auth/registro.php">¿Eres estudiante y no tienes cuenta? <span>Regístrate</span></a>
-            <a href="/triviax/auth/registro_docente.php">¿Eres docente y no tienes cuenta? <span>Crear cuenta docente</span></a>
-            <a href="/triviax/index.html">← Volver al juego</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/recuperar.php">¿Olvidaste tu contraseña? <span>Recuperar acceso</span></a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/registro.php">¿Eres estudiante y no tienes cuenta? <span>Regístrate</span></a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/registro_docente.php">¿Eres docente y no tienes cuenta? <span>Crear cuenta docente</span></a>
+            <a href="<?= TRIVIAX_BASE ?>/index.html">← Volver al juego</a>
         </div>
 
     </div>
 </div>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

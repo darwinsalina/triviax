@@ -81,7 +81,7 @@ const PHASE_LABELS = {
 // ─────────────────────────────────────────────
 
 function apiUrl(action, params = {}) {
-    const url = new URL('/triviax/api.php', window.location.origin);
+    const url = new URL((window.TRIVIAX_BASE ?? '') + '/api.php', window.location.origin);
     url.searchParams.set('action', action);
     Object.entries(params).forEach(([k, v]) => {
         if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, String(v));
@@ -405,7 +405,7 @@ async function finishActivity() {
     try {
         stopPolling();
         await api('lotto_finish_activity', { method: 'POST', body: { activity_id: state.activityId } });
-        window.location.href = `/triviax/panel/lotto.php`;
+        window.location.href = `${window.TRIVIAX_BASE ?? ""}/panel/lotto.php`;
     } catch (err) {
         alert(err.message);
         startPolling();

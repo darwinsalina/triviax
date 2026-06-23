@@ -10,7 +10,7 @@ require_once __DIR__ . '/../php/image_upload.php';
 // Control de accesos (docente y superadmin)
 $usuario = triviax_usuario_actual();
 if (!$usuario || ($usuario['rol'] !== TRIVIAX_ROL_DOCENTE && $usuario['rol'] !== TRIVIAX_ROL_SUPERADMIN)) {
-    header('Location: /triviax/auth/login.php');
+    header('Location: ' . TRIVIAX_BASE . '/auth/login.php');
     exit;
 }
 
@@ -286,7 +286,7 @@ $csrfToken = triviax_csrf_token();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Tableros — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=6.0.0">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=6.0.0">
     <style>
         body {
             overflow: auto;
@@ -548,11 +548,11 @@ $csrfToken = triviax_csrf_token();
             <span class="badge-level" style="background: rgba(168, 85, 247, 0.15); border: 1px solid var(--accent); color: #c084fc;">Map Creator</span>
         </div>
         <div style="display: flex; gap: 10px;">
-            <a href="/triviax/admin.php" class="btn btn-secondary" style="text-decoration: none; padding: 6px 14px; text-transform: none; font-size: 0.8rem;">
+            <a href="<?= TRIVIAX_BASE ?>/admin.php" class="btn btn-secondary" style="text-decoration: none; padding: 6px 14px; text-transform: none; font-size: 0.8rem;">
                 🎓 Panel Docente
             </a>
             <?php if ($usuario['rol'] === TRIVIAX_ROL_SUPERADMIN): ?>
-                <a href="/triviax/panel/super.php" class="btn btn-secondary" style="text-decoration: none; padding: 6px 14px; text-transform: none; font-size: 0.8rem;">
+                <a href="<?= TRIVIAX_BASE ?>/panel/super.php" class="btn btn-secondary" style="text-decoration: none; padding: 6px 14px; text-transform: none; font-size: 0.8rem;">
                     ⚡ Superadmin
                 </a>
             <?php endif; ?>
@@ -848,7 +848,7 @@ $csrfToken = triviax_csrf_token();
 
         function changeBgImage(path) {
             const img = document.getElementById('editor-bg-img');
-            img.src = path ? '/triviax/' + path : '';
+            img.src = path ? '<?= TRIVIAX_BASE ?>/' + path : '';
             img.style.display = path ? 'block' : 'none';
             updatePrompt();
         }
@@ -1314,7 +1314,7 @@ Verifica que el array tenga exactamente ${size + 1} elementos y que los valores 
             })
             .then(data => {
                 alert('¡Tablero guardado correctamente!' + (data.codigo ? '\nCódigo: ' + data.codigo : '') + '\nYa está disponible para seleccionar en la partida.');
-                window.location.href = '/triviax/admin.php';
+                window.location.href = '<?= TRIVIAX_BASE ?>/admin.php';
             })
             .catch(err => {
                 alert('No se pudo guardar el tablero.\n\n' + err.message);

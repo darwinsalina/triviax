@@ -1,69 +1,46 @@
-# Plan de épicas — #7 (importador filesystem→BD) y #10 (tiempo real)
+# Estado de épicas — #7 completada y #10 pendiente
 
-**Fecha:** 2026-06-17
-**Contexto:** áreas críticas restantes del [reporte260617.md](reporte260617.md) §7.
-Son las únicas dos que **no** se completaron en la sesión de quick-wins porque
-exceden una sesión y requieren un MySQL vivo (y, para #10, navegador) para
-construirse y verificarse. Este documento las deja listas para aprobar.
+**Fecha:** 2026-06-18
+**Contexto:** actualización posterior a la sesión que cerró la Épica #7 y la
+Etapa 2 de #1. Este documento queda como registro de lo construido y como plan
+vigente para la Épica #10.
 
 ---
 
-## Épica #7 — Importador filesystem → BD (dualidad de datos)
+## Épica #7 — Importador filesystem → BD (COMPLETADA)
 
-### Por qué
-Hoy el tablero clásico lee los desafíos de `proyectos/*/preguntas.txt` o
-`proyecto.json` (filesystem); solo `php/project_sync.php` registra **metadata**
-en la tabla `proyectos`, no los desafíos. Esa dualidad:
-- Obliga al servidor a re-parsear archivos en cada `submit_answer` (ya resuelto
-  parcialmente en #1 Etapa 1).
-- Bloquea la **Etapa 2 de #1** (validación server-side de tipos estructurados).
-- Bloquea reportes ricos, estadísticas por desafío en BD y modos competitivos.
-
-### Estado del esquema
-Las tablas destino existen en el respaldo local
-`NoSubir/respaldos sql/triviax_*.sql` (Fase 2 del AGENTS.md): `activities`,
-`activity_settings`, `challenges`, `challenge_options`, `challenge_pairs`,
-`challenge_sequence_items`. **Acción previa:** confirmar contra la BD viva qué
-tablas/columnas existen realmente y formalizarlas como migración versionada
-`db/migraciones/6.2_actividades_desafios.sql` (hoy no hay DDL de estas tablas en
-el repo).
-
-### Pasos
-1. **Reconciliar esquema.** Volcar el `CREATE TABLE` real de la BD y versionarlo
-   como migración. Añadir índices por `proyecto_id`/`challenge_key`.
-2. **Mapeo puro (testeable sin BD).** Función `triviax_map_challenge_to_rows($challenge)`
-   que transforme cada desafío normalizado en filas de `challenges` (+ tablas
-   hijas según tipo: `challenge_options` para choice/media, `challenge_pairs`
-   para matching, `challenge_sequence_items` para sequence, JSON para
-   classification/fill_blank/hotspot/code). **Unit test en `tests/`** con un
-   proyecto de cada tipo (sin BD).
-3. **Importador.** `triviax_import_project($pdo, $slug)` que parsea el proyecto
-   del filesystem y hace upsert idempotente de actividad + desafíos, preservando
-   `docente_id` (reusar la regla de propiedad de
-   `triviax_docente_puede_gestionar_proyecto`). Transaccional.
-4. **Disparadores.** Llamar al importador desde `admin.php` al crear/editar
-   actividad (junto a `triviax_sync_single_project`) y un comando CLI
-   `tools/import_projects.php` para la carga inicial masiva.
-5. **Re-apuntar lecturas.** `api.php?action=get` y `submit_answer` leen de BD
-   cuando la actividad está importada (fallback a filesystem si no).
-6. **Cerrar #1 Etapa 2.** Con los desafíos en BD y el cliente enviando la
-   respuesta cruda estructurada, validar server-side **todos** los tipos y dejar
-   de exponer las respuestas correctas en `action=get`.
-
-### Riesgos
-- Doble fuente de verdad durante la transición: definir claramente cuál manda.
-- Cobertura de los ~10 tipos en el mapeo (mitigar con unit tests por tipo).
-- Requiere MySQL de pruebas para los pasos 3–6.
+### Qué quedó implementado
+- Migraciones versionadas: `db/migraciones/6.0_actividades_imagenes.sql`,
+  `db/migraciones/6.1_tableros.sql` y `db/migraciones/6.2_desafios.sql`.
+- Mapeo/importación de desafíos desde filesystem a BD en `php/project_import.php`.
+- CLI de carga masiva en `tools/import_projects.php`.
+- Disparadores desde `admin.php` para importar/sincronizar al guardar actividades.
+- `api.php?action=get` y `submit_answer` leen desde BD cuando hay actividad
+  importada, con fallback al filesystem para compatibilidad.
+- Grader server-side para todos los tipos del tablero en `php/board_eval.php`.
+- Endpoint `action=grade` y delegación del veredicto desde el cliente.
+- Saneador `triviax_board_sanitize_challenge_for_client()` para que `action=get`
+  no exponga respuestas correctas al navegador.
 
 ### Criterios de aceptación
-- Migración versionada aplicable en limpio.
-- Unit tests del mapeo (todos los tipos) en verde sin BD.
-- Una actividad importada se juega leyendo de BD y `submit_answer` valida todos
-  los tipos server-side; `action=get` no incluye `correct`.
+- `tests/run.php`: 3 suites, 81 OK, 0 FAIL.
+- `tests/project_import_test.php`: mapeo puro en verde.
+- `tests/board_grade_test.php`: grader + saneador en verde.
+- Verificación HTTP local contra Apache/WAMP:
+  `api.php?action=get&project=demo_mixto` devuelve 6 preguntas y 0 claves
+  sensibles (`correct`, `correctOptionId`, `value`, `order`, `hotspot`,
+  `categoryId`, `lines`) fuera de textos de feedback.
+- `api.php?action=grade` con CSRF corrige `demo_mixto/mc_001` con HTTP 200 y
+  `correct:true` para la opción correcta.
+
+### Consecuencia de diseño
+El tablero online ya no necesita confiar en el veredicto del cliente. En PWA
+verdaderamente offline, sin PHP disponible, no hay corrección competitiva fiable
+porque las respuestas correctas ya no viajan al navegador.
 
 ---
 
-## Épica #10 — Tiempo real (reemplazar el polling)
+## Épica #10 — Tiempo real (EN PROGRESO)
 
 ### Por qué
 El monitor docente y las modalidades en vivo usan *polling* (~5 s):
@@ -80,12 +57,16 @@ innecesaria de BD/HTTP.
   desplegar (hub Mercure o servidor WS). Mayor coste operativo.
 
 ### Pasos (opción A)
-1. Tabla/columna de "versión de estado" por sesión (`updated_at`/`state_version`)
-   para detectar cambios baratos.
-2. Endpoint SSE que hace long-poll/stream del estado y emite solo deltas.
-3. Cliente: `EventSource` con reconexión y *fallback* automático al polling
-   actual si SSE no está disponible (degradación elegante).
-4. Mantener el polling como fallback hasta validar SSE en producción.
+1. ✅ Endpoint SSE `events.php?stream=live_session_summary&id=...` para el
+   monitor docente de una partida.
+2. ✅ Helper compartido `php/live_session_summary.php`, usado tanto por AJAX
+   legado como por SSE.
+3. ✅ Cliente `panel/live_session.php` con `EventSource`, heartbeat,
+   reconexión y fallback automático al polling de 5 s si SSE no entrega eventos.
+4. ✅ Streams cortos (25 s) para no retener workers Apache/PHP indefinidamente.
+5. ⬜ Extender el patrón a Lotto host/estudiante y otros monitores.
+6. ⬜ Evaluar una columna `state_version` si el volumen de sesiones exige evitar
+   consultas periódicas dentro del stream.
 
 ### Riesgos
 - Apache/PHP con `mod_php` mantiene un worker por conexión SSE abierta: limitar
@@ -93,13 +74,15 @@ innecesaria de BD/HTTP.
 - Requiere pruebas en navegador (no verificable en este entorno CLI).
 
 ### Criterios de aceptación
-- El monitor docente refleja cambios en < 1 s sin polling de 5 s.
-- Fallback a polling si el navegador/servidor no soporta SSE.
+- Monitor docente del tablero: implementado con SSE + fallback a polling.
+- `scratch/test_live_session_summary.php`: 10 OK, 0 FAIL.
+- Pendiente de aceptación visual: abrir una partida real en el navegador y
+  confirmar actualización < 1 s en el monitor.
+- Pendiente para cerrar toda la épica: Lotto host/estudiante con SSE.
 
 ---
 
-## Nota de método
-Ambas épicas se construyen y prueban con MySQL (y, para #10, navegador), no
-disponibles en el entorno CLI de esta sesión. Por eso se entregan como plan en
-vez de código no verificable. La parte **pura** de #7 (mapeo) sí es unit-testeable
-sin BD y debería ser el primer commit cuando se arranque.
+## Próximo bloque real
+La siguiente iteración de #10 es llevar el mismo patrón SSE a Lotto
+host/estudiante. Requiere navegador para validar reconexión, latencia y consumo
+de workers en Apache/PHP.

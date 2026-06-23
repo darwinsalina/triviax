@@ -9,7 +9,7 @@ require_once __DIR__ . '/../php/auth.php';
 
 // Si ya está autenticado, redirigir
 if (triviax_esta_autenticado()) {
-    header('Location: /triviax/index.html');
+    header('Location: ' . TRIVIAX_BASE . '/index.html');
     exit;
 }
 
@@ -58,7 +58,7 @@ $csrfToken = triviax_csrf_token();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrarse — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         .auth-screen {
             display: flex;
@@ -242,7 +242,7 @@ $csrfToken = triviax_csrf_token();
         <?php if ($success !== ''): ?>
             <div class="auth-success"><?= $success ?></div>
             <div style="text-align:center;">
-                <a href="/triviax/auth/login.php" style="color:#a5b4fc;font-weight:600;text-decoration:none;font-size:0.95rem;">
+                <a href="<?= TRIVIAX_BASE ?>/auth/login.php" style="color:#a5b4fc;font-weight:600;text-decoration:none;font-size:0.95rem;">
                     → Ir al inicio de sesión
                 </a>
             </div>
@@ -309,14 +309,14 @@ $csrfToken = triviax_csrf_token();
         <hr class="auth-divider">
 
         <div class="auth-links">
-            <a href="/triviax/auth/login.php">¿Ya tienes cuenta? <span>Iniciar sesión</span></a>
-            <a href="/triviax/index.html">← Volver al juego</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/login.php">¿Ya tienes cuenta? <span>Iniciar sesión</span></a>
+            <a href="<?= TRIVIAX_BASE ?>/index.html">← Volver al juego</a>
         </div>
 
         <?php endif; ?>
 
     </div>
 </div>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

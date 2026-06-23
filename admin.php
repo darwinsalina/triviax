@@ -3673,6 +3673,6 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
             return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
     </script>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

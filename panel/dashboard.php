@@ -70,7 +70,7 @@ $estadoColor = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel docente — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         body { overflow: auto; }
 
@@ -349,8 +349,8 @@ $estadoColor = [
         <div class="topbar-logo">TRIVIAX</div>
         <div class="topbar-usuario">
             Hola, <strong><?= htmlspecialchars($usuario['nombre'], ENT_QUOTES, 'UTF-8') ?></strong>
-            <a href="/triviax/panel/guia_docente.php">📘 Guía del docente</a>
-            <a href="/triviax/auth/logout.php">Cerrar sesión</a>
+            <a href="<?= TRIVIAX_BASE ?>/panel/guia_docente.php">📘 Guía del docente</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/logout.php">Cerrar sesión</a>
         </div>
     </header>
 
@@ -382,7 +382,7 @@ $estadoColor = [
         <section>
             <div class="section-header">
                 <h2>Mis sesiones de juego</h2>
-                <a href="/triviax/panel/sesion_nueva.php" class="btn-nueva">+ Nueva sesión</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/sesion_nueva.php" class="btn-nueva">+ Nueva sesión</a>
             </div>
 
             <?php if (empty($sesiones)): ?>
@@ -433,7 +433,7 @@ $estadoColor = [
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="/triviax/panel/sesion_detalle.php?id=<?= (int)$s['id'] ?>" class="link-detalle">
+                                    <a href="<?= TRIVIAX_BASE ?>/panel/sesion_detalle.php?id=<?= (int)$s['id'] ?>" class="link-detalle">
                                         Ver →
                                     </a>
                                 </td>
@@ -451,19 +451,19 @@ $estadoColor = [
                 <h2>Herramientas adicionales</h2>
             </div>
             <div class="panel-legado">
-                <a href="/triviax/index.html" class="btn-legado">🎮 Ir al juego</a>
-                <a href="/triviax/panel/live_sessions.php" class="btn-legado">Ver partidas en vivo</a>
-                <a href="/triviax/panel/study_answer.php" class="btn-legado">Estudia y responde</a>
-                <a href="/triviax/panel/lotto.php" class="btn-legado">TRIVIAX Lotto</a>
-                <a href="/triviax/panel/jigsaw.php" class="btn-legado">🧩 Puzle</a>
-                <a href="/triviax/panel/etiquetar.php" class="btn-legado">🏷️ Etiquetar</a>
-                <a href="/triviax/admin.php" class="btn-legado">⚙️ Panel de Actividades</a>
-                <a href="/triviax/estadisticas.php" class="btn-legado">📊 Estadísticas</a>
+                <a href="<?= TRIVIAX_BASE ?>/index.html" class="btn-legado">🎮 Ir al juego</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/live_sessions.php" class="btn-legado">Ver partidas en vivo</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/study_answer.php" class="btn-legado">Estudia y responde</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/lotto.php" class="btn-legado">TRIVIAX Lotto</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/jigsaw.php" class="btn-legado">🧩 Puzle</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/etiquetar.php" class="btn-legado">🏷️ Etiquetar</a>
+                <a href="<?= TRIVIAX_BASE ?>/admin.php" class="btn-legado">⚙️ Panel de Actividades</a>
+                <a href="<?= TRIVIAX_BASE ?>/estadisticas.php" class="btn-legado">📊 Estadísticas</a>
             </div>
         </section>
 
     </main>
 </div>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

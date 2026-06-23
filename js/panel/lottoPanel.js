@@ -32,7 +32,7 @@ function setStatus(message, tone = '') {
 }
 
 function apiUrl(action, params = {}) {
-    const url = new URL('/triviax/api.php', window.location.origin);
+    const url = new URL((window.TRIVIAX_BASE ?? '') + '/api.php', window.location.origin);
     url.searchParams.set('action', action);
     Object.entries(params).forEach(([k, v]) => {
         if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, String(v));
@@ -148,7 +148,7 @@ async function refreshList() {
             addBtn('Abrir ingreso', true, () => transition('lotto_open_login', a.id, 'Ingreso abierto. Tus estudiantes ya pueden entrar con su número.'));
         }
         if (['published', 'login_open', 'study', 'response', 'oral'].includes(a.status)) {
-            addLink('Pantalla salón', `/triviax/lotto_host.php?code=${encodeURIComponent(a.codigo)}`);
+            addLink('Pantalla salón', `${window.TRIVIAX_BASE ?? ""}/lotto_host.php?code=${encodeURIComponent(a.codigo)}`);
         }
         if (a.status !== 'draft') {
             addBtn('Reporte', false, () => showReport(a));
@@ -583,7 +583,7 @@ async function wizGenerate() {
         p2.append(el('span', 'lotto-code', saved.codigo));
         const p3 = el('p', '', 'Cuando empiece la clase: abre la pantalla del salón, presiona "Abrir ingreso" y espera a que todos ingresen con su número antes de iniciar el estudio.');
         wiz.finalSummary.append(p1, p2, p3);
-        wiz.finalHost.href = `/triviax/lotto_host.php?code=${encodeURIComponent(saved.codigo)}`;
+        wiz.finalHost.href = `${window.TRIVIAX_BASE ?? ""}/lotto_host.php?code=${encodeURIComponent(saved.codigo)}`;
         wiz.finalHost.classList.remove('lotto-hidden');
 
         await refreshList();

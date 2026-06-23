@@ -230,7 +230,7 @@ function _triviax_es_local(): bool {
 function _triviax_base_url(): string {
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    return $scheme . '://' . $host . '/triviax';
+    return $scheme . '://' . $host . TRIVIAX_BASE;
 }
 
 /**
@@ -587,7 +587,7 @@ function triviax_registrar_usuario(string $nombre, string $apellido, string $ema
             // ── MODO LOCAL ───────────────────────────────────────────────────
             // En lugar de mail(), el navegador va a una página que simula
             // el email con el enlace clicable. No se necesita SMTP configurado.
-            $localPreview = '/triviax/auth/mail_preview.php?' . http_build_query([
+            $localPreview = TRIVIAX_BASE . '/auth/mail_preview.php?' . http_build_query([
                 'token'    => $token,
                 'email'    => $email,
                 'nombre'   => $nombre,
@@ -1030,7 +1030,7 @@ function triviax_login(string $email, string $password): array {
         // Superadmin: determinar redirect especial
         $redirect = null;
         if ($datosUsuario['rol'] === TRIVIAX_ROL_SUPERADMIN) {
-            $redirect = '/triviax/panel/super.php';
+            $redirect = TRIVIAX_BASE . '/panel/super.php';
         }
 
         return ['ok' => true, 'error' => null, 'usuario' => $datosUsuario, 'redirect' => $redirect];
@@ -1096,12 +1096,12 @@ function triviax_requerir_auth(?string $rolRequerido = null): void {
 
     if ($usuario === null) {
         $redir = urlencode($_SERVER['REQUEST_URI'] ?? '');
-        header('Location: /triviax/auth/login.php?redir=' . $redir);
+        header('Location: ' . TRIVIAX_BASE . '/auth/login.php?redir=' . $redir);
         exit;
     }
 
     if ($rolRequerido !== null && $usuario['rol'] !== $rolRequerido) {
-        header('Location: /triviax/auth/login.php?error=acceso_denegado');
+        header('Location: ' . TRIVIAX_BASE . '/auth/login.php?error=acceso_denegado');
         exit;
     }
 }
@@ -1137,7 +1137,7 @@ function triviax_reenviar_verificacion(int $userId): array {
         )->execute([$token, $expira, $userId]);
 
         if (_triviax_es_local()) {
-            $localPreview = '/triviax/auth/mail_preview.php?' . http_build_query([
+            $localPreview = TRIVIAX_BASE . '/auth/mail_preview.php?' . http_build_query([
                 'token'    => $token,
                 'email'    => $u['email'],
                 'nombre'   => $u['nombre'],
@@ -1169,11 +1169,11 @@ function triviax_requerir_superadmin(): void {
     triviax_session_start();
     $usuario = triviax_usuario_actual();
     if ($usuario === null) {
-        header('Location: /triviax/auth/login.php');
+        header('Location: ' . TRIVIAX_BASE . '/auth/login.php');
         exit;
     }
     if ($usuario['rol'] !== TRIVIAX_ROL_SUPERADMIN) {
-        header('Location: /triviax/auth/login.php?error=acceso_denegado');
+        header('Location: ' . TRIVIAX_BASE . '/auth/login.php?error=acceso_denegado');
         exit;
     }
 }
@@ -1215,7 +1215,7 @@ function triviax_solicitar_reset_password(string $email): array {
             ->execute([$token, $expira, $usuario['id']]);
 
         if (_triviax_es_local()) {
-            $localPreview = '/triviax/auth/mail_preview.php?' . http_build_query([
+            $localPreview = TRIVIAX_BASE . '/auth/mail_preview.php?' . http_build_query([
                 'type'   => 'reset',
                 'token'  => $token,
                 'email'  => $email,

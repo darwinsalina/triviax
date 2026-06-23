@@ -4,5 +4,5 @@
  */
 require_once __DIR__ . '/../php/auth.php';
 triviax_logout();
-header('Location: /triviax/auth/login.php');
+header('Location: ' . TRIVIAX_BASE . '/auth/login.php');
 exit;

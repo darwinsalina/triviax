@@ -13,7 +13,7 @@ $pdo     = triviax_db();
 
 $id = (int)($_GET['id'] ?? 0);
 if ($id <= 0) {
-    header('Location: /triviax/panel/dashboard.php');
+    header('Location: ' . TRIVIAX_BASE . '/panel/dashboard.php');
     exit;
 }
 
@@ -105,7 +105,7 @@ $stmtS->execute([$id, $usuario['id']]);
 $sesion = $stmtS->fetch();
 
 if (!$sesion) {
-    header('Location: /triviax/panel/dashboard.php');
+    header('Location: ' . TRIVIAX_BASE . '/panel/dashboard.php');
     exit;
 }
 
@@ -150,9 +150,8 @@ $triviax_relleno = static function (int $n): string {
 $shareToken = $triviax_relleno(12) . $sesion['codigo_acceso'] . $triviax_relleno(8);
 $scheme   = (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off') ? 'https' : 'http';
 $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
-// Base de la app derivada de la ruta del propio script: /triviax/panel/… → /triviax
-$appBase  = rtrim(str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME'] ?? '/triviax/panel/x'))), '/');
-$shareUrl = $scheme . '://' . $host . $appBase . '/?' . $shareToken;
+// Base de la app: constante global auto-detectada (ver php/db.php).
+$shareUrl = $scheme . '://' . $host . TRIVIAX_BASE . '/?' . $shareToken;
 
 // Acciones rápidas sobre el estado
 $csrfToken = triviax_csrf_token();
@@ -167,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $campo = $nuevoEstado === 'activa' ? ', fecha_inicio = NOW()' : ($nuevoEstado === 'finalizada' ? ', fecha_fin = NOW()' : '');
         $stmtU = $pdo->prepare("UPDATE sesiones SET estado = ? {$campo} WHERE id = ? AND docente_id = ?");
         $stmtU->execute([$nuevoEstado, $id, $usuario['id']]);
-        header('Location: /triviax/panel/sesion_detalle.php?id=' . $id);
+        header('Location: ' . TRIVIAX_BASE . '/panel/sesion_detalle.php?id=' . $id);
         exit;
     }
 }
@@ -203,7 +202,7 @@ $resultadoLabel = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($sesion['nombre'], ENT_QUOTES, 'UTF-8') ?> — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         body { overflow: auto; }
 
@@ -429,8 +428,8 @@ $resultadoLabel = [
     <header class="topbar">
         <div class="topbar-logo">TRIVIAX</div>
         <div class="topbar-nav">
-            <a href="/triviax/panel/dashboard.php">← Panel</a>
-            <a href="/triviax/auth/logout.php">Cerrar sesión</a>
+            <a href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">← Panel</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/logout.php">Cerrar sesión</a>
         </div>
     </header>
 
@@ -811,6 +810,6 @@ document.head.appendChild(styleSheet);
 setInterval(fetchLiveStats, 3000);
 fetchLiveStats();
 </script>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

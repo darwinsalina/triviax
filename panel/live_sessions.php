@@ -33,7 +33,7 @@ $sesiones = $stmtSesiones->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Partidas en vivo - TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         body { overflow: auto; }
         .panel-layout { min-height: 100vh; display: flex; flex-direction: column; }
@@ -106,8 +106,8 @@ $sesiones = $stmtSesiones->fetchAll(PDO::FETCH_ASSOC);
     <header class="topbar">
         <div class="topbar-logo">TRIVIAX</div>
         <div class="topbar-nav">
-            <a href="/triviax/panel/dashboard.php">Dashboard</a>
-            <a href="/triviax/auth/logout.php">Cerrar sesion</a>
+            <a href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">Dashboard</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/logout.php">Cerrar sesion</a>
         </div>
     </header>
 
@@ -143,13 +143,13 @@ $sesiones = $stmtSesiones->fetchAll(PDO::FETCH_ASSOC);
                         <div class="live-project"><?= htmlspecialchars($s['proyecto_title'], ENT_QUOTES, 'UTF-8') ?></div>
                         <div><span class="live-code"><?= htmlspecialchars($s['codigo_acceso'], ENT_QUOTES, 'UTF-8') ?></span></div>
                         <div class="live-project"><?= (int)$s['jugadores_inscritos'] ?> / <?= (int)$s['max_jugadores'] ?></div>
-                        <a class="btn-live" href="/triviax/panel/live_session.php?id=<?= (int)$s['id'] ?>">Ver</a>
+                        <a class="btn-live" href="<?= TRIVIAX_BASE ?>/panel/live_session.php?id=<?= (int)$s['id'] ?>">Ver</a>
                     </div>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
     </main>
 </div>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

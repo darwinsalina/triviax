@@ -13,7 +13,7 @@ require_once __DIR__ . '/../php/auth.php';
 
 // ── Solo en local ────────────────────────────────────────────────────────────
 if (!_triviax_es_local()) {
-    header('Location: /triviax/index.html');
+    header('Location: ' . TRIVIAX_BASE . '/index.html');
     exit;
 }
 
@@ -27,14 +27,14 @@ $rol      = trim($_GET['rol']      ?? 'estudiante');
 
 // Validación mínima del token (64 chars hex)
 if (strlen($token) !== 64 || !ctype_xdigit($token)) {
-    header('Location: /triviax/auth/login.php');
+    header('Location: ' . TRIVIAX_BASE . '/auth/login.php');
     exit;
 }
 
 $rolTxt       = $rol === 'docente' ? 'docente' : 'estudiante';
-$verifyUrl    = '/triviax/auth/verificar.php?token=' . urlencode($token);
-$resetUrl     = '/triviax/auth/reset_password.php?token=' . urlencode($token);
-$destAfter    = $rol === 'docente' ? '/triviax/panel/dashboard.php' : '/triviax/index.html';
+$verifyUrl    = TRIVIAX_BASE . '/auth/verificar.php?token=' . urlencode($token);
+$resetUrl     = TRIVIAX_BASE . '/auth/reset_password.php?token=' . urlencode($token);
+$destAfter    = $rol === 'docente' ? TRIVIAX_BASE . '/panel/dashboard.php' : TRIVIAX_BASE . '/index.html';
 $adminEmail   = defined('TRIVIAX_ADMIN_EMAIL') ? TRIVIAX_ADMIN_EMAIL : 'saltmine.development@gmail.com';
 $emailDestino = $email !== '' ? $email : 'usuario@ejemplo.local';
 ?>
@@ -44,7 +44,7 @@ $emailDestino = $email !== '' ? $email : 'usuario@ejemplo.local';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador de correo — TRIVIAX Local</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         /* ── Layout ─────────────────────────────── */
         body { padding: 0; margin: 0; }
@@ -367,6 +367,6 @@ $emailDestino = $email !== '' ? $email : 'usuario@ejemplo.local';
     </div>
 
 </div><!-- /preview-screen -->
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

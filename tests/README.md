@@ -10,6 +10,8 @@ se pueden correr desde la CLI directamente y son aptas para CI.
 | Archivo | Cubre |
 |---------|-------|
 | `board_eval_test.php` | Evaluación autoritativa del tablero (#1): clamp de puntos y degradación de veredicto en opción múltiple/multimedia, con fallback seguro. |
+| `board_grade_test.php` | Grader server-side de todos los tipos del tablero, soluciones para feedback y saneador de desafíos enviados al cliente. |
+| `project_import_test.php` | Mapeo puro de desafíos del filesystem a filas/JSON de importación para BD. |
 
 Ejecutar todas:
 
@@ -34,6 +36,7 @@ la conexión real y necesitan la BD `triviax` operativa:
 |---------|-------|
 | `scratch/test_auditoria_seguridad.php` | Seguridad, rate limiting y reportes. |
 | `scratch/test_fase_45.php` | Turnos y concurrencia. |
+| `scratch/test_live_session_summary.php` | Resumen del monitor en vivo compartido por AJAX y SSE; crea datos temporales y valida permisos de docente. |
 | `scratch/test_lotto.php` | Modalidad Lotto. |
 | `scratch/test_study_answer.php` | Modalidad "Estudia y responde". |
 

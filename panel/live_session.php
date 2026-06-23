@@ -4,6 +4,7 @@
  */
 
 require_once __DIR__ . '/../php/auth.php';
+require_once __DIR__ . '/../php/live_session_summary.php';
 triviax_requerir_auth(TRIVIAX_ROL_DOCENTE);
 
 $usuario = triviax_usuario_actual();
@@ -11,22 +12,14 @@ $pdo = triviax_db();
 $id = (int)($_GET['id'] ?? 0);
 
 if ($id <= 0) {
-    header('Location: /triviax/panel/live_sessions.php');
+    header('Location: ' . TRIVIAX_BASE . '/panel/live_sessions.php');
     exit;
 }
 
-$stmtSesion = $pdo->prepare('
-    SELECT s.id, s.nombre, s.codigo_acceso, s.estado, s.max_jugadores,
-           p.title AS proyecto_title
-    FROM sesiones s
-    JOIN proyectos p ON p.id = s.proyecto_id
-    WHERE s.id = ? AND s.docente_id = ?
-');
-$stmtSesion->execute([$id, $usuario['id']]);
-$sesion = $stmtSesion->fetch(PDO::FETCH_ASSOC);
+$sesion = triviax_live_session_load_for_docente($pdo, $id, (int)$usuario['id']);
 
 if (!$sesion) {
-    header('Location: /triviax/panel/live_sessions.php');
+    header('Location: ' . TRIVIAX_BASE . '/panel/live_sessions.php');
     exit;
 }
 
@@ -34,60 +27,7 @@ if (($_GET['ajax'] ?? '') === 'summary') {
     header('Content-Type: application/json; charset=utf-8');
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 
-    $stmtPreguntas = $pdo->prepare('
-        SELECT
-            i.challenge_key,
-            COALESCE(NULLIF(MAX(i.prompt_text), \'\'), CONCAT(\'Pregunta \', i.challenge_key)) AS prompt_text,
-            SUM(CASE WHEN i.resultado = \'correct\' THEN 1 ELSE 0 END) AS correctas,
-            SUM(CASE WHEN i.resultado <> \'correct\' THEN 1 ELSE 0 END) AS errores,
-            COUNT(*) AS total,
-            MAX(i.id) AS ultimo_intento_id
-        FROM intentos i
-        WHERE i.sesion_id = ?
-        GROUP BY i.challenge_key
-        HAVING total > 0
-        ORDER BY correctas DESC, errores ASC, ultimo_intento_id DESC
-    ');
-    $stmtPreguntas->execute([$id]);
-
-    $stmtTotales = $pdo->prepare('
-        SELECT
-            (SELECT COUNT(*) FROM sesion_jugadores sj WHERE sj.sesion_id = s.id) AS jugadores,
-            (SELECT COUNT(*) FROM intentos i WHERE i.sesion_id = s.id) AS respuestas,
-            (SELECT COUNT(*) FROM intentos i WHERE i.sesion_id = s.id AND i.resultado = \'correct\') AS correctas,
-            (SELECT COUNT(*) FROM intentos i WHERE i.sesion_id = s.id AND i.resultado <> \'correct\') AS errores
-        FROM sesiones s
-        WHERE s.id = ?
-    ');
-    $stmtTotales->execute([$id]);
-    $totales = $stmtTotales->fetch(PDO::FETCH_ASSOC) ?: [];
-
-    echo json_encode([
-        'success' => true,
-        'session' => [
-            'id' => (int)$sesion['id'],
-            'nombre' => $sesion['nombre'],
-            'estado' => $sesion['estado'],
-            'codigo' => $sesion['codigo_acceso'],
-            'proyecto' => $sesion['proyecto_title'],
-        ],
-        'totals' => [
-            'jugadores' => (int)($totales['jugadores'] ?? 0),
-            'respuestas' => (int)($totales['respuestas'] ?? 0),
-            'correctas' => (int)($totales['correctas'] ?? 0),
-            'errores' => (int)($totales['errores'] ?? 0),
-        ],
-        'questions' => array_map(static function (array $row): array {
-            return [
-                'challenge_key' => (string)$row['challenge_key'],
-                'prompt_text' => (string)$row['prompt_text'],
-                'correctas' => (int)$row['correctas'],
-                'errores' => (int)$row['errores'],
-                'total' => (int)$row['total'],
-            ];
-        }, $stmtPreguntas->fetchAll(PDO::FETCH_ASSOC)),
-        'updated_at' => date('c'),
-    ], JSON_UNESCAPED_UNICODE);
+    echo json_encode(triviax_live_session_summary($pdo, $sesion), JSON_UNESCAPED_UNICODE);
     exit;
 }
 ?>
@@ -97,7 +37,7 @@ if (($_GET['ajax'] ?? '') === 'summary') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>En vivo - <?= htmlspecialchars($sesion['nombre'], ENT_QUOTES, 'UTF-8') ?> - TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         body { overflow: auto; }
         .live-layout { min-height: 100vh; display: flex; flex-direction: column; }
@@ -199,8 +139,8 @@ if (($_GET['ajax'] ?? '') === 'summary') {
     <header class="topbar">
         <div class="topbar-logo">TRIVIAX</div>
         <div class="topbar-nav">
-            <a href="/triviax/panel/live_sessions.php">Partidas en vivo</a>
-            <a href="/triviax/panel/dashboard.php">Dashboard</a>
+            <a href="<?= TRIVIAX_BASE ?>/panel/live_sessions.php">Partidas en vivo</a>
+            <a href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">Dashboard</a>
         </div>
     </header>
 
@@ -214,7 +154,7 @@ if (($_GET['ajax'] ?? '') === 'summary') {
                 </div>
             </div>
             <div class="status-line">
-                <span id="live-status"><span class="live-dot"></span>Actualizando cada 5 s</span>
+                <span id="live-status"><span class="live-dot"></span>Conectando en vivo...</span>
                 <span id="live-updated">-</span>
             </div>
         </div>
@@ -274,35 +214,87 @@ function renderQuestions(questions) {
     }).join('');
 }
 
-async function refreshLiveSession() {
+function applyLiveSessionData(data, mode = 'polling') {
+    setText('summary-players', data.totals?.jugadores || 0);
+    setText('summary-answers', data.totals?.respuestas || 0);
+    setText('summary-correct', data.totals?.correctas || 0);
+    setText('summary-wrong', data.totals?.errores || 0);
+    renderQuestions(data.questions || []);
+
+    if (statusEl) {
+        const label = mode === 'sse' ? 'En vivo' : 'Actualizando cada 5 s';
+        statusEl.innerHTML = `<span class="live-dot"></span>${label}`;
+    }
+    if (updatedEl) {
+        updatedEl.textContent = new Date().toLocaleTimeString('es-UY', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    }
+}
+
+async function refreshLiveSession(mode = 'polling') {
     try {
-        const response = await fetch(`/triviax/panel/live_session.php?id=${sessionId}&ajax=summary`, { cache: 'no-store' });
+        const response = await fetch(`<?= TRIVIAX_BASE ?>/panel/live_session.php?id=${sessionId}&ajax=summary`, { cache: 'no-store' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         if (!data.success) throw new Error(data.error || 'Respuesta invalida');
-
-        setText('summary-players', data.totals?.jugadores || 0);
-        setText('summary-answers', data.totals?.respuestas || 0);
-        setText('summary-correct', data.totals?.correctas || 0);
-        setText('summary-wrong', data.totals?.errores || 0);
-        renderQuestions(data.questions || []);
-
-        if (statusEl) statusEl.innerHTML = '<span class="live-dot"></span>Actualizando cada 5 s';
-        if (updatedEl) {
-            updatedEl.textContent = new Date().toLocaleTimeString('es-UY', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-        }
+        applyLiveSessionData(data, mode);
     } catch (err) {
         if (statusEl) statusEl.textContent = 'Sin conexion con la partida';
     }
 }
 
-refreshLiveSession();
-setInterval(refreshLiveSession, 5000);
+let fallbackTimer = null;
+function startPollingFallback() {
+    if (fallbackTimer) return;
+    refreshLiveSession('polling');
+    fallbackTimer = setInterval(() => refreshLiveSession('polling'), 5000);
+}
+
+if (window.EventSource) {
+    const source = new EventSource(`<?= TRIVIAX_BASE ?>/events.php?stream=live_session_summary&id=${sessionId}`);
+    let sseStarted = false;
+    let sseLastEventAt = 0;
+    const sseFallbackTimeout = setTimeout(() => {
+        if (!sseStarted) {
+            source.close();
+            startPollingFallback();
+        }
+    }, 8000);
+
+    source.addEventListener('summary', (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            if (data.success) {
+                sseStarted = true;
+                sseLastEventAt = Date.now();
+                clearTimeout(sseFallbackTimeout);
+                applyLiveSessionData(data, 'sse');
+            }
+        } catch (err) {
+            console.warn('Evento SSE invalido', err);
+        }
+    });
+    source.addEventListener('heartbeat', () => {
+        sseStarted = true;
+        sseLastEventAt = Date.now();
+        clearTimeout(sseFallbackTimeout);
+        if (statusEl) statusEl.innerHTML = '<span class="live-dot"></span>En vivo';
+    });
+    source.addEventListener('error', () => {
+        if (statusEl) statusEl.innerHTML = '<span class="live-dot"></span>Reconectando...';
+        if (!sseStarted || (Date.now() - sseLastEventAt > 15000)) {
+            source.close();
+            startPollingFallback();
+        }
+    });
+    refreshLiveSession('sse');
+} else {
+    startPollingFallback();
+}
 </script>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

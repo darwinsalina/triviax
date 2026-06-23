@@ -109,12 +109,12 @@ Esquema relacional para autenticación, actividades y partidas:
 - **Rate limiting** y auditoría en endpoints; throttle por modalidad (`_study_api_throttle`, `_jigsaw_throttle`, `_etiquetar_throttle`).
 - **Validación server-side** en las modalidades nuevas (study_answer, jigsaw, etiquetar, lotto): no confían en el cliente y protegen las respuestas esperadas.
 - Control de concurrencia y sesiones multijugador; verificación de tokens de email.
+- **Validación server-side del tablero clásico** (cerrada el 2026-06-18): `submit_answer` y `grade` recalculan veredicto/puntaje en servidor para todos los tipos; el cliente envía respuesta cruda y no decide el resultado competitivo.
+- `api.php?action=get` entrega desafíos saneados con `triviax_board_sanitize_challenge_for_client()`, sin respuestas correctas expuestas al navegador.
+- `guardar_resultados` exige token de jugador de la sesión y valida pertenencia a la sesión.
 
-**Brecha estructural pendiente (crítica) — solo en el tablero clásico:**
-- El **puntaje y el veredicto correcto/incorrecto los decide el cliente** y el servidor los acepta sin validar (`submit_answer`, `guardar_resultados`).
-- `api.php?action=get` **envía las respuestas correctas al navegador**.
-- `guardar_resultados` **no valida autorización/propiedad**.
-- **Causa raíz:** el contenido del tablero vive en filesystem (`proyectos/*`), no en BD, por lo que el servidor no puede correlacionar `challenge_key` con su contenido. Es inocuo en modo "pantalla única proyectada", pero **bloquea cualquier modo competitivo multi-dispositivo**.
+**Caveat operativo:**
+- En PWA verdaderamente offline, sin PHP disponible, no hay corrección competitiva fiable porque las respuestas correctas ya no viajan al cliente. El modo online/pantalla única con WAMP/XAMPP sí queda cubierto.
 
 ---
 
@@ -130,8 +130,8 @@ Esquema relacional para autenticación, actividades y partidas:
 
 ## 6. Proyección de futuros desarrollos potenciales
 
-**Habilitador maestro (desbloquea casi todo el roadmap):**
-- **Importador filesystem → BD del tablero clásico** (Fase 5 de `AGENTS.md`). Es prerrequisito para corrección server-side del puntaje, modos competitivos multi-dispositivo y reportes ricos.
+**Habilitador maestro ya cerrado:**
+- **Importador filesystem → BD del tablero clásico** (Épica #7) implementado el 2026-06-18: permite leer desafíos desde BD, validar server-side todos los tipos y sanear `action=get`.
 
 **Capacidades de mayor ventaja (según auditoría estratégica):**
 1. **Repetición espaciada (algoritmo SM-2)** sobre "Estudia y responde" — gran impacto pedagógico y baja complejidad relativa.
@@ -148,17 +148,17 @@ Esquema relacional para autenticación, actividades y partidas:
 
 ## 7. Áreas críticas a corregir o atender
 
-> **Estado al 2026-06-17 (sesión de remediación):** 9 de 11 resueltas; #1 quedó en
-> su Etapa 1 (núcleo) y las 2 épicas restantes (#7, #10) están planificadas en
-> [plan-epicas-7-10.md](plan-epicas-7-10.md). Cada arreglo se commiteó por separado.
+> **Estado actualizado al 2026-06-18:** #1 Etapa 2 y #7 quedaron cerradas. La
+> gran deuda técnica viva es #10 (tiempo real/SSE), además de pendientes
+> operativos y cobertura de integración.
 
-- ✅/🟡 **Confianza en el cliente (tablero clásico):** **Etapa 1 resuelta** — el servidor recalcula veredicto y puntaje en `submit_answer` re-parseando el proyecto (`php/board_eval.php`, unit-testeado): clamp de puntos en todos los tipos y validación de veredicto en opción múltiple/multimedia. **Etapa 2 pendiente** (tipos estructurados + dejar de exponer respuestas en `action=get`); depende de #7.
+- ✅ **Confianza en el cliente (tablero clásico):** resuelta — el servidor recalcula veredicto y puntaje para todos los tipos (`php/board_eval.php`), `grade`/`submit_answer` son autoritativos y `action=get` entrega desafíos saneados.
 - ✅ **Autorización ausente en `guardar_resultados`:** resuelto — exige token de jugador de la sesión (identidad) y `jugador_id` perteneciente a la sesión (propiedad) + rate limiting.
 - ✅ **`display_errors = 1` fijo en paneles:** resuelto — `0` por defecto y gate `APP_DEBUG` en `admin.php` y `estadisticas.php`.
 - ✅ **Aislamiento entre docentes:** resuelto — `triviax_docente_puede_gestionar_proyecto()` en editar/borrar; las modalidades con imágenes ya filtraban por dueño.
 - ✅ **Endpoints `save_stat` y `unirse_sesion` sin límite de tasa:** resuelto — `triviax_api_throttle()` (60/5min y 180/min, fallo abierto sin BD).
 - ✅ **Destinatario de correo de notificación hardcodeado:** resuelto — `triviax_admin_email()` (lee `ADMIN_EMAIL` del `.env`).
-- 🟡 **Deuda de dualidad de datos (importador filesystem→BD):** **planificada** como Épica #7 — ver [plan-epicas-7-10.md](plan-epicas-7-10.md). Habilita la Etapa 2 de #1.
+- ✅ **Deuda de dualidad de datos (importador filesystem→BD):** resuelta como Épica #7 — migración `6.2_desafios.sql`, importador, CLI, disparadores en admin y fallback filesystem.
 - ✅ **Consistencia de versión:** resuelto — alineado a `6.1.0` en `config.js`/`service-worker.js`/footers.
 - ✅/🟡 **Turnstile sin claves en producción:** implementación verificada (ya completa); se añadió `triviax.env.example`. Resta **operativo**: cargar las claves en el `.env` de producción.
 - 🟡 **Latencia por polling (tiempo real):** **planificada** como Épica #10 (SSE recomendado) — ver [plan-epicas-7-10.md](plan-epicas-7-10.md).
@@ -174,11 +174,11 @@ Esquema relacional para autenticación, actividades y partidas:
 - **Desafíos:** ~11 tipos (opción múltiple, V/F, asociar, ordenar, clasificar, completar, elección con imagen, código, hotspot, etiquetar, puzle).
 - **Modalidades propias:** Estudia y responde, Puzle/jigsaw, Etiquetar imagen y TRIVIAX Lotto (con evaluación oral y rúbricas).
 - **Docente:** registro abierto + verificación, gestión de actividades, papelera, sesiones en vivo con monitor, estadísticas, guías MD/PDF, andamiaje de generación con IA.
-- **Persistencia:** MySQL para modalidades nuevas; filesystem para el tablero clásico → **dualidad de datos** que condiciona la evolución.
-- **Seguridad:** bcrypt, CSRF, rate limiting y validación server-side en lo nuevo; **brecha crítica de puntaje client-trusted en el tablero clásico**.
-- **Habilitador clave del roadmap:** importador filesystem→BD del tablero.
+- **Persistencia:** MySQL para modalidades nuevas y para desafíos importados del tablero clásico, con fallback filesystem legado.
+- **Seguridad:** bcrypt, CSRF, rate limiting y validación server-side también en el tablero clásico online.
+- **Habilitador clave del roadmap:** importador filesystem→BD del tablero cerrado; el próximo salto técnico grande es tiempo real/SSE.
 - **Próximos saltos recomendados:** SM-2 (repetición espaciada), IA consolidada, gamificación persistente, tiempo real (SSE/Mercure), accesibilidad WCAG.
-- **A atender ya:** validación server-side del puntaje, autorización en `guardar_resultados`, `display_errors`, aislamiento entre docentes, alineación de versión 6.0.0↔6.1.
+- **A atender ya:** tiempo real/SSE, claves Turnstile en producción y ampliar cobertura de integración reproducible.
 
 ---
 

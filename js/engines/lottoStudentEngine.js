@@ -53,7 +53,7 @@ function setStatus(message, tone = '') {
 }
 
 function apiUrl(action, params = {}) {
-    const url = new URL('/triviax/api.php', window.location.origin);
+    const url = new URL((window.TRIVIAX_BASE ?? '') + '/api.php', window.location.origin);
     url.searchParams.set('action', action);
     Object.entries(params).forEach(([k, v]) => {
         if (v !== undefined && v !== null && v !== '') url.searchParams.set(k, String(v));

@@ -8,11 +8,11 @@ require_once __DIR__ . '/../php/auth.php';
 // Si ya tiene sesión activa, redirigir a su panel
 if (triviax_esta_autenticado()) {
     if (triviax_es_superadmin()) {
-        header('Location: /triviax/panel/super.php');
+        header('Location: ' . TRIVIAX_BASE . '/panel/super.php');
     } elseif (triviax_es_docente()) {
-        header('Location: /triviax/panel/dashboard.php');
+        header('Location: ' . TRIVIAX_BASE . '/panel/dashboard.php');
     } else {
-        header('Location: /triviax/index.html');
+        header('Location: ' . TRIVIAX_BASE . '/index.html');
     }
     exit;
 }
@@ -49,7 +49,7 @@ $csrfToken = triviax_csrf_token();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recuperar contraseña — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         .auth-screen {
             display: flex;
@@ -186,12 +186,12 @@ $csrfToken = triviax_csrf_token();
         <hr class="auth-divider">
 
         <div class="auth-links">
-            <a href="/triviax/auth/login.php">← Volver al inicio de sesión</a>
-            <a href="/triviax/index.html">← Volver al juego</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/login.php">← Volver al inicio de sesión</a>
+            <a href="<?= TRIVIAX_BASE ?>/index.html">← Volver al juego</a>
         </div>
 
     </div>
 </div>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

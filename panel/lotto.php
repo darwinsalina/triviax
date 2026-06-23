@@ -16,7 +16,7 @@ $csrf = htmlspecialchars(triviax_csrf_token(), ENT_QUOTES, 'UTF-8');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRIVIAX Lotto — Panel docente — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.8">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.8">
     <style>
         body { overflow: auto; }
 
@@ -149,11 +149,11 @@ $csrf = htmlspecialchars(triviax_csrf_token(), ENT_QUOTES, 'UTF-8');
 <body>
 <div class="lotto-admin-layout" data-lotto-admin data-csrf="<?php echo $csrf; ?>">
     <header class="topbar">
-        <a class="topbar-logo" href="/triviax/panel/dashboard.php">TRIVIAX</a>
+        <a class="topbar-logo" href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">TRIVIAX</a>
         <div class="topbar-actions">
             <span class="topbar-user">Docente: <strong><?php echo htmlspecialchars($usuario['nombre'], ENT_QUOTES, 'UTF-8'); ?></strong></span>
-            <a class="btn btn-secondary" href="/triviax/panel/dashboard.php">Dashboard</a>
-            <a class="btn btn-secondary" href="/triviax/auth/logout.php">Salir</a>
+            <a class="btn btn-secondary" href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">Dashboard</a>
+            <a class="btn btn-secondary" href="<?= TRIVIAX_BASE ?>/auth/logout.php">Salir</a>
         </div>
     </header>
 
@@ -330,7 +330,8 @@ $csrf = htmlspecialchars(triviax_csrf_token(), ENT_QUOTES, 'UTF-8');
     </main>
 </div>
 
-<script src="/triviax/js/brand.js?v=5.0.8"></script>
-<script type="module" src="/triviax/js/panel/lottoPanel.js"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.8"></script>
+<script>window.TRIVIAX_BASE = <?= json_encode(TRIVIAX_BASE) ?>;</script>
+<script type="module" src="<?= TRIVIAX_BASE ?>/js/panel/lottoPanel.js?v=6.1.0"></script>
 </body>
 </html>

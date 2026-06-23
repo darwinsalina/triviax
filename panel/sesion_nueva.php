@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$proyectoId, $usuario['id'], $nombre, $tipo, $codigo, $maxJugadores]);
             $nuevaId = (int) $pdo->lastInsertId();
 
-            header('Location: /triviax/panel/sesion_detalle.php?id=' . $nuevaId . '&nueva=1');
+            header('Location: ' . TRIVIAX_BASE . '/panel/sesion_detalle.php?id=' . $nuevaId . '&nueva=1');
             exit;
         }
     }
@@ -90,7 +90,7 @@ $csrfToken = triviax_csrf_token();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nueva sesión — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         body { overflow: auto; }
 
@@ -322,8 +322,8 @@ $csrfToken = triviax_csrf_token();
     <header class="topbar">
         <div class="topbar-logo">TRIVIAX</div>
         <div class="topbar-nav">
-            <a href="/triviax/panel/dashboard.php">← Dashboard</a>
-            <a href="/triviax/auth/logout.php">Cerrar sesión</a>
+            <a href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">← Dashboard</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/logout.php">Cerrar sesión</a>
         </div>
     </header>
 
@@ -341,7 +341,7 @@ $csrfToken = triviax_csrf_token();
                 <div style="text-align:center;color:var(--text-muted);padding:20px 0;">
                     <strong>No hay proyectos disponibles.</strong><br>
                     <span style="font-size:0.9rem;">Crea un proyecto en el panel de actividades o sube preguntas primero.</span><br><br>
-                    <a href="/triviax/admin.php" style="color:#a5b4fc;text-decoration:none;font-weight:600;">Ir al panel de actividades →</a>
+                    <a href="<?= TRIVIAX_BASE ?>/admin.php" style="color:#a5b4fc;text-decoration:none;font-weight:600;">Ir al panel de actividades →</a>
                 </div>
             <?php else: ?>
 
@@ -415,10 +415,10 @@ $csrfToken = triviax_csrf_token();
 
         </div>
 
-        <a href="/triviax/panel/dashboard.php" class="btn-volver">← Volver al panel</a>
+        <a href="<?= TRIVIAX_BASE ?>/panel/dashboard.php" class="btn-volver">← Volver al panel</a>
 
     </main>
 </div>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

@@ -47,7 +47,7 @@ if ($activity) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRIVIAX Lotto — Pizarra del Salón</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.8">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.8">
     <style>
         body { overflow: auto; background: #060913; }
 
@@ -634,7 +634,7 @@ if ($activity) {
         <main class="lotto-error-card glass-card">
             <h2>Error de Acceso</h2>
             <p><?php echo htmlspecialchars($errorMsg, ENT_QUOTES, 'UTF-8'); ?></p>
-            <a href="/triviax/panel/dashboard.php" class="btn btn-primary">Volver al Dashboard</a>
+            <a href="<?= TRIVIAX_BASE ?>/panel/dashboard.php" class="btn btn-primary">Volver al Dashboard</a>
         </main>
     <?php else: ?>
         <!-- Header / Topbar -->
@@ -722,7 +722,7 @@ if ($activity) {
                     <button type="button" class="btn btn-primary lotto-hidden" data-act-draw-initial>🎲 Iniciar sorteo</button>
                     <button type="button" class="btn btn-secondary lotto-hidden" style="border-color: rgba(239,68,68,0.4); color: #f87171;" data-act-finish>🏁 Finalizar actividad</button>
                     
-                    <a href="/triviax/panel/lotto.php" class="btn btn-secondary" style="margin-top: 20px; justify-content: center;">Volver al Listado</a>
+                    <a href="<?= TRIVIAX_BASE ?>/panel/lotto.php" class="btn btn-secondary" style="margin-top: 20px; justify-content: center;">Volver al Listado</a>
                 </div>
             </section>
 
@@ -804,9 +804,10 @@ if ($activity) {
     <?php endif; ?>
 </div>
 
-<script src="/triviax/js/brand.js?v=5.0.8"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.8"></script>
 <?php if ($activity): ?>
-    <script type="module" src="/triviax/js/engines/lottoHostEngine.js"></script>
+    <script>window.TRIVIAX_BASE = <?= json_encode(TRIVIAX_BASE) ?>;</script>
+<script type="module" src="<?= TRIVIAX_BASE ?>/js/engines/lottoHostEngine.js?v=6.1.0"></script>
 <?php endif; ?>
 </body>
 </html>

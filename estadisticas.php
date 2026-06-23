@@ -904,7 +904,7 @@ usort($questionPerformanceRows, function ($a, $b) {
 
                         @font-face {
                             font-family: "Luckiest Guy Local";
-                            src: url("/triviax/fonts/LuckiestGuy-Regular.ttf") format("truetype");
+                            src: url("<?= TRIVIAX_BASE ?>/fonts/LuckiestGuy-Regular.ttf") format("truetype");
                             font-weight: 400;
                             font-style: normal;
                         }
@@ -1175,7 +1175,7 @@ usort($questionPerformanceRows, function ($a, $b) {
 
                         @font-face {
                             font-family: "Luckiest Guy Local";
-                            src: url("/triviax/fonts/LuckiestGuy-Regular.ttf") format("truetype");
+                            src: url("<?= TRIVIAX_BASE ?>/fonts/LuckiestGuy-Regular.ttf") format("truetype");
                             font-weight: 400;
                             font-style: normal;
                         }
@@ -1260,6 +1260,6 @@ usort($questionPerformanceRows, function ($a, $b) {
             printWindow.document.close();
         }
     </script>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

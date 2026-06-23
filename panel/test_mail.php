@@ -58,7 +58,7 @@ $csrf = triviax_csrf_token();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test de correo — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         body { overflow: auto; }
         .test-screen {
@@ -187,9 +187,9 @@ $csrf = triviax_csrf_token();
         </form>
 
         <hr>
-        <a href="/triviax/panel/super.php" class="back-link">← Volver al panel superadmin</a>
+        <a href="<?= TRIVIAX_BASE ?>/panel/super.php" class="back-link">← Volver al panel superadmin</a>
     </div>
 </div>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

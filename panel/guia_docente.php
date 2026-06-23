@@ -17,7 +17,7 @@ $guiaHtml = triviax_guia_docente_html();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guía del Docente — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.15">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.15">
     <style>
         body { overflow: auto; }
         .panel-layout { min-height: 100vh; display: flex; flex-direction: column; }
@@ -92,7 +92,7 @@ $guiaHtml = triviax_guia_docente_html();
         <div class="topbar-logo">TRIVIAX</div>
         <div class="topbar-nav">
             <a href="javascript:window.print()">🖨 Imprimir / PDF</a>
-            <a href="/triviax/panel/dashboard.php">← Dashboard</a>
+            <a href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">← Dashboard</a>
         </div>
     </header>
     <main class="guia-content">
@@ -105,6 +105,6 @@ $guiaHtml = triviax_guia_docente_html();
         </div>
     </main>
 </div>
-<script src="/triviax/js/brand.js?v=5.0.15"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.15"></script>
 </body>
 </html>

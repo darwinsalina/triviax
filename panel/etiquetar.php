@@ -17,17 +17,17 @@ $nombreUsuario = trim(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etiquetar — Panel docente — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=6.0.0">
-    <link rel="stylesheet" href="/triviax/css/actividades.css?v=6.0.0">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=6.0.0">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/actividades.css?v=6.0.0">
 </head>
 <body class="act-app" data-act-csrf="<?php echo $csrf; ?>">
     <header class="act-topbar">
-        <a class="act-brand" href="/triviax/panel/dashboard.php">🏷️ <span>Etiquetar</span> <em>Panel docente</em></a>
+        <a class="act-brand" href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">🏷️ <span>Etiquetar</span> <em>Panel docente</em></a>
         <nav class="act-topnav">
             <span class="act-user"><?php echo htmlspecialchars($nombreUsuario, ENT_QUOTES, 'UTF-8'); ?></span>
-            <a class="act-btn ghost sm" href="/triviax/etiquetar.php" target="_blank">Ver juego ↗</a>
-            <a class="act-btn ghost sm" href="/triviax/panel/dashboard.php">Panel</a>
-            <a class="act-btn ghost sm" href="/triviax/auth/logout.php">Salir</a>
+            <a class="act-btn ghost sm" href="<?= TRIVIAX_BASE ?>/etiquetar.php" target="_blank">Ver juego ↗</a>
+            <a class="act-btn ghost sm" href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">Panel</a>
+            <a class="act-btn ghost sm" href="<?= TRIVIAX_BASE ?>/auth/logout.php">Salir</a>
         </nav>
     </header>
 
@@ -112,7 +112,7 @@ $nombreUsuario = trim(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?
         window.TRIVIAX_BASE = '../';
         window.TRIVIAX_API  = '../api.php';
     </script>
-    <script src="/triviax/js/brand.js?v=6.0.0"></script>
-    <script src="/triviax/js/panel/etiquetarPanel.js?v=6.0.0"></script>
+    <script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=6.0.0"></script>
+    <script src="<?= TRIVIAX_BASE ?>/js/panel/etiquetarPanel.js?v=6.0.0"></script>
 </body>
 </html>

@@ -532,16 +532,25 @@ localStorage.setItem(`triviax_tab_${sesionId}`, Date.now().toString())  // heart
 
 ---
 
-### ⬜ Fase 5 — Importador legado
-- [ ] Importar `preguntas.txt` → tabla `desafios` en BD
-- [ ] Importar `proyecto.json` → tabla `proyectos` + `desafios`
-- [ ] El juego puede cargar desde BD O desde carpeta (detección automática)
+### ✅ Fase 5 / Épica #7 — Importador legado filesystem → BD (COMPLETADA — 2026-06-18)
+- [x] Migración `db/migraciones/6.2_desafios.sql` para persistir desafíos del tablero en BD.
+- [x] `php/project_import.php`: mapeo/importación idempotente de `preguntas.txt` y `proyecto.json`.
+- [x] `tools/import_projects.php`: carga masiva por CLI.
+- [x] `admin.php`: disparadores para importar/sincronizar al guardar actividades.
+- [x] `api.php?action=get` y `submit_answer`: leen desde BD cuando la actividad está importada; fallback a carpeta legado si no.
+- [x] #1 Etapa 2: `php/board_eval.php` evalúa server-side todos los tipos, el cliente envía `raw`, `action=grade` devuelve veredicto autoritativo y `action=get` sanea respuestas correctas con `triviax_board_sanitize_challenge_for_client()`.
+- [x] Verificación: `tests/run.php` 3 suites / 81 OK / 0 FAIL; HTTP local `demo_mixto` sin claves sensibles en `action=get`.
 
-### ⬜ Fase 6+ — Funcionalidades avanzadas (futuro)
+**Consecuencia:** el tablero online ya no confía en el veredicto del cliente. En PWA verdaderamente offline no hay corrección competitiva fiable porque las respuestas correctas no viajan al navegador.
+
+### 🔄 Fase 6+ — Funcionalidades avanzadas
 - [ ] Generación de actividades con IA (desde backend)
 - [ ] Respuestas abiertas evaluadas con IA
 - [ ] Exportación de reportes a PDF/Excel
 - [ ] Soporte multiinstitución
+- [x] Épica #10 parcial: SSE en monitor docente de partida (`events.php?stream=live_session_summary`) con `EventSource`, heartbeat, streams cortos y fallback automático al polling de 5 s.
+- [ ] Épica #10 restante: extender SSE a Lotto host/estudiante y otros monitores con cuidado de workers Apache/PHP.
+- [x] Chequeo operativo de producción: `tools/check_production_readiness.php` verifica secretos, Turnstile y BD sin imprimir claves.
 
 ---
 
@@ -625,6 +634,8 @@ localStorage.setItem(`triviax_tab_${sesionId}`, Date.now().toString())  // heart
 | 2026-06-11 | Configuracion de jugadores ampliada de 4 a 8 participantes para sesiones por equipos: `index.html` agrega botones/filas 5-8, `js/config.js` define cuatro colores nuevos y `css/styles.css` permite que el selector envuelva botones sin romper layout. Querystrings de assets sincronizados a 5.0.12 con `tools/bump_version.php 5.0.12 --assets`. |
 | 2026-06-11 | Graphify integrado para Codex/TRIVIAX: instalado `graphifyy==0.8.38` con `uv`, skill global actualizada, skill/hook de proyecto en `.codex/`, `multi_agent = true` activado en `C:\Users\Usuario\.codex\config.toml`, y grafo local regenerado con `graphify update .` (1881 nodos, 2626 relaciones, 182 comunidades). `graphify-out/` permanece ignorado por git y se regenera localmente. |
 | 2026-06-12 | Manuales consolidados: quedan como fuentes editables `docs/GUIA_DOCENTE_TRIVIAX.md` y `docs/GUIA_JUGADORES_TRIVIAX.md`, y como archivos públicos enlazados `docs/GUIA_DOCENTE_TRIVIAX.pdf` y `docs/GUIA_JUGADORES_TRIVIAX.pdf`. Se retiraron duplicados activos del root y guías versionadas de `docs/`; los enlaces de `index.html`, `admin.php`, visor docente y email de bienvenida apuntan a nombres estables sin versión. Exportador local: `python tools/build_guides_pdf.py`. |
+| 2026-06-18 | Épica #7 / #1 Etapa 2 cerrada: importador filesystem→BD del tablero (`php/project_import.php`, `tools/import_projects.php`, migración `6.2_desafios.sql`), lectura desde BD con fallback, grader server-side para todos los tipos, endpoint `grade` y saneo de `action=get` para no exponer respuestas. Verificado con `tests/run.php` (81 OK) y HTTP local `demo_mixto` sin claves sensibles. |
+| 2026-06-18 | Épica #10 iniciada: monitor docente `panel/live_session.php` usa SSE mediante `events.php` y helper compartido `php/live_session_summary.php`; mantiene fallback a polling. Agregado `scratch/test_live_session_summary.php` (10 OK) y `tools/check_production_readiness.php` para validar producción/Turnstile/BD. |
 
 ## 9. Glosario
 

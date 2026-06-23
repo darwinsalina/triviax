@@ -6,6 +6,34 @@
  */
 
 /**
+ * TRIVIAX_BASE — prefijo de URL bajo el que se sirve la app.
+ *
+ * Se detecta solo comparando la carpeta real de la app contra el
+ * DOCUMENT_ROOT del servidor, de modo que la app funcione sin tocar
+ * código sin importar dónde se la copie:
+ *   · wamp local  →  app en  www/triviax  y docroot  www      →  "/triviax"
+ *   · subdominio  →  docroot apunta a la propia carpeta triviax →  ""  (raíz)
+ *
+ * Úsala SIEMPRE para construir rutas absolutas internas
+ * (header('Location: ' . TRIVIAX_BASE . '/...'), href="<?= TRIVIAX_BASE ?>/...").
+ */
+if (!defined('TRIVIAX_BASE')) {
+    // __DIR__ = .../triviax/php  →  dirname = raíz de la app (.../triviax)
+    // Normalizar a "/" ANTES de recortar la barra final: en Windows el
+    // DOCUMENT_ROOT puede llegar con "\" al final y un rtrim('/') no lo vería.
+    $triviaxAppRoot = rtrim(str_replace('\\', '/', dirname(__DIR__)), '/');
+    $triviaxDocRoot = rtrim(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] ?? ''), '/');
+
+    $triviaxBase = '';
+    if ($triviaxDocRoot !== '' && strpos($triviaxAppRoot, $triviaxDocRoot) === 0) {
+        // Lo que sobra del root de la app por encima del docroot es el prefijo.
+        $triviaxBase = rtrim(substr($triviaxAppRoot, strlen($triviaxDocRoot)), '/');
+    }
+    define('TRIVIAX_BASE', $triviaxBase);
+    unset($triviaxAppRoot, $triviaxDocRoot, $triviaxBase);
+}
+
+/**
  * Devuelve la conexión PDO singleton.
  * @throws RuntimeException si la conexión falla.
  */

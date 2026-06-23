@@ -59,7 +59,7 @@ $csrfToken = triviax_csrf_token();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nueva contraseña — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         .auth-screen {
             display: flex;
@@ -181,7 +181,7 @@ $csrfToken = triviax_csrf_token();
                 <strong>¡Contraseña actualizada!</strong><br>
                 Ya puedes iniciar sesión con tu nueva contraseña.
             </div>
-            <a href="/triviax/auth/login.php" class="btn-auth" style="text-align:center;text-decoration:none;display:block;">
+            <a href="<?= TRIVIAX_BASE ?>/auth/login.php" class="btn-auth" style="text-align:center;text-decoration:none;display:block;">
                 Ir al inicio de sesión
             </a>
 
@@ -190,7 +190,7 @@ $csrfToken = triviax_csrf_token();
             <!-- ══ Token inválido / expirado ══ -->
             <h2>Enlace inválido</h2>
             <div class="auth-error"><?= htmlspecialchars($tokenError, ENT_QUOTES, 'UTF-8') ?></div>
-            <a href="/triviax/auth/recuperar.php" class="btn-auth" style="text-align:center;text-decoration:none;display:block;">
+            <a href="<?= TRIVIAX_BASE ?>/auth/recuperar.php" class="btn-auth" style="text-align:center;text-decoration:none;display:block;">
                 Solicitar un nuevo enlace
             </a>
 
@@ -234,11 +234,11 @@ $csrfToken = triviax_csrf_token();
         <hr class="auth-divider">
 
         <div class="auth-links">
-            <a href="/triviax/auth/login.php">← Volver al inicio de sesión</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/login.php">← Volver al inicio de sesión</a>
         </div>
 
     </div>
 </div>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

@@ -16,7 +16,7 @@ $prefillCode = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string)($_GET['cod
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRIVIAX Lotto — Estudiante</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.8">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.8">
     <style>
         body { overflow: auto; }
 
@@ -160,6 +160,7 @@ $prefillCode = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string)($_GET['cod
     </section>
 </main>
 
-<script type="module" src="/triviax/js/engines/lottoStudentEngine.js"></script>
+<script>window.TRIVIAX_BASE = <?= json_encode(TRIVIAX_BASE) ?>;</script>
+<script type="module" src="<?= TRIVIAX_BASE ?>/js/engines/lottoStudentEngine.js?v=6.1.0"></script>
 </body>
 </html>

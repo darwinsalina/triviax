@@ -84,6 +84,6 @@ $nombreUsuario = $nombreUsuario !== '' ? $nombreUsuario : 'Invitado';
         window.TRIVIAX_CSRF_TOKEN = <?php echo json_encode($csrf, JSON_UNESCAPED_UNICODE); ?>;
     </script>
     <script src="js/brand.js?v=5.0.6"></script>
-    <script type="module" src="js/engines/studyAnswerEngine.js"></script>
+    <script type="module" src="js/engines/studyAnswerEngine.js?v=6.1.0"></script>
 </body>
 </html>

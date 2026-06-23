@@ -37,16 +37,21 @@ Commits de la sesión, en orden:
 | `b988fae` | #6.2 el cliente envía la respuesta cruda `raw` por tipo |
 | `c92a9fe` | #6.3a endpoint `action=grade` sin estado + `triviax_board_solution_for_client` |
 | `06a7e14` | #6.3b el cliente delega el veredicto al servidor + **Brecha B cerrada** |
+| `2ea3fbb` | #6.3c sanea `action=get` y cierra la fuga de respuestas |
 
 **Estado de seguridad actual:** en modo online el servidor ya evalúa
 autoritativamente todos los tipos (endpoint `grade` + `submit_answer`), el cliente
 usa ese veredicto para el display y el feedback (muestra la solución que devuelve
-el servidor). **Lo único que falta para cerrar del todo la fuga: `action=get`
-todavía envía las respuestas correctas al navegador.** Eso es el paso 6.3c.
+el servidor). **La fuga de respuestas quedó cerrada:** `action=get` devuelve los
+desafíos saneados al navegador y el servidor conserva los datos completos para
+evaluar.
 
 ---
 
-## TAREA PENDIENTE: paso 6.3c (sanear `action=get`)
+## TAREA CERRADA: paso 6.3c (sanear `action=get`)
+
+> Esta sección queda como registro histórico del diseño ejecutado, no como lista
+> pendiente.
 
 ### Hallazgo clave (ya verificado por revisión)
 **NO hace falta tocar los renderers.** Cada renderer ya arma su `raw` desde los
@@ -56,7 +61,7 @@ los renderers degradan con elegancia (su grading local da resultado erróneo per
 nadie lo mira). Verificado que ninguno lanza excepción si faltan los datos de
 respuesta (todos usan optional chaining / fallback).
 
-### Qué implementar
+### Qué se implementó
 1. **`php/board_eval.php`** — nueva función pura
    `triviax_board_sanitize_challenge_for_client(array $c): array`, por tipo
    (normalizar con `triviax_normalize_challenge_type`):
@@ -88,15 +93,16 @@ respuesta (todos usan optional chaining / fallback).
    saneador: que no quede `correct`/`correctOptionId`/`value`/`order`/`hotspot`/
    `categoryId`/`lines`, y que matching quede desacoplado.
 
-### Verificación a hacer (preview en :8123, docroot = C:\wamp64\www, app en /triviax/)
-- `curl action=get&project=demo_mixto` → confirmar que NO viaja ninguna respuesta
-  correcta (revisar mc/tf/seq/mp/class/fill).
-- **Camino real** en navegador: cargar un desafío vía `action=get` saneado →
-  renderizar con `UIManager.showQuestionModal` → responder bien → confirmar que el
-  veredicto del servidor sigue dando `true` (el `grade` evalúa contra la BD completa,
-  no contra los datos saneados). Patrón de harness ya usado esta sesión:
-  `new UIManager()`, fijar `ApiClient.csrfToken` con `action=list`, click-to-place,
-  `#btn-next-turn`, esperar con poll `until(...)`.
+### Verificación hecha
+- `api.php?action=get&project=demo_mixto` devuelve 6 preguntas.
+- Revisión estructural del JSON recibido: 0 claves sensibles (`correct`,
+  `correctOptionId`, `value`, `order`, `hotspot`, `categoryId`, `lines`) fuera de
+  textos de feedback.
+- `api.php?action=grade` con CSRF y `demo_mixto/mc_001` responde HTTP 200 con
+  `correct:true` para `raw.optionId = a`.
+- `tests/run.php`: 3 suites, 81 OK, 0 FAIL.
+- `tests/board_grade_test.php`: 56 OK, 0 FAIL.
+- `tests/project_import_test.php`: 16 OK, 0 FAIL.
 
 ### Consecuencia a comunicar (decidido por el usuario: "completo, todos los modos")
 Tras sanear, **el juego online siempre requiere el servidor para evaluar**. En modo

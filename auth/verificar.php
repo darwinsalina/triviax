@@ -33,18 +33,18 @@ if ($token !== '') {
 } else {
     // ── Sin token: si ya está autenticado, llevarlo a su panel ──────────
     if (triviax_esta_autenticado()) {
-        $destino = triviax_es_docente() ? '/triviax/panel/dashboard.php' : '/triviax/index.html';
+        $destino = triviax_es_docente() ? TRIVIAX_BASE . '/panel/dashboard.php' : TRIVIAX_BASE . '/index.html';
         header('Location: ' . $destino);
         exit;
     }
 }
 
 // Determinar destino de redirección automática (3 seg)
-$destino = '/triviax/auth/login.php';
+$destino = TRIVIAX_BASE . '/auth/login.php';
 if ($autoLoginOk) {
     $destino = ($resultado['usuario']['rol'] === TRIVIAX_ROL_DOCENTE)
-        ? '/triviax/panel/dashboard.php?bienvenido=1'
-        : '/triviax/index.html?bienvenido=1';
+        ? TRIVIAX_BASE . '/panel/dashboard.php?bienvenido=1'
+        : TRIVIAX_BASE . '/index.html?bienvenido=1';
 }
 ?>
 <!DOCTYPE html>
@@ -53,7 +53,7 @@ if ($autoLoginOk) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificar cuenta — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <?php if ($autoLoginOk): ?>
     <meta http-equiv="refresh" content="4;url=<?= htmlspecialchars($destino, ENT_QUOTES, 'UTF-8') ?>">
     <?php endif; ?>
@@ -207,7 +207,7 @@ if ($autoLoginOk) {
             <div class="verify-warn">
                 Asegúrate de copiar el enlace completo desde tu correo.
             </div>
-            <a href="/triviax/auth/login.php" class="auth-link">← Volver al inicio de sesión</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/login.php" class="auth-link">← Volver al inicio de sesión</a>
 
         <?php elseif ($resultado['ok']): ?>
             <!-- Verificación exitosa -->
@@ -238,13 +238,13 @@ if ($autoLoginOk) {
                 Si el problema persiste, intenta registrarte de nuevo<br>
                 o contacta al administrador del sistema.
             </p>
-            <a href="/triviax/auth/registro.php" class="btn-auth">Registrarme de nuevo</a>
-            <a href="/triviax/auth/login.php" class="auth-link">← Volver al inicio de sesión</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/registro.php" class="btn-auth">Registrarme de nuevo</a>
+            <a href="<?= TRIVIAX_BASE ?>/auth/login.php" class="auth-link">← Volver al inicio de sesión</a>
 
         <?php endif; ?>
 
     </div>
 </div>
-<script src="/triviax/js/brand.js?v=5.0.6"></script>
+<script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>

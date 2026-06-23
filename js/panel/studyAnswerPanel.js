@@ -19,7 +19,8 @@ const els = {
     report: document.querySelector('[data-report]'),
     currentTitle: document.querySelector('[data-current-title]'),
     currentMeta: document.querySelector('[data-current-meta]'),
-    openStudent: document.querySelector('[data-open-student]')
+    openStudent: document.querySelector('[data-open-student]'),
+    copyStudent: document.querySelector('[data-copy-student]')
 };
 
 function el(tag, className = '', text = '') {
@@ -45,7 +46,7 @@ function setStatus(message, tone = '') {
 }
 
 function apiUrl(action, params = {}) {
-    const url = new URL('/triviax/api.php', window.location.origin);
+    const url = new URL((window.TRIVIAX_BASE ?? '') + '/api.php', window.location.origin);
     url.searchParams.set('action', action);
     Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null && value !== '') {
@@ -136,10 +137,12 @@ function updateCurrentMeta(project = null) {
         : `${cards} cartas · borrador nuevo`;
 
     if (state.currentDeckId && state.currentEstado === 'published') {
-        els.openStudent.href = `/triviax/study.php?deck_id=${encodeURIComponent(state.currentDeckId)}`;
+        els.openStudent.href = `${window.TRIVIAX_BASE ?? ""}/study.php?deck_id=${encodeURIComponent(state.currentDeckId)}`;
         els.openStudent.classList.remove('study-hidden');
+        els.copyStudent.classList.remove('study-hidden');
     } else {
         els.openStudent.classList.add('study-hidden');
+        els.copyStudent.classList.add('study-hidden');
     }
 }
 
@@ -308,7 +311,7 @@ async function loadDeck(deckId) {
 async function loadDemo() {
     try {
         setStatus('Cargando ejemplo...');
-        const response = await fetch('/triviax/docs/fixtures/study_answer_demo.json', { cache: 'no-store' });
+        const response = await fetch((window.TRIVIAX_BASE ?? '') + '/docs/fixtures/study_answer_demo.json', { cache: 'no-store' });
         if (!response.ok) {
             throw new Error(`No se pudo cargar el ejemplo: HTTP ${response.status}`);
         }
@@ -522,6 +525,7 @@ function setupEvents() {
     document.querySelector('[data-action="archive"]').addEventListener('click', () => setDeckEstado('archived'));
     document.querySelector('[data-action="preview"]').addEventListener('click', previewDeck);
     document.querySelector('[data-action="report"]').addEventListener('click', reportDeck);
+    els.copyStudent.addEventListener('click', () => copyShareLink(els.openStudent.href, els.copyStudent));
 
     els.fileInput.addEventListener('change', async () => {
         const file = els.fileInput.files?.[0];
@@ -648,6 +652,7 @@ const wiz = {
     finishManual: document.querySelector('[data-wiz-finish-manual]'),
     finalSummary: document.querySelector('[data-final-summary]'),
     finalOpen: document.querySelector('[data-final-open]'),
+    finalCopy: document.querySelector('[data-final-copy]'),
     finalEdit: document.querySelector('[data-final-edit]')
 };
 
@@ -902,6 +907,34 @@ async function wizCopyPrompt() {
     }
 }
 
+async function copyShareLink(url, button) {
+    if (!url || url === '#' || /\/study\.php$/.test(url)) {
+        setStatus('Publica el mazo antes de copiar su enlace.', 'warn');
+        return;
+    }
+    try {
+        await navigator.clipboard.writeText(url);
+    } catch (err) {
+        // Fallback para navegadores sin Clipboard API o sin contexto seguro (HTTP).
+        const tmp = document.createElement('textarea');
+        tmp.value = url;
+        tmp.style.position = 'fixed';
+        tmp.style.opacity = '0';
+        document.body.appendChild(tmp);
+        tmp.select();
+        document.execCommand('copy');
+        tmp.remove();
+    }
+    setStatus('Enlace copiado. Compártelo con tus estudiantes.', 'ok');
+    if (button) {
+        if (!button.dataset.label) {
+            button.dataset.label = button.textContent;
+        }
+        button.textContent = '✓ ¡Enlace copiado!';
+        setTimeout(() => { button.textContent = button.dataset.label; }, 2000);
+    }
+}
+
 /* ---------- Camino IA: pegar y procesar el JSON ---------- */
 
 function wizCleanPastedJson(raw) {
@@ -975,8 +1008,9 @@ async function wizPublishProject(project, feedbackTarget) {
     clear(wiz.finalSummary);
     wiz.finalSummary.append(el('p', '', ''));
     wiz.finalSummary.firstChild.innerHTML = `La actividad <strong>${escapeHtml(project.studyAnswer.title)}</strong> quedó <strong>publicada</strong> con <strong>${cards} cartas</strong>. Tus estudiantes ya pueden encontrarla en la vista de práctica junto con el resto de las actividades. Si quieres ajustar algo, puedes editar el mazo desde este mismo panel.`;
-    wiz.finalOpen.href = `/triviax/study.php?deck_id=${encodeURIComponent(deckId)}`;
+    wiz.finalOpen.href = `${window.TRIVIAX_BASE ?? ""}/study.php?deck_id=${encodeURIComponent(deckId)}`;
     wiz.finalOpen.classList.remove('study-hidden');
+    wiz.finalCopy.classList.remove('study-hidden');
     return deckId;
 }
 
@@ -1282,6 +1316,7 @@ function setupWizardEvents() {
     wiz.cardType.addEventListener('change', wizRenderManualAnswers);
     wiz.addCard.addEventListener('click', wizAddManualCard);
     wiz.finishManual.addEventListener('click', wizFinishManual);
+    wiz.finalCopy.addEventListener('click', () => copyShareLink(wiz.finalOpen.href, wiz.finalCopy));
     wiz.finalEdit.addEventListener('click', () => {
         wizClose();
         if (wizard.deckId) {

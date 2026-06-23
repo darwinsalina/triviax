@@ -15,7 +15,7 @@ $csrf = htmlspecialchars(triviax_csrf_token(), ENT_QUOTES, 'UTF-8');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estudia y responde — Panel docente — TRIVIAX</title>
-    <link rel="stylesheet" href="/triviax/css/styles.css?v=5.0.6">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=5.0.6">
     <style>
         body {
             overflow: auto;
@@ -625,12 +625,12 @@ $csrf = htmlspecialchars(triviax_csrf_token(), ENT_QUOTES, 'UTF-8');
 <body>
 <div class="study-admin-layout" data-study-admin data-csrf="<?php echo $csrf; ?>">
     <header class="topbar">
-        <a class="topbar-logo" href="/triviax/panel/dashboard.php">TRIVIAX</a>
+        <a class="topbar-logo" href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">TRIVIAX</a>
         <div class="topbar-actions">
             <span class="topbar-user">Docente: <strong><?php echo htmlspecialchars($usuario['nombre'], ENT_QUOTES, 'UTF-8'); ?></strong></span>
-            <a class="btn btn-secondary" href="/triviax/study.php">Vista estudiante</a>
-            <a class="btn btn-secondary" href="/triviax/panel/dashboard.php">Dashboard</a>
-            <a class="btn btn-secondary" href="/triviax/auth/logout.php">Salir</a>
+            <a class="btn btn-secondary" href="<?= TRIVIAX_BASE ?>/study.php">Vista estudiante</a>
+            <a class="btn btn-secondary" href="<?= TRIVIAX_BASE ?>/panel/dashboard.php">Dashboard</a>
+            <a class="btn btn-secondary" href="<?= TRIVIAX_BASE ?>/auth/logout.php">Salir</a>
         </div>
     </header>
 
@@ -834,6 +834,7 @@ $csrf = htmlspecialchars(triviax_csrf_token(), ENT_QUOTES, 'UTF-8');
                 <div class="study-final-summary" data-final-summary></div>
                 <div class="study-actions">
                     <a class="btn btn-primary study-hidden" data-final-open href="#" target="_blank" rel="noopener">Abrir práctica (vista estudiante)</a>
+                    <button type="button" class="btn btn-primary study-hidden study-copy-btn" data-final-copy>🔗 Clic aquí para copiar el enlace a compartir</button>
                     <button type="button" class="btn btn-secondary" data-final-edit>Ver y editar el mazo</button>
                 </div>
             </div>
@@ -877,7 +878,8 @@ $csrf = htmlspecialchars(triviax_csrf_token(), ENT_QUOTES, 'UTF-8');
                         <div class="study-actions">
                             <button type="button" class="btn btn-secondary" data-action="preview">Previsualizar</button>
                             <button type="button" class="btn btn-secondary" data-action="report">Reporte</button>
-                            <a class="btn btn-secondary study-hidden" data-open-student href="/triviax/study.php" target="_blank" rel="noopener">Abrir práctica</a>
+                            <a class="btn btn-secondary study-hidden" data-open-student href="<?= TRIVIAX_BASE ?>/study.php" target="_blank" rel="noopener">Abrir práctica</a>
+                            <button type="button" class="btn btn-secondary study-hidden study-copy-btn" data-copy-student>🔗 Copiar enlace</button>
                         </div>
 
                         <div data-validation></div>
@@ -890,7 +892,8 @@ $csrf = htmlspecialchars(triviax_csrf_token(), ENT_QUOTES, 'UTF-8');
     </main>
 </div>
 
-    <script src="/triviax/js/brand.js?v=5.0.6"></script>
-    <script type="module" src="/triviax/js/panel/studyAnswerPanel.js"></script>
+    <script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
+    <script>window.TRIVIAX_BASE = <?= json_encode(TRIVIAX_BASE) ?>;</script>
+<script type="module" src="<?= TRIVIAX_BASE ?>/js/panel/studyAnswerPanel.js?v=6.1.1"></script>
 </body>
 </html>

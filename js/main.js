@@ -386,6 +386,13 @@ function setupIntroSplash() {
         splash.setAttribute('aria-hidden', 'true');
     };
 
+    // En entorno local se omite el splash (lo oculta el CSS sin parpadeo); aquí
+    // solo lo dejamos cerrado y evitamos registrar animaciones/temporizadores.
+    if (window.TRIVIAX_IS_LOCAL) {
+        finishSplash();
+        return;
+    }
+
     splash.addEventListener('animationend', (event) => {
         if (event.animationName === 'splashFadeOut') {
             finishSplash();

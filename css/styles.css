@@ -4100,6 +4100,12 @@ input[type="number"]:focus {
     pointer-events: none;
 }
 
+/* En entorno local (ver script temprano en index.html) se omite el splash por
+   completo, sin animación ni parpadeo. */
+html.triviax-local .intro-splash {
+    display: none !important;
+}
+
 .intro-splash-stack {
     display: flex;
     flex-direction: column;

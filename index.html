@@ -7,7 +7,7 @@
     
     <!-- Fuentes locales o del sistema para funcionamiento offline -->
     <!-- Estilos de la aplicación -->
-    <link rel="stylesheet" href="css/styles.css?v=6.1.2">
+    <link rel="stylesheet" href="css/styles.css?v=6.1.3">
     
     <!-- Soporte PWA / Aplicación Móvil (WAP) -->
     <link rel="manifest" href="manifest.json">
@@ -16,6 +16,22 @@
     <meta name="theme-color" content="#6366f1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Detección temprana de entorno local: marca <html> ANTES de pintar el
+         splash para poder ocultarlo sin parpadeo (ver css/styles.css). -->
+    <script>
+        (function () {
+            var h = location.hostname || '';
+            var isLocal = h === 'localhost' || h === '127.0.0.1' || h === '::1'
+                || h === '0.0.0.0' || h.endsWith('.local') || h.endsWith('.localhost')
+                || h.endsWith('.test') || /^192\.168\./.test(h) || /^10\./.test(h)
+                || /^172\.(1[6-9]|2\d|3[01])\./.test(h);
+            window.TRIVIAX_IS_LOCAL = isLocal;
+            if (isLocal) {
+                document.documentElement.classList.add('triviax-local');
+            }
+        })();
+    </script>
 </head>
 <body>
     <div id="intro-splash" class="intro-splash" aria-hidden="false">
@@ -121,7 +137,7 @@
                         </div>
 
                         <footer class="app-version-footer">
-                            <span data-app-version-full="TRIVIAX Plus v{v}">TRIVIAX Plus v6.1.2</span>
+                            <span data-app-version-full="TRIVIAX Plus v{v}">TRIVIAX Plus v6.1.3</span>
                             <span>by Darwin Salina © 2026</span>
                         </footer>
                     </div>
@@ -474,7 +490,7 @@
                 </form>
 
                 <footer class="app-version-footer">
-                    <span data-app-version-full="TRIVIAX v{v}">TRIVIAX v6.1.2</span>
+                    <span data-app-version-full="TRIVIAX v{v}">TRIVIAX v6.1.3</span>
                     <span>by Darwin Salina © 2026</span>
                 </footer>
             </div>
@@ -612,7 +628,7 @@
                     </button>
                 </div>
                 <footer class="app-version-footer">
-                    <span data-app-version-full="TRIVIAX Plus v{v}">TRIVIAX Plus v6.1.2</span>
+                    <span data-app-version-full="TRIVIAX Plus v{v}">TRIVIAX Plus v6.1.3</span>
                     <span>by Darwin Salina © 2026</span>
                 </footer>
             </div>
@@ -906,7 +922,7 @@
         });
     </script>
 
-    <script src="js/brand.js?v=6.1.2"></script>
-    <script type="module" src="js/main.js?v=6.1.2"></script>
+    <script src="js/brand.js?v=6.1.3"></script>
+    <script type="module" src="js/main.js?v=6.1.3"></script>
 </body>
 </html>

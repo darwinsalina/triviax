@@ -967,6 +967,13 @@ select:focus {
     min-height: 166px;
 }
 
+.activity-card--special {
+    background:
+        linear-gradient(150deg, rgba(76, 29, 149, 0.78), rgba(30, 41, 59, 0.78)),
+        radial-gradient(circle at top left, rgba(251, 191, 36, 0.22), transparent 52%);
+    border-color: rgba(196, 181, 253, 0.28);
+}
+
 .activity-card__level,
 .activity-card__plays {
     width: fit-content;

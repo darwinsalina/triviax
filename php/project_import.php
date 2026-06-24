@@ -28,6 +28,28 @@ function triviax_import_tipos_validos(): array {
     ];
 }
 
+/** Ordena solo claves asociativas para comparar JSON sin falsos desajustes. */
+function triviax_canonicalize_json_value($value) {
+    if (!is_array($value)) {
+        return $value;
+    }
+    $isList = $value === [] || array_keys($value) === range(0, count($value) - 1);
+    foreach ($value as $key => $item) {
+        $value[$key] = triviax_canonicalize_json_value($item);
+    }
+    if (!$isList) {
+        ksort($value);
+    }
+    return $value;
+}
+
+function triviax_project_challenges_fingerprint(array $challenges): string {
+    return hash('sha256', (string)json_encode(
+        triviax_canonicalize_json_value($challenges),
+        JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+    ));
+}
+
 /**
  * Mapea un desafío (ya normalizado por el parser) a una fila de `desafios`.
  * PURA: no toca BD ni filesystem. El payload completo se conserva en data_json.

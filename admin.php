@@ -398,7 +398,108 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $trashDir = __DIR__ . '/trash';
     $result   = triviax_sync_all_projects($pdo, $proyDir, $trashDir, $docenteId);
 
+    // El botón de sincronización debe copiar también los desafíos completos,
+    // no solo la metadata de `proyectos`.
+    $result['challenge_projects'] = 0;
+    $result['challenges_imported'] = 0;
+    foreach (array_diff(scandir($proyDir), ['.', '..']) as $entry) {
+        $fullPath = $proyDir . DIRECTORY_SEPARATOR . $entry;
+        if (!is_dir($fullPath)
+            || (!is_file($fullPath . '/proyecto.json') && !is_file($fullPath . '/preguntas.txt'))) {
+            continue;
+        }
+        $import = triviax_import_project($pdo, $entry, $fullPath);
+        if (!empty($import['ok'])) {
+            $result['challenge_projects']++;
+            $result['challenges_imported'] += (int)($import['imported'] ?? 0);
+            continue;
+        }
+        $result['errors']++;
+        $result['log'][] = [
+            'type' => 'error',
+            'msg' => '"' . $entry . '": desafíos no importados — ' . ($import['error'] ?? 'error desconocido'),
+        ];
+    }
+
     echo json_encode(['success' => true, 'stats' => $result], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// Carga autenticada para el editor. No se usa api.php?action=get porque ese
+// endpoint es público y, correctamente, elimina las respuestas antes de enviar
+// los desafíos al jugador.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'load_activity_editor') {
+    header('Content-Type: application/json; charset=utf-8');
+
+    if (!isset($_POST['csrf_token']) || !hash_equals((string)$_SESSION['csrf_token'], (string)$_POST['csrf_token'])) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Token CSRF inválido.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $project = trim((string)($_POST['project'] ?? ''));
+    if ($project === '' || !preg_match('/^[a-zA-Z0-9_-]+$/', $project)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Nombre de proyecto inválido.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    $projectPath = __DIR__ . '/proyectos/' . $project;
+    if (!isSafePath($projectPath) || !is_dir($projectPath)) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'Proyecto no encontrado.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    if (function_exists('triviax_docente_puede_gestionar_proyecto')
+        && !triviax_docente_puede_gestionar_proyecto($pdo, $project, $docenteId)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'No tienes permiso para editar esta actividad.'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    try {
+        $jsonPath = $projectPath . '/proyecto.json';
+        if (is_file($jsonPath)) {
+            $parsed = triviax_parse_project_json((string)file_get_contents($jsonPath));
+            $metadata = $parsed['metadata'] ?? [];
+            $questions = $parsed['challenges'] ?? [];
+            $board = triviax_merge_board_sidecar($projectPath, is_array($parsed['board'] ?? null) ? $parsed['board'] : []);
+        } else {
+            $txtPath = $projectPath . '/preguntas.txt';
+            if (!is_file($txtPath)) {
+                throw new RuntimeException('No se encontró proyecto.json ni preguntas.txt.');
+            }
+            $parsed = triviax_parse_questions_text((string)file_get_contents($txtPath));
+            $metadata = $parsed['metadata'] ?? [];
+            $questions = $parsed['questions'] ?? ($parsed['challenges'] ?? []);
+            $board = triviax_merge_board_sidecar($projectPath, []);
+        }
+
+        // Diagnóstico privado: avisa si la copia importada quedó desfasada,
+        // pero el editor siempre abre la fuente completa del filesystem.
+        $syncState = ['checked' => false, 'in_sync' => null];
+        if ($pdo !== null) {
+            $dbQuestions = triviax_db_load_challenges($pdo, $project);
+            $syncState['checked'] = true;
+            $syncState['in_sync'] = $dbQuestions !== null
+                && triviax_project_challenges_fingerprint($dbQuestions)
+                    === triviax_project_challenges_fingerprint($questions);
+            $syncState['file_count'] = count($questions);
+            $syncState['db_count'] = is_array($dbQuestions) ? count($dbQuestions) : 0;
+        }
+
+        echo json_encode([
+            'success' => true,
+            'metadata' => $metadata,
+            'questions' => $questions,
+            'board' => $board,
+            'sync' => $syncState,
+        ], JSON_UNESCAPED_UNICODE);
+    } catch (\Throwable $e) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
+    }
     exit;
 }
 
@@ -531,11 +632,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     ];
     $validationErrors = triviax_validate_project($tempProject);
     if (!empty($validationErrors)) {
+        $validationDetails = triviax_validate_project_detailed($tempProject);
         http_response_code(422);
         echo json_encode([
             'success' => false,
             'error'   => 'La actividad tiene errores de validación.',
             'details' => $validationErrors,
+            'validation' => $validationDetails,
         ], JSON_UNESCAPED_UNICODE);
         exit;
     }
@@ -582,14 +685,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     // Sincronizar metadatos actualizados con la BD + reimportar desafíos
     // (sync primero por la FK desafios.proyecto_id → proyectos.id).
+    $syncWarning = null;
     if ($pdo !== null) {
         try {
             triviax_sync_single_project($pdo, $project, $projectPath, false);
-            triviax_import_project($pdo, $project, $projectPath);
-        } catch (\Throwable $_) {}
+            $importResult = triviax_import_project($pdo, $project, $projectPath);
+            if (empty($importResult['ok'])) {
+                $syncWarning = 'El archivo se guardó, pero no se pudieron sincronizar los desafíos con la base de datos: '
+                    . ($importResult['error'] ?? 'error desconocido');
+            }
+        } catch (\Throwable $syncError) {
+            $syncWarning = 'El archivo se guardó, pero la sincronización con la base de datos falló: '
+                . $syncError->getMessage();
+        }
     }
 
-    echo json_encode(['success' => true, 'title' => $title], JSON_UNESCAPED_UNICODE);
+    echo json_encode(['success' => true, 'title' => $title, 'warning' => $syncWarning], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -2042,6 +2153,12 @@ Aquí está el documento de estudio:";
                                     </div>
                                 </div>
 
+                                <div id="ep-validation-summary" hidden
+                                     style="margin:0 0 20px; padding:14px 16px; border:1px solid rgba(248,113,113,0.55); border-radius:10px; background:rgba(127,29,29,0.18); color:#fecaca;">
+                                    <strong style="display:block; margin-bottom:8px;">⚠️ Revisa los componentes marcados antes de guardar</strong>
+                                    <ul id="ep-validation-list" style="margin:0; padding-left:20px; line-height:1.5;"></ul>
+                                </div>
+
                                 <!-- LISTA DE DESAFÍOS -->
                                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                                     <h3 style="font-size:1rem; font-weight:800; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em; margin:0;">🎯 Desafíos (<span id="ep-ch-count">0</span>)</h3>
@@ -2882,6 +2999,7 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
             project: '',          // slug de la carpeta
             challenges: [],       // copia mutable del array de challenges
             expandedIdx: -1,      // índice del challenge con editor abierto
+            validationErrors: new Map(),
         };
 
         // Tipos conocidos y sus etiquetas
@@ -2922,8 +3040,13 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
             document.getElementById('edit-loading').style.display = 'block';
             document.getElementById('edit-body').style.display    = 'none';
 
-            // Cargar datos del proyecto
-            fetch('api.php?action=get&project=' + encodeURIComponent(folder))
+            // Cargar la fuente completa mediante una ruta docente autenticada.
+            // El endpoint público api.php?action=get oculta las respuestas.
+            const payload = new FormData();
+            payload.append('action', 'load_activity_editor');
+            payload.append('csrf_token', '<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>');
+            payload.append('project', folder);
+            fetch('admin.php', { method: 'POST', body: payload })
                 .then(r => r.json())
                 .then(data => {
                     if (!data.success) throw new Error(data.error || 'Error al cargar.');
@@ -2936,6 +3059,7 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
         };
 
         function populateEditForm(data) {
+            clearEditorValidationErrors();
             const meta = data.metadata || {};
             document.getElementById('ep-title').value  = meta.title  || '';
             document.getElementById('ep-author').value = meta.author || '';
@@ -2953,6 +3077,54 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
 
             document.getElementById('edit-loading').style.display = 'none';
             document.getElementById('edit-body').style.display    = 'block';
+
+            if (data.sync?.checked && data.sync.in_sync === false) {
+                const summary = document.getElementById('ep-validation-summary');
+                const list = document.getElementById('ep-validation-list');
+                summary.hidden = false;
+                list.innerHTML = `<li>La copia de la base de datos estaba desactualizada (${Number(data.sync.db_count || 0)} de ${Number(data.sync.file_count || 0)} desafíos). Al guardar se volverá a sincronizar desde proyecto.json.</li>`;
+            }
+        }
+
+        function clearEditorValidationErrors() {
+            _ep.validationErrors = new Map();
+            const summary = document.getElementById('ep-validation-summary');
+            const list = document.getElementById('ep-validation-list');
+            if (summary) summary.hidden = true;
+            if (list) list.innerHTML = '';
+        }
+
+        function showEditorValidationErrors(data) {
+            const validation = data.validation || {};
+            _ep.validationErrors = new Map();
+            (validation.challenges || []).forEach(item => {
+                _ep.validationErrors.set(Number(item.index), Array.isArray(item.errors) ? item.errors : []);
+            });
+
+            const allErrors = [
+                ...(Array.isArray(validation.general) ? validation.general : []),
+                ...((validation.challenges || []).flatMap(item => item.errors || [])),
+            ];
+            if (allErrors.length === 0 && Array.isArray(data.details)) {
+                allErrors.push(...data.details);
+            }
+
+            const summary = document.getElementById('ep-validation-summary');
+            const list = document.getElementById('ep-validation-list');
+            if (summary && list) {
+                summary.hidden = false;
+                list.innerHTML = allErrors.map(error => `<li>${escHtml(error)}</li>`).join('');
+            }
+
+            renderChallengeList();
+            const firstInvalid = (validation.challenges || [])[0];
+            if (firstInvalid) {
+                const idx = Number(firstInvalid.index);
+                toggleChallengeEditor(idx);
+                document.getElementById('ep-ch-card-' + idx)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                summary?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
         }
 
         // Convierte el formato txt (id/text/answers) al formato json challenge
@@ -2981,6 +3153,7 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
             document.getElementById('edit-panel').style.display = 'none';
             _ep.project = '';
             _ep.challenges = [];
+            clearEditorValidationErrors();
         };
 
         // ── Renderizar lista de challenges ───────────────────────────
@@ -2997,7 +3170,10 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
             _ep.challenges.forEach((ch, idx) => {
                 const card = document.createElement('div');
                 card.id = 'ep-ch-card-' + idx;
-                card.style.cssText = 'background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:12px; overflow:hidden;';
+                const validationErrors = _ep.validationErrors.get(idx) || [];
+                card.style.cssText = validationErrors.length > 0
+                    ? 'background:rgba(127,29,29,0.10); border:2px solid rgba(248,113,113,0.75); border-radius:12px; overflow:hidden;'
+                    : 'background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:12px; overflow:hidden;';
 
                 const type  = ch.type || 'multiple_choice';
                 const color = CH_TYPE_COLORS[type] || '#6366f1';
@@ -3014,12 +3190,14 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
                                padding:2px 10px; font-size:0.72rem; font-weight:700;">${label}</span>
                         <span style="flex:1; color:var(--text-secondary); font-size:0.88rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"
                               title="${escHtml(promptText)}">${escHtml(promptText)}</span>
+                        ${validationErrors.length > 0 ? `<span style="flex-shrink:0; padding:3px 9px; border-radius:999px; background:rgba(239,68,68,0.22); color:#fecaca; font-size:0.72rem; font-weight:800;">${validationErrors.length} error${validationErrors.length === 1 ? '' : 'es'}</span>` : ''}
                         <div style="display:flex; gap:5px; flex-shrink:0;" onclick="event.stopPropagation()">
                             <button title="Subir" onclick="moveChallenge(${idx},-1)" style="${chBtnStyle('#6366f1')}">↑</button>
                             <button title="Bajar" onclick="moveChallenge(${idx},1)"  style="${chBtnStyle('#6366f1')}">↓</button>
                             <button title="Eliminar" onclick="deleteChallenge(${idx})" style="${chBtnStyle('#ef4444')}">🗑️</button>
                         </div>
                     </div>
+                    ${validationErrors.length > 0 ? `<ul style="margin:0; padding:0 18px 12px 48px; color:#fecaca; font-size:0.8rem; line-height:1.45;">${validationErrors.map(error => `<li>${escHtml(error)}</li>`).join('')}</ul>` : ''}
                     <div id="ep-ch-editor-${idx}" style="display:none; border-top:1px solid var(--border-color); padding:18px 18px 14px;">
                         ${buildChallengeEditorHTML(ch, idx)}
                     </div>`;
@@ -3423,6 +3601,8 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
                 }
             }
 
+            _ep.validationErrors.delete(idx);
+
             // Re-renderizar la lista para reflejar el nuevo enunciado y
             // colapsar la pregunta (vuelve a su visualización de un renglón)
             renderChallengeList();
@@ -3602,6 +3782,9 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
                 .then(r => r.json())
                 .then(data => {
                     if (data.success) {
+                        if (data.warning) {
+                            alert(data.warning);
+                        }
                         setSaveBtns(true, '✔ ¡Guardado!', 'var(--success-gradient)');
                         setTimeout(() => {
                             // Volver al listado de actividades con datos frescos
@@ -3610,7 +3793,11 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
                             window.location.reload();
                         }, 1000);
                     } else {
-                        alert('Error al guardar: ' + (data.error || 'Error desconocido.'));
+                        if (Array.isArray(data.details) || data.validation) {
+                            showEditorValidationErrors(data);
+                        } else {
+                            alert('Error al guardar: ' + (data.error || 'Error desconocido.'));
+                        }
                         setSaveBtns(false, '💾 Guardar cambios');
                     }
                 })
@@ -3645,6 +3832,7 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
                         `✅ Nuevas en BD: <strong>${s.new}</strong>`,
                         `🔄 Actualizadas: <strong>${s.updated}</strong>`,
                         `⊘ Sin cambios / omitidas: <strong>${s.skipped}</strong>`,
+                        `🎯 Desafíos importados: <strong>${s.challenges_imported || 0}</strong> en <strong>${s.challenge_projects || 0}</strong> actividades`,
                         s.trash ? `🗑 En papelera: <strong>${s.trash}</strong>` : '',
                         s.errors ? `<span style="color:#ef4444">⚠ Errores: <strong>${s.errors}</strong></span>` : '',
                     ].filter(Boolean);

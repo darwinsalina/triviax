@@ -28,6 +28,15 @@
         radial-gradient(ellipse at 90% 20%, rgba(168,85,247,0.14), transparent 50%),
         var(--act-bg);
     background-attachment: fixed;
+
+    /* css/styles.css fija body{height:100vh;width:100vw;overflow:hidden} para el
+       SPA del juego. Las páginas de actividad usan <body class="act-app"> y su
+       contenido (p. ej. el formulario de "Nuevo puzle") puede superar la altura
+       de la ventana, así que recuperamos el flujo y el scroll vertical normal. */
+    height: auto;
+    width: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .act-app [hidden] { display: none !important; }
 
@@ -218,12 +227,19 @@ legend.act-label { padding: 0 6px; margin-bottom: 4px; }
     box-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 .lab-anchor.correct { background: var(--act-good); border-color: #bbf7d0; }
+/* Marcador de posición (caja vacía donde va la etiqueta). Verde flúo con borde
+   blanco grueso para que destaque sobre cualquier imagen. Se mantiene PEQUEÑO a
+   propósito: nunca debe superar el tamaño de la etiqueta, así queda totalmente
+   cubierto cuando el jugador suelta la etiqueta encima. */
 .lab-slot {
     position: absolute; transform: translate(-50%, -50%);
-    min-width: 90px; padding: 6px 10px; border-radius: 8px; text-align: center;
-    background: rgba(12,16,32,0.78); border: 2px dashed var(--act-border); color: var(--act-text);
-    font-size: 0.86rem; touch-action: none;
+    width: 28px; height: 28px; min-width: 0; padding: 0; border-radius: 6px;
+    background: #39ff14; border: 3px solid #fff;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.45); touch-action: none;
 }
+/* Halo invisible: amplía el área para soltar la etiqueta sin agrandar el
+   marcador visible, así no hace falta puntería exacta sobre el cuadrito. */
+.lab-slot::before { content: ''; position: absolute; inset: -14px; border-radius: 12px; }
 .lab-slot.filled { border-style: solid; border-color: var(--act-accent); cursor: grab; }
 .lab-slot.correct { border-color: var(--act-good); }
 .lab-slot.drop-hover { box-shadow: 0 0 0 3px rgba(99,102,241,0.5); }
@@ -235,7 +251,9 @@ legend.act-label { padding: 0 6px; margin-bottom: 4px; }
 }
 .lab-tray-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; cursor: move; border-bottom: 1px solid var(--act-border); font-size: 0.85rem; font-weight: 700; }
 .lab-tray-head button { background: none; border: none; color: var(--act-text-dim); cursor: pointer; font-size: 1rem; }
-.lab-tray-body { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; max-height: 50vh; overflow-y: auto; }
+/* Sin scroll: las barras de desplazamiento capturaban el gesto e impedían
+   arrastrar una etiqueta fuera de la bandeja. La bandeja crece y se mueve libre. */
+.lab-tray-body { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; }
 .lab-tray.collapsed .lab-tray-body { display: none; }
 .lab-chip {
     padding: 7px 12px; border-radius: 999px; background: rgba(255,255,255,0.08);
@@ -254,8 +272,22 @@ legend.act-label { padding: 0 6px; margin-bottom: 4px; }
 .lab-pool { display: flex; flex-wrap: wrap; gap: 8px; min-height: 44px; padding: 10px; border: 1px dashed var(--act-border); border-radius: 10px; }
 .act-editor-note { color: var(--act-text-dim); font-size: 0.82rem; line-height: 1.45; }
 
-/* La etiqueta colocada en el editor lleva el botón de quitar */
-.lab-overlay .lab-chip { position: absolute; transform: translate(-50%, -50%); display: inline-flex; align-items: center; gap: 6px; }
+/* La etiqueta colocada sobre la imagen (editor y juego): fondo negro semitransparente,
+   letras blancas en negrita y contorno blanco para que se lea sobre cualquier imagen,
+   incluso si es muy clara o de fondo blanco. */
+.lab-overlay .lab-chip {
+    position: absolute; transform: translate(-50%, -50%);
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    min-height: 40px; padding: 8px 12px; border-radius: 8px;
+    background: #000; border: 1px solid #fff; color: #fff;
+    font-weight: 700; font-size: 0.92rem; line-height: 1.2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+/* Ayuda visual: la etiqueta colocada en su lugar correcto se tiñe de verde. */
+.lab-overlay .lab-chip.correct {
+    background: #15803d; border-color: #bbf7d0;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.55);
+}
 .lab-tag-del { cursor: pointer; opacity: 0.7; font-size: 0.85rem; }
 .lab-tag-del:hover { opacity: 1; color: var(--act-bad); }
 .lab-anchor.editor { cursor: grab; background: rgba(168,85,247,0.45); }

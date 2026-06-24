@@ -306,6 +306,10 @@ function triviax_validate_project(array $data): array {
 
     $challengeErrors = [];
     foreach ($challenges as $idx => $ch) {
+        if (!is_array($ch)) {
+            $challengeErrors[] = 'Desafío #' . ($idx + 1) . ': debe ser un objeto.';
+            continue;
+        }
         $challengeErrors = array_merge(
             $challengeErrors,
             triviax_validate_challenge_errors($ch, $idx)
@@ -313,6 +317,40 @@ function triviax_validate_project(array $data): array {
     }
 
     return array_merge($dupeErrors, $challengeErrors);
+}
+
+/**
+ * Variante estructurada para interfaces de edición. Mantiene los mensajes del
+ * validador canónico, pero indica a qué desafío pertenece cada error para que
+ * el panel pueda resaltarlo sin tener que interpretar texto en español.
+ *
+ * @return array{general:string[],challenges:array<int,array{index:int,id:string,errors:string[]}>}
+ */
+function triviax_validate_project_detailed(array $data): array {
+    $general = triviax_validate_project_structure($data);
+    $result = ['general' => $general, 'challenges' => []];
+    if (!empty($general)) {
+        return $result;
+    }
+
+    $challenges = $data['challenges'] ?? $data['questions'] ?? [];
+    $result['general'] = triviax_find_duplicate_ids($challenges);
+
+    foreach ($challenges as $index => $challenge) {
+        $errors = is_array($challenge)
+            ? triviax_validate_challenge_errors($challenge, $index)
+            : ['Desafío #' . ($index + 1) . ': debe ser un objeto.'];
+        if (empty($errors)) {
+            continue;
+        }
+        $result['challenges'][] = [
+            'index'  => $index,
+            'id'     => (string)(is_array($challenge) ? ($challenge['id'] ?? '#' . ($index + 1)) : '#' . ($index + 1)),
+            'errors' => $errors,
+        ];
+    }
+
+    return $result;
 }
 
 /**

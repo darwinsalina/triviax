@@ -217,21 +217,8 @@ function triviax_read_project_list_metadata($projectPath, $folderName) {
     return $metadata;
 }
 
-/**
- * Fusiona el sidecar board.json (si existe) en el objeto board del proyecto.
- * Permite fijar un tablero a la actividad sin depender del formato (proyecto.json
- * o preguntas.txt). El juego lee board.lockedId.
- */
-function triviax_merge_board_sidecar($projectPath, array $board) {
-    $sidecar = $projectPath . '/board.json';
-    if (is_file($sidecar)) {
-        $bj = json_decode(@file_get_contents($sidecar), true);
-        if (is_array($bj) && !empty($bj['lockedId'])) {
-            $board['lockedId'] = (string)$bj['lockedId'];
-        }
-    }
-    return $board;
-}
+// triviax_merge_board_sidecar() vive ahora en php/triviax_core.php (compartida
+// con el editor docente de admin.php). Aquí solo se usa.
 
 // Acción: Listar tableros de juego personalizados
 if ($action === 'list_boards') {

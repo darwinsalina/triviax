@@ -37,6 +37,26 @@ let activeProjectMetadata = null;
 let currentPlayersSetup = [];
 let currentBoardProfile = getRandomBoardProfile();
 let availableProjectOptions = [];
+const SPECIAL_ACTIVITY_MODES = [
+    {
+        id: 'special-jigsaw',
+        title: '🧩 Puzles',
+        author: 'Arma la imagen pieza a pieza',
+        nivel: 'Modalidades',
+        href: 'jigsaw.php',
+        actionLabel: 'Abrir catálogo de puzles',
+        keywords: 'puzle puzles puzzle jigsaw imagen piezas'
+    },
+    {
+        id: 'special-etiquetar',
+        title: '🏷️ Etiquetado',
+        author: 'Ubica cada etiqueta sobre la imagen',
+        nivel: 'Modalidades',
+        href: 'etiquetar.php',
+        actionLabel: 'Abrir catálogo de etiquetado',
+        keywords: 'etiquetar etiquetado etiquetas imagen'
+    }
+];
 let activityCatalogCategory = 'all';
 let activityCatalogQuery = '';
 let shouldOpenProjectFromUrl = false;
@@ -565,19 +585,48 @@ function renderProjectCard(project, variant = 'default') {
     return button;
 }
 
+function specialActivityMatchesCatalogFilters(activity) {
+    const categoryMatch = activityCatalogCategory === 'all' || activityCatalogCategory === 'modalidades';
+    const haystack = [activity.title, activity.author, activity.nivel, activity.keywords || '', 'visual']
+        .join(' ')
+        .toLowerCase();
+    return categoryMatch && (!activityCatalogQuery || haystack.includes(activityCatalogQuery));
+}
+
+function renderSpecialActivityCard(activity) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'activity-card activity-card--featured activity-card--special';
+    button.innerHTML = `
+        <span class="activity-card__level">Modalidad visual</span>
+        <strong>${escapeHTML(activity.title)}</strong>
+        <span class="activity-card__meta">${escapeHTML(activity.author)}</span>
+        <span class="activity-card__plays">${escapeHTML(activity.actionLabel)} →</span>
+    `;
+    button.addEventListener('click', () => {
+        window.location.href = activity.href;
+    });
+    return button;
+}
+
 function renderActivityCatalog() {
     const categoryList = qs('#activity-category-list');
     const allGrid = qs('#activities-grid');
     const popularGrid = qs('#popular-activities-grid');
     const newGrid = qs('#new-activities-grid');
+    const specialGrid = qs('#special-activities-grid');
     const emptyState = qs('#catalog-empty-state');
-    if (!categoryList || !allGrid || !popularGrid || !newGrid || !emptyState) return;
+    if (!categoryList || !allGrid || !popularGrid || !newGrid || !specialGrid || !emptyState) return;
 
     const categories = [...new Set(availableProjectOptions.map(project => (project.nivel || 'General').trim()))]
         .sort((a, b) => a.localeCompare(b, 'es'));
 
     categoryList.innerHTML = '';
-    [{ label: 'Todas', value: 'all' }, ...categories.map(label => ({ label, value: label.trim().toLowerCase() }))].forEach(category => {
+    [
+        { label: 'Todas', value: 'all' },
+        { label: 'Modalidades visuales', value: 'modalidades' },
+        ...categories.map(label => ({ label, value: label.trim().toLowerCase() }))
+    ].forEach(category => {
         const chip = document.createElement('button');
         chip.type = 'button';
         chip.className = `category-chip ${activityCatalogCategory === category.value ? 'active' : ''}`;
@@ -591,6 +640,9 @@ function renderActivityCatalog() {
     });
 
     const filtered = availableProjectOptions.filter(projectMatchesCatalogFilters);
+    const specialFiltered = SPECIAL_ACTIVITY_MODES.filter(specialActivityMatchesCatalogFilters);
+    specialGrid.innerHTML = '';
+    specialFiltered.forEach(activity => specialGrid.appendChild(renderSpecialActivityCard(activity)));
     allGrid.innerHTML = '';
     filtered.forEach(project => allGrid.appendChild(renderProjectCard(project)));
 
@@ -612,8 +664,9 @@ function renderActivityCatalog() {
 
     qs('#popular-count').innerText = popular.length;
     qs('#new-count').innerText = recent.length;
+    qs('#special-count').innerText = specialFiltered.length;
     qs('#all-count').innerText = filtered.length;
-    emptyState.classList.toggle('hidden', filtered.length > 0);
+    emptyState.classList.toggle('hidden', filtered.length + specialFiltered.length > 0);
 
     const popularSection = qs('section[data-section="popular"]');
     if (popularSection) {
@@ -622,6 +675,10 @@ function renderActivityCatalog() {
     const newSection = qs('section[data-section="new"]');
     if (newSection) {
         newSection.style.display = recent.length > 0 ? '' : 'none';
+    }
+    const specialSection = qs('section[data-section="special"]');
+    if (specialSection) {
+        specialSection.style.display = specialFiltered.length > 0 ? '' : 'none';
     }
 }
 
@@ -674,11 +731,6 @@ async function loadProjectsList() {
             .filter(project => project.id);
 
         updateHiddenProjectDropdown(availableProjectOptions);
-
-        if (availableProjectOptions.length === 0) {
-            ui.showError('No se encontraron proyectos guardados localmente ni en el servidor.', () => loadProjectsList());
-            return;
-        }
 
         const selectedProjectExists = shouldOpenProjectFromUrl
             && availableProjectOptions.some(project => project.id === activeProjectName);

@@ -243,6 +243,8 @@ function chipToSlot(chip, slotId) {
     overlayPlay.appendChild(chip);
     chip.dataset.slot = numericSlot;
     chip.classList.add('filled');
+    // Pista de ayuda: la etiqueta se tiñe de verde si quedó en el lugar correcto.
+    chip.classList.toggle('correct', numericChip === numericSlot);
     game.fill[numericSlot] = numericChip;
     game.slotEls[numericSlot].classList.add('filled');
     game.anchorEls[numericSlot].classList.toggle('correct', numericChip === numericSlot);
@@ -250,7 +252,7 @@ function chipToSlot(chip, slotId) {
 }
 function chipToTray(chip) {
     clearChipPlacement(chip);
-    chip.classList.remove('filled');
+    chip.classList.remove('filled', 'correct');
     chip.style.position = 'relative';
     chip.style.transform = 'none';
     chip.style.left = chip.style.top = 'auto';

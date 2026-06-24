@@ -32,6 +32,18 @@ check('MC difficulty default 1', $r['difficulty'], 1);
 check('MC points default 10', $r['points'], 10);
 check('MC orden', $r['orden'], 0);
 check('MC data_json conserva options', json_decode($r['data_json'], true)['options'][0]['text'], 'Cuatro');
+check('MC data_json conserva respuesta correcta', json_decode($r['data_json'], true)['options'][0]['correct'], true);
+
+// La migración debe conservar también objetos answer anidados; son los que el
+// editor docente necesita recuperar completos aunque la API del jugador los sanee.
+$tfPayload = ['id' => 'tf_payload', 'type' => 'true_false', 'prompt' => ['text' => 'El cielo es azul'], 'answer' => ['value' => true]];
+$tfRow = triviax_map_challenge_to_row($tfPayload, 1);
+check('data_json conserva answer.value', json_decode($tfRow['data_json'], true)['answer']['value'], true);
+check(
+    'fingerprint ignora orden de claves JSON',
+    triviax_project_challenges_fingerprint([['id' => 'q', 'answer' => ['value' => true]]]),
+    triviax_project_challenges_fingerprint([['answer' => ['value' => true], 'id' => 'q']])
+);
 
 // 2. Normalización de tipo: classification → drag_drop (valor del ENUM).
 $cl = ['id' => 'c1', 'type' => 'classification', 'prompt' => ['text' => 'Clasificá']];

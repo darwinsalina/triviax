@@ -9,7 +9,7 @@ TRIVIAX es una aplicación web educativa de juego de preguntas y respuestas con 
 
 ---
 
-## 2. Versión actual: 5.x (en desarrollo activo — base estable)
+## 2. Versión actual: 6.1.1 (en desarrollo activo — base estable)
 
 ### 2.1. Qué funciona y NO debe tocarse salvo causa directa con la migración
 
@@ -30,6 +30,8 @@ TRIVIAX es una aplicación web educativa de juego de preguntas y respuestas con 
 | Envío de reporte por email | ✅ Funcional | `api.php` → action=send_report |
 | Modalidad “Estudia y responde” | ✅ Backend + frontend estudiante + panel docente | `study.php`, `panel/study_answer.php`, `js/engines/studyAnswerEngine.js`, `js/panel/studyAnswerPanel.js`, `php/study_answer_*`, `NoSubir/triviax_db_study_answer.sql` |
 | Modalidad "TRIVIAX Lotto" | ✅ Completa (Fase 6 host activa) | `lotto.php`, `lotto_host.php`, `panel/lotto.php`, `js/engines/lottoStudentEngine.js`, `js/engines/lottoHostEngine.js`, `js/panel/lottoPanel.js`, `php/lotto_*`, `NoSubir/triviax_db_lotto.sql` |
+| Modalidad Puzles (jigsaw) | ✅ Catálogo jugador + panel docente | `jigsaw.php`, `panel/jigsaw.php`, `js/engines/jigsawEngine.js`, `js/panel/jigsawPanel.js`, `php/jigsaw_*` |
+| Modalidad Etiquetado | ✅ Catálogo jugador + panel docente | `etiquetar.php`, `panel/etiquetar.php`, `js/engines/etiquetarEngine.js`, `js/panel/etiquetarPanel.js`, `php/etiquetar_*` |
 | Acceso docente por código `tkey` | ✅ Funcional (legado) | `php/triviax_core.php` |
 | Proyectos en carpetas `/proyectos/` | ✅ Funcional (legado) | `proyectos/` |
 
@@ -551,6 +553,9 @@ localStorage.setItem(`triviax_tab_${sesionId}`, Date.now().toString())  // heart
 - [x] Épica #10 parcial: SSE en monitor docente de partida (`events.php?stream=live_session_summary`) con `EventSource`, heartbeat, streams cortos y fallback automático al polling de 5 s.
 - [ ] Épica #10 restante: extender SSE a Lotto host/estudiante y otros monitores con cuidado de workers Apache/PHP.
 - [x] Chequeo operativo de producción: `tools/check_production_readiness.php` verifica secretos, Turnstile y BD sin imprimir claves.
+- [x] v6.1.1: Puzles y Etiquetado visibles en el catálogo del jugador y en el catálogo docente.
+- [x] v6.1.1: el editor docente carga respuestas completas desde una ruta autenticada; `api.php?action=get` continúa saneado para jugadores.
+- [x] v6.1.1: validación de edición localizada por desafío, sincronización masiva de metadata + `desafios.data_json` y auditoría CLI `tools/audit_project_db_sync.php`.
 
 ---
 
@@ -636,6 +641,7 @@ localStorage.setItem(`triviax_tab_${sesionId}`, Date.now().toString())  // heart
 | 2026-06-12 | Manuales consolidados: quedan como fuentes editables `docs/GUIA_DOCENTE_TRIVIAX.md` y `docs/GUIA_JUGADORES_TRIVIAX.md`, y como archivos públicos enlazados `docs/GUIA_DOCENTE_TRIVIAX.pdf` y `docs/GUIA_JUGADORES_TRIVIAX.pdf`. Se retiraron duplicados activos del root y guías versionadas de `docs/`; los enlaces de `index.html`, `admin.php`, visor docente y email de bienvenida apuntan a nombres estables sin versión. Exportador local: `python tools/build_guides_pdf.py`. |
 | 2026-06-18 | Épica #7 / #1 Etapa 2 cerrada: importador filesystem→BD del tablero (`php/project_import.php`, `tools/import_projects.php`, migración `6.2_desafios.sql`), lectura desde BD con fallback, grader server-side para todos los tipos, endpoint `grade` y saneo de `action=get` para no exponer respuestas. Verificado con `tests/run.php` (81 OK) y HTTP local `demo_mixto` sin claves sensibles. |
 | 2026-06-18 | Épica #10 iniciada: monitor docente `panel/live_session.php` usa SSE mediante `events.php` y helper compartido `php/live_session_summary.php`; mantiene fallback a polling. Agregado `scratch/test_live_session_summary.php` (10 OK) y `tools/check_production_readiness.php` para validar producción/Turnstile/BD. |
+| 2026-06-23 | v6.1.1: Puzles y Etiquetado incorporados al catálogo principal y al catálogo docente. Corregida la edición de actividades tras la migración: el editor ya no consume la respuesta pública saneada, muestra errores por desafío y la sincronización masiva importa también `data_json`. Auditoría local: 12/12 proyectos en paridad canónica y 0 respuestas diferentes. |
 
 ## 9. Glosario
 

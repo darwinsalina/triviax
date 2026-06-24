@@ -227,6 +227,13 @@ export function validateChallenge(challenge, index = 0) {
     // ── Validaciones por tipo ─────────────────────────────────
     if (type === 'multiple_choice') {
         const options = challenge.options || challenge.answers || [];
+        // El servidor SANEA las respuestas correctas antes de enviar el desafío
+        // al jugador (api.php?action=get). Este validador corre sobre esos datos
+        // saneados, así que la corrección solo se exige cuando esa información
+        // está presente (datos completos: editor/servidor). El veredicto real es
+        // autoritativo del servidor (board_eval).
+        const hasCorrectInfo = options.some(o => 'correct' in o)
+            || (challenge.answer && 'correctOptionId' in challenge.answer);
         const correctCount = options.filter(o =>
             o.correct || (challenge.answer && challenge.answer.correctOptionId === o.id)
         ).length;
@@ -239,16 +246,20 @@ export function validateChallenge(challenge, index = 0) {
                 }
             });
         }
-        if (correctCount === 0) {
+        if (hasCorrectInfo && correctCount === 0) {
             errors.push(`${prefix}: no se marcó ninguna respuesta correcta.`);
-        } else if (correctCount > 1) {
+        } else if (hasCorrectInfo && correctCount > 1) {
             errors.push(`${prefix}: tiene ${correctCount} respuestas marcadas como correctas; debe ser exactamente 1.`);
         }
 
     } else if (type === 'true_false') {
         const hasBooleanAnswer = typeof challenge.answer?.value === 'boolean';
-        const correctAnswers = (challenge.answers || []).filter(a => a.correct);
-        if (!hasBooleanAnswer && correctAnswers.length !== 1) {
+        const answers = challenge.answers || [];
+        const correctAnswers = answers.filter(a => a.correct);
+        // answer.value se sanea para el jugador; solo validar si hay datos de respuesta.
+        const answerInfoPresent = challenge.answer !== undefined
+            || answers.some(a => 'correct' in a);
+        if (answerInfoPresent && !hasBooleanAnswer && correctAnswers.length !== 1) {
             errors.push(`${prefix}: verdadero/falso requiere una respuesta booleana (true/false) o exactamente una opción correcta.`);
         }
 
@@ -304,7 +315,10 @@ export function validateChallenge(challenge, index = 0) {
             if (!String(item.text || '').trim()) {
                 errors.push(`${prefix}: hay un elemento sin texto.`);
             }
-            if (!categoryIds.has(String(item.categoryId || ''))) {
+            // categoryId se sanea para el jugador (normalizeChallenge lo deja como
+            // cadena vacía); validar pertenencia solo cuando viene con valor.
+            const categoryId = String(item.categoryId || '').trim();
+            if (categoryId !== '' && !categoryIds.has(categoryId)) {
                 errors.push(`${prefix}: el elemento "${item.text || item.id}" no pertenece a ninguna categoría válida.`);
             }
         });
@@ -320,11 +334,17 @@ export function validateChallenge(challenge, index = 0) {
         if (draggables.length < 1) {
             errors.push(`${prefix}: clasificar (drag_drop) requiere al menos 1 elemento arrastrable.`);
         }
-        draggables.forEach(item => {
-            if (!zoneIds.has(String(answers[item.id] || ''))) {
-                errors.push(`${prefix}: el elemento "${item.text || item.id}" no tiene zona de destino asignada.`);
-            }
-        });
+        // El mapa elemento→zona (answer) se sanea para el jugador (normalizeChallenge
+        // lo deja con valores vacíos); validar solo cuando trae asignaciones reales.
+        const answerInfoPresent = challenge.answer
+            && Object.values(challenge.answer).some(v => String(v || '').trim() !== '');
+        if (answerInfoPresent) {
+            draggables.forEach(item => {
+                if (!zoneIds.has(String(answers[item.id] || ''))) {
+                    errors.push(`${prefix}: el elemento "${item.text || item.id}" no tiene zona de destino asignada.`);
+                }
+            });
+        }
 
     } else if (type === 'fill_blank') {
         const blanks  = challenge.blanks || {};
@@ -342,7 +362,8 @@ export function validateChallenge(challenge, index = 0) {
             if (!Array.isArray(config.options) || config.options.length < 2) {
                 errors.push(`${prefix}: el espacio [${marker}] necesita al menos 2 opciones.`);
             }
-            if (!config.correct || !config.options?.includes(config.correct)) {
+            // config.correct se sanea para el jugador; validar solo si está presente.
+            if ('correct' in config && !config.options?.includes(config.correct)) {
                 errors.push(`${prefix}: la respuesta correcta de [${marker}] no está entre sus opciones.`);
             }
         });
@@ -355,11 +376,13 @@ export function validateChallenge(challenge, index = 0) {
         }
         // Opciones igual que multiple_choice
         const options = challenge.options || challenge.answers || [];
+        const hasCorrectInfo = options.some(o => 'correct' in o);
         const correctCount = options.filter(o => o.correct).length;
         if (options.length < 2) {
             errors.push(`${prefix}: multimedia con opciones requiere al menos 2 opciones (tiene ${options.length}).`);
         }
-        if (correctCount !== 1) {
+        // La marca de acierto se sanea para el jugador; validar solo si está presente.
+        if (hasCorrectInfo && correctCount !== 1) {
             errors.push(`${prefix}: debe tener exactamente 1 respuesta correcta (tiene ${correctCount}).`);
         }
 
@@ -370,11 +393,13 @@ export function validateChallenge(challenge, index = 0) {
         }
         // Zonas de respuesta
         const zones = challenge.zones || challenge.hotspots || challenge.areas || [];
+        const hasCorrectInfo = zones.some(z => 'correct' in z);
         const correctZones = zones.filter(z => z.correct);
         if (zones.length === 0) {
             errors.push(`${prefix}: zona en imagen requiere al menos una zona o coordenadas definidas.`);
         }
-        if (correctZones.length === 0) {
+        // La marca de zona correcta se sanea para el jugador; validar solo si está presente.
+        if (hasCorrectInfo && correctZones.length === 0) {
             errors.push(`${prefix}: zona en imagen requiere que al menos una zona esté marcada como correcta.`);
         }
 
@@ -384,7 +409,12 @@ export function validateChallenge(challenge, index = 0) {
                       || challenge.solution
                       || '';
         const pattern  = challenge.answer?.pattern || challenge.validationPattern || '';
-        if (!String(expected).trim() && !String(pattern).trim()) {
+        // El esquema Parsons (challenge.lines) y la respuesta esperada se sanean
+        // para el jugador; solo exigir respuesta esperada/patrón si no hay otra
+        // forma de evaluación presente.
+        const hasLinesSchema = Array.isArray(challenge.lines);
+        if (!hasLinesSchema && challenge.answer !== undefined
+            && !String(expected).trim() && !String(pattern).trim()) {
             errors.push(`${prefix}: desafío de código necesita una respuesta esperada (answer.expected) o un patrón de validación.`);
         }
     }

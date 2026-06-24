@@ -18,7 +18,7 @@ $nombreUsuario = trim(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Etiquetar — Panel docente — TRIVIAX</title>
     <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/styles.css?v=6.0.0">
-    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/actividades.css?v=6.0.0">
+    <link rel="stylesheet" href="<?= TRIVIAX_BASE ?>/css/actividades.css?v=6.0.1">
 </head>
 <body class="act-app" data-act-csrf="<?php echo $csrf; ?>">
     <header class="act-topbar">

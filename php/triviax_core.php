@@ -681,3 +681,22 @@ function triviax_clean_uploaded_questions($content) {
 
     return implode("\r\n", $cleanedLines);
 }
+
+/**
+ * Fusiona el sidecar board.json (si existe) en el objeto board del proyecto.
+ * Permite fijar un tablero a la actividad sin depender del formato (proyecto.json
+ * o preguntas.txt). El juego lee board.lockedId.
+ *
+ * Vive en el core compartido porque tanto api.php (carga pública) como admin.php
+ * (editor docente autenticado) necesitan la misma fusión.
+ */
+function triviax_merge_board_sidecar($projectPath, array $board) {
+    $sidecar = $projectPath . '/board.json';
+    if (is_file($sidecar)) {
+        $bj = json_decode(@file_get_contents($sidecar), true);
+        if (is_array($bj) && !empty($bj['lockedId'])) {
+            $board['lockedId'] = (string)$bj['lockedId'];
+        }
+    }
+    return $board;
+}

@@ -20,7 +20,7 @@ $nombreUsuario = $nombreUsuario !== '' ? $nombreUsuario : 'Invitado';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Puzle — TRIVIAX</title>
     <link rel="stylesheet" href="css/styles.css?v=6.0.0">
-    <link rel="stylesheet" href="css/actividades.css?v=6.0.0">
+    <link rel="stylesheet" href="css/actividades.css?v=6.0.1">
 </head>
 <body class="act-app" data-act-csrf="<?php echo $csrf; ?>">
     <header class="act-topbar">

@@ -445,10 +445,10 @@ $estadoColor = [
             <?php endif; ?>
         </section>
 
-        <!-- Accesos al panel legado -->
+        <!-- Catálogo docente de modalidades y herramientas -->
         <section>
             <div class="section-header">
-                <h2>Herramientas adicionales</h2>
+                <h2>Catálogo de actividades</h2>
             </div>
             <div class="panel-legado">
                 <a href="<?= TRIVIAX_BASE ?>/index.html" class="btn-legado">🎮 Ir al juego</a>

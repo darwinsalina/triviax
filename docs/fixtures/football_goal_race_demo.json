@@ -1,0 +1,56 @@
+{
+  "id": "football_goal_race_demo",
+  "mode": "football_goal_race",
+  "title": "TRIVIAX Futbol - Camino al Gol",
+  "board": "football_pitch_30_v1",
+  "questions": {
+    "normal": [
+      {
+        "id": "n1",
+        "prompt": "Que dispositivo permite ingresar texto a la computadora?",
+        "options": ["Monitor", "Teclado", "Parlante", "Impresora"],
+        "correct": "Teclado"
+      },
+      {
+        "id": "n2",
+        "prompt": "Cual es la unidad minima de informacion?",
+        "options": ["Bit", "Pixel", "Archivo", "Carpeta"],
+        "correct": "Bit"
+      },
+      {
+        "id": "n3",
+        "prompt": "Que significa CPU?",
+        "options": ["Unidad central de proceso", "Cable principal universal", "Centro de pantallas unidas", "Control de programas usados"],
+        "correct": "Unidad central de proceso"
+      }
+    ],
+    "special": [
+      {
+        "id": "s1",
+        "prompt": "Que accion protege mejor una cuenta escolar?",
+        "options": ["Compartir la clave", "Usar contrasena fuerte", "Repetir la misma clave", "Anotar la clave en el banco"],
+        "correct": "Usar contrasena fuerte"
+      },
+      {
+        "id": "s2",
+        "prompt": "Que extension suele identificar una pagina web?",
+        "options": [".jpg", ".html", ".mp3", ".zip"],
+        "correct": ".html"
+      }
+    ],
+    "final": [
+      {
+        "id": "f1",
+        "prompt": "Tiro al arco: cual es la funcion principal de un sistema operativo?",
+        "options": ["Administrar recursos y programas", "Aumentar el brillo", "Crear imagenes solamente", "Cambiar el color del teclado"],
+        "correct": "Administrar recursos y programas"
+      },
+      {
+        "id": "f2",
+        "prompt": "Tiro al arco: que practica ayuda a verificar informacion en Internet?",
+        "options": ["Leer una sola publicacion", "Comparar fuentes confiables", "Creer todo anuncio", "Ignorar la fecha"],
+        "correct": "Comparar fuentes confiables"
+      }
+    ]
+  }
+}

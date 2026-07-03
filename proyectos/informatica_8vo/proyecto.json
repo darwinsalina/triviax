@@ -1,0 +1,1666 @@
+{
+    "metadata": {
+        "title": "Pensamiento Computacional",
+        "author": "Prof. Darwin Salina",
+        "nivel": "8vo EBI",
+        "obs": "Preguntas basadas en los temas de estudio para  la evaluación parcial de Junio",
+        "mail": "",
+        "date": "11\/06\/2026",
+        "background": "fondo.jpg"
+    },
+    "board": {
+        "type": "serpentine"
+    },
+    "challenges": [
+        {
+            "id": "mc_001",
+            "type": "multiple_choice",
+            "title": "Pregunta 1",
+            "prompt": {
+                "text": "¿Qué es el pensamiento computacional?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Una forma de resolver problemas de manera ordenada, lógica y clara.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Una manera de memorizar comandos sin comprenderlos.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Una técnica para reparar computadoras dañadas.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Un método para pensar exactamente igual que una máquina.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_002",
+            "type": "multiple_choice",
+            "title": "Pregunta 2",
+            "prompt": {
+                "text": "¿Qué NO significa el pensamiento computacional?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Aprender a analizar un problema.",
+                    "correct": false
+                },
+                {
+                    "id": "b",
+                    "text": "Buscar una solución paso a paso.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Pensar exactamente como una computadora.",
+                    "correct": true
+                },
+                {
+                    "id": "d",
+                    "text": "Resolver problemas de forma clara.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_003",
+            "type": "multiple_choice",
+            "title": "Pregunta 3",
+            "prompt": {
+                "text": "¿Para qué sirve el pensamiento computacional?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Para entender problemas complejos, dividirlos y crear instrucciones claras.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Para decorar dispositivos tecnológicos.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Para aumentar automáticamente la velocidad de una computadora.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Para evitar revisar errores.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_004",
+            "type": "multiple_choice",
+            "title": "Pregunta 4",
+            "prompt": {
+                "text": "¿En qué consiste la fase de análisis del problema?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "En comprender qué problema se debe resolver antes de intentar solucionarlo.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "En escribir directamente el programa final.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "En eliminar todos los datos del problema.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "En repetir instrucciones sin control.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_005",
+            "type": "multiple_choice",
+            "title": "Pregunta 5",
+            "prompt": {
+                "text": "En la máquina de bebidas, ¿qué se analiza antes de preparar café?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Si hay electricidad, agua, ficha válida, selección de bebida y vaso colocado.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "El color exterior de la máquina.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "La marca del mueble de la máquina.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "El nombre del fabricante del plástico.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_006",
+            "type": "multiple_choice",
+            "title": "Pregunta 6",
+            "prompt": {
+                "text": "¿Qué significa descomponer un problema?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Dividir un problema grande en partes más pequeñas y fáciles de resolver.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Mezclar todos los pasos en una sola instrucción.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Resolver el problema sin analizarlo.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Ignorar las partes importantes del sistema.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_007",
+            "type": "multiple_choice",
+            "title": "Pregunta 7",
+            "prompt": {
+                "text": "¿Cuál de estas opciones es un subproblema de la máquina de bebidas?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Validar ficha.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Pintar la carcasa.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Elegir el color del cartel.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Cambiar el diseño del aula.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_008",
+            "type": "multiple_choice",
+            "title": "Pregunta 8",
+            "prompt": {
+                "text": "¿Qué es el reconocimiento de patrones?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Encontrar partes parecidas o repetidas dentro de un problema.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Borrar las instrucciones repetidas sin analizarlas.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Cambiar el objetivo del algoritmo.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Usar cualquier respuesta aunque sea incorrecta.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_009",
+            "type": "multiple_choice",
+            "title": "Pregunta 9",
+            "prompt": {
+                "text": "¿Qué patrón comparten preparar café y preparar té en la máquina?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Colocar producto soluble, calentar agua, agregar agua, mezclar y servir.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Moler granos de café en todos los casos.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Enfriar el agua antes de usarla.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Apagar la máquina antes de servir.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_010",
+            "type": "multiple_choice",
+            "title": "Pregunta 10",
+            "prompt": {
+                "text": "¿Qué es la abstracción?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Quedarse con lo importante y dejar de lado detalles innecesarios.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Agregar todos los detalles posibles aunque no sirvan.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Repetir un procedimiento sin final.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Escribir pasos desordenados.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_011",
+            "type": "multiple_choice",
+            "title": "Pregunta 11",
+            "prompt": {
+                "text": "Para diseñar el algoritmo de una máquina de bebidas, ¿qué detalle puede ignorarse por abstracción?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El color de la máquina.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Si hay agua.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Si la ficha es válida.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Si hay vaso colocado.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_012",
+            "type": "multiple_choice",
+            "title": "Pregunta 12",
+            "prompt": {
+                "text": "¿Qué es un algoritmo?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Un conjunto ordenado y finito de instrucciones para resolver un problema.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Un depósito de agua caliente.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Una ficha que activa la máquina.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Una lista infinita de pasos desordenados.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_013",
+            "type": "multiple_choice",
+            "title": "Pregunta 13",
+            "prompt": {
+                "text": "¿Qué significa que un algoritmo sea ordenado?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Que sus pasos estén en una secuencia correcta.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Que nunca termine.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Que tenga instrucciones confusas.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Que ignore las condiciones.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_014",
+            "type": "multiple_choice",
+            "title": "Pregunta 14",
+            "prompt": {
+                "text": "¿Qué significa que un algoritmo sea claro?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Que cada instrucción se entienda fácilmente.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Que tenga la mayor cantidad posible de palabras difíciles.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Que omita pasos importantes.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Que solo pueda entenderlo quien lo escribió.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_015",
+            "type": "multiple_choice",
+            "title": "Pregunta 15",
+            "prompt": {
+                "text": "¿Qué significa que un algoritmo sea finito?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Que debe terminar en algún momento.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Que debe repetirse para siempre.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Que no debe tener final.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Que debe evitar toda decisión.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_016",
+            "type": "multiple_choice",
+            "title": "Pregunta 16",
+            "prompt": {
+                "text": "¿Qué significa que un algoritmo sea preciso?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Que no debe tener ambigüedades.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Que debe usar frases vagas.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Que puede saltar a cualquier parte sin indicar dónde.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Que no necesita explicar las decisiones.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_017",
+            "type": "multiple_choice",
+            "title": "Pregunta 17",
+            "prompt": {
+                "text": "¿Qué significa que un algoritmo sea eficiente?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Que resuelve el problema sin pasos innecesarios.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Que agrega acciones inútiles para hacerlo más largo.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Que repite siempre los mismos pasos sin control.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Que evita llegar a una solución.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_018",
+            "type": "multiple_choice",
+            "title": "Pregunta 18",
+            "prompt": {
+                "text": "¿Qué significa que un algoritmo sea verificable?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Que se puede probar si funciona o no.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Que no puede revisarse.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Que solo funciona si nadie lo lee.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Que no necesita corrección.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_019",
+            "type": "multiple_choice",
+            "title": "Pregunta 19",
+            "prompt": {
+                "text": "¿Qué se busca durante la prueba y corrección de un algoritmo?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Pasos desordenados, instrucciones poco claras, condiciones incompletas y caminos sin salida.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "El color más atractivo de la máquina.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "El nombre de los estudiantes del equipo.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "La decoración exterior del dispositivo.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_020",
+            "type": "multiple_choice",
+            "title": "Pregunta 20",
+            "prompt": {
+                "text": "Si la máquina pide un vaso pero nunca devuelve la ficha cuando el usuario no coloca el vaso, ¿qué ocurre?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "El algoritmo está incompleto.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "El algoritmo es más eficiente.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "La abstracción está perfectamente aplicada.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "El problema ya quedó resuelto.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_021",
+            "type": "multiple_choice",
+            "title": "Pregunta 21",
+            "prompt": {
+                "text": "En el análisis de un problema, ¿qué pregunta corresponde al objetivo?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "¿Qué quiero lograr?",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "¿Qué color debe tener?",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "¿Qué nombre tendrá el archivo?",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "¿Cuántas veces puedo repetir el error?",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_022",
+            "type": "multiple_choice",
+            "title": "Pregunta 22",
+            "prompt": {
+                "text": "En el análisis de un problema, ¿qué pregunta corresponde a las entradas?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "¿Qué datos o elementos necesito?",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "¿Qué resultado espero?",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "¿Qué puede salir mal?",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "¿Qué pasos ya no importan?",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_023",
+            "type": "multiple_choice",
+            "title": "Pregunta 23",
+            "prompt": {
+                "text": "En el análisis de un problema, ¿qué pregunta corresponde al proceso?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "¿Qué pasos debo realizar?",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "¿Qué resultado espero?",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "¿Qué datos necesito?",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "¿Qué puede salir mal?",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_024",
+            "type": "multiple_choice",
+            "title": "Pregunta 24",
+            "prompt": {
+                "text": "En el análisis de un problema, ¿qué pregunta corresponde a las salidas?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "¿Qué resultado espero?",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "¿Qué decisiones hay que tomar?",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "¿Qué datos necesito?",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "¿Qué pasos debo ocultar?",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_025",
+            "type": "multiple_choice",
+            "title": "Pregunta 25",
+            "prompt": {
+                "text": "En el análisis de un problema, ¿qué pregunta corresponde a las condiciones?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "¿Qué decisiones hay que tomar?",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "¿Qué color externo tendrá la máquina?",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "¿Qué resultado decorativo espero?",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "¿Qué pasos debo eliminar sin revisar?",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_026",
+            "type": "multiple_choice",
+            "title": "Pregunta 26",
+            "prompt": {
+                "text": "¿Cuál de estos es un error posible en la máquina de bebidas?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Ficha atascada.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Color poco atractivo.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Fuente de letra incorrecta.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Nombre demasiado largo.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_027",
+            "type": "multiple_choice",
+            "title": "Pregunta 27",
+            "prompt": {
+                "text": "¿Qué es un algoritmo de hilo único?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Un algoritmo que sigue un solo flujo principal de instrucciones.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Un algoritmo que ejecuta muchos módulos al mismo tiempo.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Un algoritmo que nunca tiene decisiones.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Un algoritmo que no puede terminar.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_028",
+            "type": "multiple_choice",
+            "title": "Pregunta 28",
+            "prompt": {
+                "text": "En un algoritmo de hilo único para validar ficha, ¿qué debe ocurrir si la ficha no es válida?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Devolver la ficha.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Preparar café inmediatamente.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Apagar para siempre la máquina.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Ignorar el error y servir la bebida.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_029",
+            "type": "multiple_choice",
+            "title": "Pregunta 29",
+            "prompt": {
+                "text": "¿Qué es una rutina?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Una parte del algoritmo que resuelve una tarea concreta.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Un error que bloquea el sistema.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Una ficha especial de la máquina.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Un tipo de ingrediente soluble.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_030",
+            "type": "multiple_choice",
+            "title": "Pregunta 30",
+            "prompt": {
+                "text": "¿Qué es un algoritmo con rutinas múltiples?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Un algoritmo que divide el trabajo en varias partes o módulos.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Un algoritmo que no tiene organización.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Un algoritmo formado por un solo paso.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Un algoritmo que no puede revisarse.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_031",
+            "type": "multiple_choice",
+            "title": "Pregunta 31",
+            "prompt": {
+                "text": "¿Cuál es una ventaja de usar rutinas?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Facilita encontrar errores.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Obliga a repetir instrucciones innecesarias.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Impide modificar una parte del algoritmo.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Hace que el algoritmo sea menos claro.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_032",
+            "type": "multiple_choice",
+            "title": "Pregunta 32",
+            "prompt": {
+                "text": "¿Qué es una subrutina?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Una rutina más pequeña que se usa dentro de otra.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Un error imposible de corregir.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Un tipo de vaso descartable.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Una señal sonora de la máquina.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_033",
+            "type": "multiple_choice",
+            "title": "Pregunta 33",
+            "prompt": {
+                "text": "¿Cuál de estas es una rutina básica de la máquina de bebidas?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Detección y validación de ficha.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Elección del color del gabinete.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Diseño del logotipo exterior.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Compra del uniforme del usuario.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_034",
+            "type": "multiple_choice",
+            "title": "Pregunta 34",
+            "prompt": {
+                "text": "¿Qué verifica la rutina de control de insumos e ingredientes?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Electricidad, agua y niveles mínimos de ingredientes.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "El color de los botones.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "El tamaño del cartel exterior.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "La marca del vaso del usuario.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_035",
+            "type": "multiple_choice",
+            "title": "Pregunta 35",
+            "prompt": {
+                "text": "¿Qué controla la rutina de detección y validación de ficha?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Si se ingresó ficha, si llegó al sensor y si es válida.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Si el usuario tiene sed.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Si la bebida quedó dulce.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Si el vaso tiene dibujos.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_036",
+            "type": "multiple_choice",
+            "title": "Pregunta 36",
+            "prompt": {
+                "text": "¿Qué permite la rutina de selección de bebida?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Elegir entre café, capuchino, chocolatada o té.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Elegir el color de la máquina.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Cambiar el nombre del algoritmo.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Apagar todos los sensores.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_037",
+            "type": "multiple_choice",
+            "title": "Pregunta 37",
+            "prompt": {
+                "text": "¿Qué hace la rutina de preparación de la bebida?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Recibe el código de bebida y dirige la preparación correspondiente.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Decide el color del vaso.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Reemplaza la electricidad por agua.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Elimina las condiciones del algoritmo.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_038",
+            "type": "multiple_choice",
+            "title": "Pregunta 38",
+            "prompt": {
+                "text": "¿Qué comprueba la rutina de detección y validación de vaso?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Si hay vaso y si tiene el tamaño correcto.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Si el usuario sabe programar.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Si la ficha tiene buen color.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Si la máquina está decorada.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_039",
+            "type": "multiple_choice",
+            "title": "Pregunta 39",
+            "prompt": {
+                "text": "¿Qué hace la rutina de servir bebida?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Sirve la bebida y limpia la cazoleta.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Elige el título del documento.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Cambia la marca de la máquina.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Elimina los ingredientes.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_040",
+            "type": "multiple_choice",
+            "title": "Pregunta 40",
+            "prompt": {
+                "text": "¿Qué hace la rutina de detección de retiro de vaso?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Espera que el usuario retire el vaso y reinicia el ciclo.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Prepara todas las bebidas a la vez.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Borra la selección del usuario antes de servir.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Cambia el tamaño de la máquina.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_041",
+            "type": "multiple_choice",
+            "title": "Pregunta 41",
+            "prompt": {
+                "text": "¿Cómo debe ser la numeración de pasos en el algoritmo de la máquina de bebidas?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Secuencial e ininterrumpida desde el principio hasta el final.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Reiniciada en cada rutina.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Desordenada para que sea más flexible.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Opcional y sin importancia.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_042",
+            "type": "multiple_choice",
+            "title": "Pregunta 42",
+            "prompt": {
+                "text": "¿Cómo deben indicarse los saltos entre rutinas?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Con el nombre de la rutina de destino y el número de paso entre paréntesis.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Con frases como “volver arriba”.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Sin indicar el paso exacto.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Solo con una flecha sin explicación.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_043",
+            "type": "multiple_choice",
+            "title": "Pregunta 43",
+            "prompt": {
+                "text": "¿Qué debe quedar claro en cada decisión del algoritmo?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Qué ocurre si la condición se cumple y qué ocurre si no se cumple.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Solo qué pasa cuando la respuesta es sí.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Solo qué pasa cuando la respuesta es no.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Nada, porque las decisiones no necesitan explicación.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_044",
+            "type": "multiple_choice",
+            "title": "Pregunta 44",
+            "prompt": {
+                "text": "¿Cuál de estas expresiones debe evitarse al escribir el algoritmo?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "“Hacer lo necesario”.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "“Ir a Detección y validación de ficha (Paso 19)”.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "“Volver a Control de insumos e ingredientes (Paso 1)”.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "“Si no hay vaso, mostrar Colocar vaso”.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_045",
+            "type": "multiple_choice",
+            "title": "Pregunta 45",
+            "prompt": {
+                "text": "¿Qué significa probar el algoritmo “como si fueran la máquina”?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Seguir cada camino posible y comprobar que no haya caminos sin salida.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Leer solo el título del trabajo.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Cambiar las rutinas sin revisarlas.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Ignorar los errores posibles.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_046",
+            "type": "multiple_choice",
+            "title": "Pregunta 46",
+            "prompt": {
+                "text": "En la máquina dispensadora, ¿qué significa 3 pitidos?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "No se detectó recipiente.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Bebida lista para retirar.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Falta suministro de agua.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Ingredientes insuficientes.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_047",
+            "type": "multiple_choice",
+            "title": "Pregunta 47",
+            "prompt": {
+                "text": "En la máquina dispensadora, ¿qué indica 4 pitidos más luz de advertencia?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Ingredientes insuficientes y necesidad de reposición.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Bebida lista para retirar.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Recipiente colocado correctamente.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Ficha aceptada sin problemas.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_048",
+            "type": "multiple_choice",
+            "title": "Pregunta 48",
+            "prompt": {
+                "text": "En la máquina dispensadora, ¿qué indica 5 pitidos más luz de advertencia?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Falta suministro de agua.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Bebida lista para retirar.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Botón presionado correctamente.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Vaso retirado por el usuario.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_049",
+            "type": "multiple_choice",
+            "title": "Pregunta 49",
+            "prompt": {
+                "text": "Según la preparación indicada, ¿qué bebida usa leche, agua, café y formación de espuma?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "Capuchino.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "Té.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Café solo.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "Agua caliente.",
+                    "correct": false
+                }
+            ]
+        },
+        {
+            "id": "mc_050",
+            "type": "multiple_choice",
+            "title": "Pregunta 50",
+            "prompt": {
+                "text": "En el ejemplo del horno microondas digital, ¿qué condición de seguridad debe cumplirse para iniciar la operación?"
+            },
+            "timeLimitSeconds": 20,
+            "points": 10,
+            "difficulty": 1,
+            "options": [
+                {
+                    "id": "a",
+                    "text": "La puerta debe estar cerrada correctamente.",
+                    "correct": true
+                },
+                {
+                    "id": "b",
+                    "text": "El plato debe ser de una marca determinada.",
+                    "correct": false
+                },
+                {
+                    "id": "c",
+                    "text": "Los cables internos deben tener un color específico.",
+                    "correct": false
+                },
+                {
+                    "id": "d",
+                    "text": "La frecuencia exacta debe ser visible para el usuario.",
+                    "correct": false
+                }
+            ]
+        }
+    ]
+}

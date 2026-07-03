@@ -14,6 +14,7 @@
  */
 
 require_once __DIR__ . '/study_answer_engine.php';
+require_once __DIR__ . '/activity_access.php'; // v7.0: políticas de acceso
 
 // ─────────────────────────────────────────────
 // Helpers locales
@@ -146,6 +147,10 @@ function triviax_study_api_handle(string $action): void {
             }
             try {
                 $saved = triviax_study_save_deck($data, (int)$docente['id'], $deckId);
+                // v7.0: si el mazo es evaluativo y ya tiene entregas, congelar
+                // la nueva versión del contenido (las entregas viejas siguen
+                // apuntando a su versión original).
+                triviax_snapshot_after_evaluative_edit('study_deck', (string)$saved['deck_id'], (int)$docente['id']);
                 triviax_audit_log('study_deck_saved', 'study_deck', (string)$saved['deck_id'], ['cards' => $saved['cards']]);
                 triviax_api_success([
                     'deck_id' => $saved['deck_id'],
@@ -185,6 +190,7 @@ function triviax_study_api_handle(string $action): void {
                 }
             }
             $pdo->prepare('UPDATE study_decks SET estado = ? WHERE id = ?')->execute([$nuevoEstado, $deckId]);
+            triviax_sync_policy_publication('study_deck', (string)$deckId, $nuevoEstado, (int)$docente['id']);
             triviax_audit_log('study_deck_estado', 'study_deck', (string)$deckId, ['estado' => $nuevoEstado]);
             triviax_api_success(['deck_id' => $deckId, 'estado' => $nuevoEstado], 'Estado del mazo actualizado.');
             break;
@@ -300,7 +306,10 @@ function triviax_study_api_handle(string $action): void {
                 WHERE d.estado = 'published'
                 ORDER BY d.updated_at DESC
             ");
-            triviax_api_success(['decks' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
+            triviax_session_start();
+            $decks = triviax_filter_catalog(triviax_usuario_actual(), 'study_deck',
+                $stmt->fetchAll(PDO::FETCH_ASSOC), fn($d) => (string)$d['id']);
+            triviax_api_success(['decks' => $decks]);
             break;
         }
 
@@ -324,6 +333,15 @@ function triviax_study_api_handle(string $action): void {
 
             triviax_session_start();
             $usuario = triviax_usuario_actual();
+            // v7.0: política transversal (visibilidad, plazos, requisitos)
+            $codigo = trim((string)($input['codigo'] ?? ''));
+            $acc = triviax_can_start_activity($usuario, 'study_deck', (string)$deck['id'], $codigo !== '' ? $codigo : null);
+            if (!$acc['ok']) {
+                triviax_api_error('ACCESS_DENIED', $acc['message'], 403, ['motivo' => $acc['reason']]);
+            }
+            $politica = $acc['policy'];
+            $esEval = !$acc['preview'] && !empty($politica['evaluativa']) && $acc['reason'] !== 'owner_preview';
+            $versionEval = $esEval ? triviax_get_current_activity_version('study_deck', (string)$deck['id']) : null;
             $orderMode = (string)($deck['settings']['orderMode'] ?? 'progressive');
             if (!in_array($orderMode, ['progressive', 'random', 'adaptive'], true)) {
                 $orderMode = 'progressive';
@@ -333,13 +351,19 @@ function triviax_study_api_handle(string $action): void {
             try {
                 $pdo->beginTransaction();
                 $pdo->prepare('
-                    INSERT INTO study_sessions (deck_id, usuario_id, player_token_hash, estado, order_mode, last_seen_at)
-                    VALUES (?, ?, ?, \'active\', ?, NOW())
+                    INSERT INTO study_sessions (deck_id, usuario_id, player_token_hash, estado, order_mode, last_seen_at,
+                                                politica_id, actividad_version_id, grupo_id, grupo_estudiante_id, evaluativa)
+                    VALUES (?, ?, ?, \'active\', ?, NOW(), ?, ?, ?, ?, ?)
                 ')->execute([
                     (int)$deck['id'],
                     $usuario !== null ? (int)$usuario['id'] : null,
                     hash('sha256', $token),
                     $orderMode,
+                    $politica['id'] ?? null,
+                    $versionEval['id'] ?? null,
+                    $acc['grupo_id'],
+                    $acc['grupo_estudiante_id'],
+                    (int)$esEval,
                 ]);
                 $studySessionId = (int)$pdo->lastInsertId();
 
@@ -608,6 +632,27 @@ function triviax_study_api_handle(string $action): void {
                 triviax_api_success(['summary' => $summary, 'cached' => true], 'La sesión ya estaba finalizada.');
             }
             $summary = triviax_study_finish_session($studySessionId);
+            // v7.0: entrega transversal (reporte/exportación/evaluación)
+            try {
+                triviax_record_activity_submission([
+                    'actividad_tipo' => 'study_deck',
+                    'actividad_ref' => (string)$session['deck_id'],
+                    'politica_id' => $session['politica_id'] ?? null,
+                    'version_id' => $session['actividad_version_id'] ?? null,
+                    'usuario_id' => $session['usuario_id'] ?? null,
+                    'grupo_id' => $session['grupo_id'] ?? null,
+                    'grupo_estudiante_id' => $session['grupo_estudiante_id'] ?? null,
+                    'source_table' => 'study_sessions',
+                    'source_id' => $studySessionId,
+                    'estado' => 'submitted',
+                    'puntaje' => is_array($summary) ? ($summary['score'] ?? ($summary['points'] ?? null)) : null,
+                    'started_at' => $session['started_at'] ?? null,
+                    'evaluativa' => (int)($session['evaluativa'] ?? 0),
+                    'summary_json' => $summary,
+                ]);
+            } catch (Throwable $e) {
+                // La entrega transversal nunca corta el flujo del juego.
+            }
             triviax_api_success(['summary' => $summary], 'Sesión de estudio finalizada.');
             break;
         }

@@ -6,6 +6,7 @@
  */
 
 require_once __DIR__ . '/../php/auth.php';
+require_once __DIR__ . '/../php/activity_access.php'; // v7.0: vinculación a grupos
 
 // Si ya está autenticado, redirigir
 if (triviax_esta_autenticado()) {
@@ -19,11 +20,12 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     triviax_verificar_csrf();
 
-    $nombre   = trim($_POST['nombre']    ?? '');
-    $apellido = trim($_POST['apellido']  ?? '');
-    $email    = trim($_POST['email']     ?? '');
-    $password = trim($_POST['password']  ?? '');
-    $confirm  = trim($_POST['confirm']   ?? '');
+    $nombre      = trim($_POST['nombre']       ?? '');
+    $apellido    = trim($_POST['apellido']     ?? '');
+    $email       = trim($_POST['email']        ?? '');
+    $password    = trim($_POST['password']     ?? '');
+    $confirm     = trim($_POST['confirm']      ?? '');
+    $codigoGrupo = trim($_POST['codigo_grupo'] ?? ''); // v7.0: opcional
 
     $antibot = triviax_registro_antibot_check();
     if (!$antibot['ok']) {
@@ -34,6 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $resultado = triviax_registrar_usuario($nombre, $apellido, $email, $password, TRIVIAX_ROL_ESTUDIANTE);
 
         if ($resultado['ok']) {
+            // v7.0: asociar la cuenta a los grupos donde el docente importó
+            // este email, y unirse por código de grupo si se indicó uno.
+            if (!empty($resultado['id'])) {
+                triviax_vincular_estudiante_registrado(
+                    (int)$resultado['id'], $email, $nombre, $apellido,
+                    $codigoGrupo !== '' ? $codigoGrupo : null
+                );
+            }
             // En local: redirige al simulador de email con el enlace clicable
             if (!empty($resultado['local_preview'])) {
                 header('Location: ' . $resultado['local_preview']);
@@ -293,6 +303,15 @@ $csrfToken = triviax_csrf_token();
                            placeholder="Repite la contraseña"
                            autocomplete="new-password"
                            required>
+                </div>
+
+                <div class="form-group">
+                    <label for="codigo_grupo">Código de grupo (opcional)</label>
+                    <input type="text" id="codigo_grupo" name="codigo_grupo"
+                           value="<?= htmlspecialchars($_POST['codigo_grupo'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                           placeholder="Si tu docente te dio un código, escríbelo aquí"
+                           maxlength="8" autocomplete="off"
+                           style="text-transform:uppercase;">
                 </div>
 
                 <p class="auth-hint">

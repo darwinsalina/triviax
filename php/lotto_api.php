@@ -14,6 +14,7 @@
  */
 
 require_once __DIR__ . '/lotto_engine.php';
+require_once __DIR__ . '/activity_access.php'; // v7.0: políticas de acceso
 
 // ─────────────────────────────────────────────
 // Helpers locales
@@ -93,6 +94,8 @@ function _lotto_api_transition(string $newStatus, ?string $throttleScope = null)
     }
     try {
         $result = triviax_lotto_set_status($pdo, $activityId, (int)$docente['id'], $newStatus);
+        // v7.0: mantener la política lateral en sincronía con el estado lotto.
+        triviax_sync_policy_publication('lotto_activity', (string)$activityId, $newStatus, (int)$docente['id']);
         triviax_api_success($result, 'Estado actualizado.');
     } catch (InvalidArgumentException $e) {
         triviax_api_error('INVALID_STATE', $e->getMessage(), 409);
@@ -294,6 +297,32 @@ function triviax_lotto_api_handle(string $action): void {
                     }
                 }
                 triviax_audit_log('lotto_student_evaluated', 'lotto_student', (string)$studentId);
+                // v7.0: entrega transversal calificada (reporte/exportación)
+                try {
+                    $evalRow = null;
+                    $stmtEval = $pdo->prepare('SELECT * FROM lotto_evaluations WHERE activity_id = ? AND student_id = ? LIMIT 1');
+                    $stmtEval->execute([$activityId, $studentId]);
+                    $evalRow = $stmtEval->fetch(PDO::FETCH_ASSOC);
+                    $politicaLotto = triviax_get_access_policy('lotto_activity', (string)$activityId, false);
+                    triviax_record_activity_submission([
+                        'actividad_tipo' => 'lotto_activity',
+                        'actividad_ref' => (string)$activityId,
+                        'politica_id' => $politicaLotto['id'] ?? null,
+                        'version_id' => triviax_get_current_activity_version('lotto_activity', (string)$activityId)['id'] ?? null,
+                        'source_table' => 'lotto_evaluations',
+                        'source_id' => $evalRow['id'] ?? null,
+                        'estado' => 'graded',
+                        'puntaje' => $evalRow['numeric_score'] ?? null,
+                        'max_puntaje' => $evalRow['max_score'] ?? null,
+                        'evaluativa' => 1,
+                        'summary_json' => [
+                            'lotto_student_id' => $studentId,
+                            'quick_result' => $evalRow['quick_result'] ?? null,
+                        ],
+                    ]);
+                } catch (Throwable $eEval) {
+                    // La entrega transversal nunca corta la evaluación lotto.
+                }
                 triviax_api_success(['evaluated' => true, 'draws' => $draws['draws'] ?? null], 'Evaluación registrada.');
             } catch (InvalidArgumentException $e) {
                 triviax_api_error('VALIDATION_ERROR', $e->getMessage(), 422);
@@ -353,6 +382,17 @@ function triviax_lotto_api_handle(string $action): void {
             $pdo = _lotto_api_require_db();
             _lotto_api_throttle('lotto_student_login', _lotto_api_ip(), 10, 300, 300);
             $input = triviax_api_input();
+            // v7.0: la política lateral puede imponer plazos o requisitos
+            // extra sin tocar el modelo propio de lotto (código + número).
+            $actPolitica = triviax_lotto_load_activity_by_code($pdo, (string)($input['code'] ?? ''));
+            if ($actPolitica) {
+                triviax_session_start();
+                $accLotto = triviax_can_start_activity(triviax_usuario_actual(), 'lotto_activity',
+                    (string)$actPolitica['id'], null);
+                if (!$accLotto['ok']) {
+                    triviax_api_error('ACCESS_DENIED', $accLotto['message'], 403, ['motivo' => $accLotto['reason']]);
+                }
+            }
             try {
                 $result = triviax_lotto_student_login($pdo, (string)($input['code'] ?? ''), (int)($input['student_number'] ?? 0));
                 triviax_api_success($result, 'Ingreso correcto.');

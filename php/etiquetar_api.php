@@ -7,6 +7,7 @@
  */
 
 require_once __DIR__ . '/etiquetar_engine.php';
+require_once __DIR__ . '/activity_access.php'; // v7.0: políticas de acceso
 
 function _etiquetar_require_db(): PDO {
     if (!triviax_db_available()) {
@@ -101,6 +102,7 @@ function triviax_etiquetar_api_handle(string $action): void {
                 triviax_api_error('VALIDATION_ERROR', 'Estado inválido.', 400);
             }
             $pdo->prepare('UPDATE etiquetar_projects SET estado = ? WHERE id = ?')->execute([$estado, $id]);
+            triviax_sync_policy_publication('etiquetar_project', (string)$id, $estado, (int)$docente['id']);
             triviax_audit_log('etiquetar_project_estado', 'etiquetar_project', (string)$id, ['estado' => $estado]);
             triviax_api_success(['id' => $id, 'estado' => $estado], 'Estado actualizado.');
             break;
@@ -114,7 +116,12 @@ function triviax_etiquetar_api_handle(string $action): void {
             $input = triviax_api_input();
             $id = (int)($input['id'] ?? 0);
             $project = _etiquetar_load_own($id, $docente);
+            if (!triviax_can_delete_activity('etiquetar_project', (string)$id)) {
+                triviax_api_error('HAS_RESULTS',
+                    'La actividad tiene partidas registradas. Archívala en lugar de eliminarla.', 409);
+            }
             triviax_etiquetar_delete_project($project);
+            triviax_purge_activity_policy('etiquetar_project', (string)$id);
             triviax_audit_log('etiquetar_project_deleted', 'etiquetar_project', (string)$id, []);
             triviax_api_success(['id' => $id], 'Actividad eliminada.');
             break;
@@ -143,7 +150,10 @@ function triviax_etiquetar_api_handle(string $action): void {
 
         case 'etiquetar_list_published': {
             _etiquetar_require_db();
-            triviax_api_success(['projects' => triviax_etiquetar_list_published()]);
+            triviax_session_start();
+            $projects = triviax_filter_catalog(triviax_usuario_actual(), 'etiquetar_project',
+                triviax_etiquetar_list_published(), fn($p) => (string)$p['id']);
+            triviax_api_success(['projects' => $projects]);
             break;
         }
 
@@ -160,14 +170,29 @@ function triviax_etiquetar_api_handle(string $action): void {
             }
             triviax_session_start();
             $usuario = triviax_usuario_actual();
+            // v7.0: política transversal (visibilidad, plazos, requisitos)
+            $codigo = trim((string)($input['codigo'] ?? ''));
+            $acc = triviax_can_start_activity($usuario, 'etiquetar_project', (string)$id, $codigo !== '' ? $codigo : null);
+            if (!$acc['ok']) {
+                triviax_api_error('ACCESS_DENIED', $acc['message'], 403, ['motivo' => $acc['reason']]);
+            }
+            $politica = $acc['policy'];
+            $esEval = !$acc['preview'] && !empty($politica['evaluativa']) && $acc['reason'] !== 'owner_preview';
+            $version = $esEval ? triviax_get_current_activity_version('etiquetar_project', (string)$id) : null;
             $token = bin2hex(random_bytes(32));
             $pdo->prepare('
-                INSERT INTO etiquetar_sessions (project_id, usuario_id, player_token_hash, estado, started_at, last_seen_at)
-                VALUES (?, ?, ?, \'active\', NOW(), NOW())
+                INSERT INTO etiquetar_sessions (project_id, usuario_id, player_token_hash, estado, started_at, last_seen_at,
+                                                politica_id, actividad_version_id, grupo_id, grupo_estudiante_id, evaluativa)
+                VALUES (?, ?, ?, \'active\', NOW(), NOW(), ?, ?, ?, ?, ?)
             ')->execute([
                 $id,
                 $usuario !== null ? (int)$usuario['id'] : null,
                 hash('sha256', $token),
+                $politica['id'] ?? null,
+                $version['id'] ?? null,
+                $acc['grupo_id'],
+                $acc['grupo_estudiante_id'],
+                (int)$esEval,
             ]);
             triviax_api_success(['session_id' => (int)$pdo->lastInsertId(), 'session_token' => $token], 'Partida iniciada.');
             break;
@@ -202,6 +227,29 @@ function triviax_etiquetar_api_handle(string $action): void {
                        time_ms = ?, correct = ?, total = ?, summary_json = ?
                  WHERE id = ?
             ')->execute([$timeMs, $correct, $total, json_encode($summary, JSON_UNESCAPED_UNICODE), $sessionId]);
+            // v7.0: entrega transversal (reporte/exportación/evaluación)
+            try {
+                triviax_record_activity_submission([
+                    'actividad_tipo' => 'etiquetar_project',
+                    'actividad_ref' => (string)$session['project_id'],
+                    'politica_id' => $session['politica_id'] ?? null,
+                    'version_id' => $session['actividad_version_id'] ?? null,
+                    'usuario_id' => $session['usuario_id'] ?? null,
+                    'grupo_id' => $session['grupo_id'] ?? null,
+                    'grupo_estudiante_id' => $session['grupo_estudiante_id'] ?? null,
+                    'source_table' => 'etiquetar_sessions',
+                    'source_id' => $sessionId,
+                    'estado' => 'submitted',
+                    'puntaje' => $correct,
+                    'max_puntaje' => $total,
+                    'time_ms' => $timeMs,
+                    'started_at' => $session['started_at'] ?? null,
+                    'evaluativa' => (int)($session['evaluativa'] ?? 0),
+                    'summary_json' => $summary,
+                ]);
+            } catch (Throwable $e) {
+                // La entrega transversal nunca corta el flujo del juego.
+            }
             triviax_api_success(['session_id' => $sessionId], 'Partida registrada.');
             break;
         }

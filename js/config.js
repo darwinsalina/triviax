@@ -6,7 +6,7 @@
 // de service-worker.js (un SW clásico no puede importar módulos ES).
 // Usar `php tools/bump_version.php X.Y.Z` para actualizar ambos a la vez,
 // y `php tools/bump_version.php --check` para verificar consistencia.
-export const APP_VERSION = '6.1.3';
+export const APP_VERSION = '7.0.1';
 
 // ── Rueda de color RYB — 12 posiciones en sentido horario ───────────────────
 // Usada para calcular automáticamente el color del texto del splash en cada versión.
@@ -117,6 +117,18 @@ export const BOARD_PROFILES = [
         defaultVictoryMode: 'points',
         allowedVictoryModes: ['points'],
         lapBonus: 20
+    },
+    {
+        id: 'football_pitch_30_v1',
+        label: 'Camino al Gol (Fútbol)',
+        description: 'Recorrido en espejo de 30 casillas (Azul vs Rojo). Se juega por equipos en una cancha de fútbol.',
+        type: 'football_goal_race',
+        size: 30,
+        loop: false,
+        defaultVictoryMode: 'race',
+        allowedVictoryModes: ['race'],
+        lapBonus: 0,
+        image: 'images/cancha.png'
     }
 ];
 

@@ -34,6 +34,8 @@ let dice = null;
 // Variables de estado del proyecto activo
 let activeProjectName = DEFAULT_PROJECT;
 let activeProjectMetadata = null;
+let activeTokenSet = null;
+let activeTokenAssets = [];
 let currentPlayersSetup = [];
 let currentBoardProfile = getRandomBoardProfile();
 let availableProjectOptions = [];
@@ -55,6 +57,33 @@ const SPECIAL_ACTIVITY_MODES = [
         href: 'etiquetar.php',
         actionLabel: 'Abrir catálogo de etiquetado',
         keywords: 'etiquetar etiquetado etiquetas imagen'
+    },
+    {
+        id: 'special-sopa',
+        title: '🔤 Sopa de letras',
+        author: 'Encuentra las palabras en la grilla',
+        nivel: 'Modalidades',
+        href: 'sopa.php',
+        actionLabel: 'Abrir catálogo de sopas de letras',
+        keywords: 'sopa letras sopas palabras buscar grilla wordsearch'
+    },
+    {
+        id: 'special-crucigrama',
+        title: '✏️ Crucigrama',
+        author: 'Resuelve las definiciones cruzadas',
+        nivel: 'Modalidades',
+        href: 'crucigrama.php',
+        actionLabel: 'Abrir catálogo de crucigramas',
+        keywords: 'crucigrama crucigramas palabras cruzadas definiciones crossword'
+    },
+    {
+        id: 'special-football',
+        title: '⚽ TRIVIAX Fútbol',
+        author: 'Avanza por la cancha y convierte el gol final',
+        nivel: 'Modalidades',
+        href: 'football.php',
+        actionLabel: 'Abrir Camino al Gol',
+        keywords: 'futbol football cancha gol dado equipos deporte'
     }
 ];
 let activityCatalogCategory = 'all';
@@ -111,6 +140,129 @@ function openLiveSessionSetup(sessionCode = '') {
             codeInput.select();
         }
     }
+}
+
+async function loadTokenSetForProject(metadata) {
+    activeTokenSet = null;
+    activeTokenAssets = [];
+    const tokenConfig = metadata?.tokens || {};
+    const mode = tokenConfig.mode || 'standard_only';
+    const tokenSetId = parseInt(tokenConfig.tokenSetId || 0, 10);
+    if (mode === 'standard_only' || !tokenSetId) {
+        renderTokenChoicePanel();
+        return;
+    }
+    try {
+        const data = await ApiClient.tokenSetPublic(tokenSetId);
+        activeTokenSet = data.set || null;
+        activeTokenAssets = Array.isArray(data.assets) ? data.assets : [];
+    } catch (err) {
+        if (mode === 'special_required') {
+            throw new Error('Esta actividad requiere fichas especiales, pero la coleccion no esta disponible.');
+        }
+        console.warn('[TRIVIAX] No se pudo cargar la coleccion de fichas:', err.message);
+        activeTokenSet = null;
+        activeTokenAssets = [];
+    }
+    renderTokenChoicePanel();
+}
+
+function ensureTokenChoicePanel() {
+    let panel = qs('#token-choice-panel');
+    if (panel) return panel;
+    const playersForm = qs('#players-form');
+    panel = document.createElement('section');
+    panel.id = 'token-choice-panel';
+    panel.className = 'token-choice-panel';
+    panel.hidden = true;
+    panel.innerHTML = `
+        <h3>Fichas de jugadores</h3>
+        <p id="token-choice-help"></p>
+        <div id="token-choice-grid" class="token-choice-grid"></div>
+    `;
+    const refNode = playersForm?.querySelector('.action-buttons-row') || playersForm?.querySelector('button[type="submit"]') || null;
+    if (refNode) {
+        refNode.parentNode.insertBefore(panel, refNode);
+    } else {
+        playersForm?.appendChild(panel);
+    }
+    return panel;
+}
+
+function renderTokenChoicePanel() {
+    const panel = ensureTokenChoicePanel();
+    const mode = activeProjectMetadata?.tokens?.mode || 'standard_only';
+    const allowStandard = mode !== 'special_required';
+    if (mode === 'standard_only' || !activeTokenAssets.length) {
+        panel.hidden = true;
+        return;
+    }
+    panel.hidden = false;
+    qs('#token-choice-help').textContent = allowStandard
+        ? 'Puedes usar los circulos de color o elegir una ficha especial. No se puede repetir ficha.'
+        : 'Esta actividad requiere elegir una ficha especial. No se puede repetir ficha.';
+    const grid = qs('#token-choice-grid');
+    const standardButton = allowStandard ? `
+        <button type="button" class="token-choice selected" data-token-type="standard" data-token-id="">
+            <span>Color</span>
+        </button>
+    ` : '';
+    grid.innerHTML = standardButton + activeTokenAssets.map((asset) => `
+        <button type="button" class="token-choice" data-token-type="special" data-token-id="${asset.id}" title="${escapeHTML(asset.label || 'Ficha')}">
+            <img src="${escapeHTML(asset.thumb_path || asset.file_path)}" alt="${escapeHTML(asset.label || 'Ficha')}">
+        </button>
+    `).join('');
+    grid.removeEventListener('click', handleTokenChoiceClick);
+    grid.addEventListener('click', handleTokenChoiceClick);
+}
+
+function handleTokenChoiceClick(event) {
+    const btn = event.target.closest('.token-choice');
+    if (!btn || btn.classList.contains('unavailable')) return;
+    const grid = qs('#token-choice-grid');
+    if (btn.dataset.tokenType === 'standard') {
+        $$('.token-choice', grid).forEach((b) => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        return;
+    }
+    btn.classList.toggle('selected');
+    const standard = qs('.token-choice[data-token-type="standard"]', grid);
+    if (standard) standard.classList.remove('selected');
+    enforceUniqueTokenSelection();
+}
+
+function enforceUniqueTokenSelection() {
+    const selected = new Set();
+    $$('.token-choice[data-token-type="special"].selected').forEach((btn) => {
+        if (selected.has(btn.dataset.tokenId)) {
+            btn.classList.remove('selected');
+        } else {
+            selected.add(btn.dataset.tokenId);
+        }
+    });
+}
+
+function selectedTokenAssetsForPlayers(count) {
+    const mode = activeProjectMetadata?.tokens?.mode || 'standard_only';
+    if (mode === 'standard_only' || !activeTokenAssets.length) {
+        return Array(count).fill(null);
+    }
+    const selectedButtons = $$('#token-choice-grid .token-choice[data-token-type="special"].selected');
+    if (mode === 'special_required' && selectedButtons.length < count) {
+        throw new Error('Selecciona una ficha especial distinta para cada jugador.');
+    }
+    const selectedIds = selectedButtons.slice(0, count).map((btn) => parseInt(btn.dataset.tokenId, 10));
+    return Array.from({ length: count }, (_, idx) => {
+        const id = selectedIds[idx];
+        const asset = activeTokenAssets.find((item) => item.id === id);
+        if (!asset) return null;
+        return {
+            type: 'special',
+            id: asset.id,
+            label: asset.label,
+            file_path: asset.file_path,
+        };
+    });
 }
 
 // -- v4.0: estado de sesion BD (null si no hay sesion activa) --
@@ -800,6 +952,7 @@ async function loadProjectData(projectName) {
         if (activeProjectMetadata) {
             activeProjectMetadata.lockedBoardId = projectData.board?.lockedId || null;
         }
+        await loadTokenSetForProject(activeProjectMetadata);
         applyBoardLock();
 
         // Guardar en la UI para la pantalla de diagnÃ³stico tÃ©cnico
@@ -994,12 +1147,20 @@ async function startGameFlow() {
     const playerSetupList = [];
 
     const colors = PLAYER_COLORS.map(color => color.id);
+    let selectedTokens = [];
+    try {
+        selectedTokens = selectedTokenAssetsForPlayers(count);
+    } catch (err) {
+        alert(err.message);
+        return;
+    }
 
     for (let i = 0; i < count; i++) {
         const input = qs('input', rows[i]);
         playerSetupList.push({
             name: input.value.trim() !== '' ? input.value.trim() : `Jugador ${i + 1}`,
-            colorId: colors[i]
+            colorId: colors[i],
+            token: selectedTokens[i] || null
         });
     }
 
@@ -1078,6 +1239,12 @@ async function startGameFlow() {
 
     const penaltyMode = qs('#penalty-mode-select')?.value || 'lose_turn';
     const boardProfile = getBoardProfile(qs('#board-profile-select')?.value);
+    
+    if (boardProfile.id === 'football_pitch_30_v1') {
+        window.location.href = `football.php?project=${encodeURIComponent(activeProjectName)}`;
+        return;
+    }
+    
     const victoryMode = qs('#victory-mode-select')?.value || 'race';
     const scoreTargetValue = parseInt(qs('#score-target-select')?.value || '100', 10);
     const gameRules = {

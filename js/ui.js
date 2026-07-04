@@ -207,6 +207,9 @@ export class UIManager {
             const isCurrent = idx === currentIdx;
             const row = document.createElement('div');
             row.className = `player-status-row ${isCurrent ? 'active-turn' : ''}`;
+            const tokenBadge = player.token && player.token.type === 'special' && player.token.file_path
+                ? `<img class="player-status-token-img" src="${escapeHTML(player.token.file_path)}" alt="${escapeHTML(player.token.label || 'Ficha especial')}">`
+                : `<span class="player-status-color" style="background-color: ${player.color.hex};"></span>`;
 
             const skipBadge = player.skipNextTurn 
                 ? '<span class="player-status-penalties" title="Próximo turno perdido">!</span>' 
@@ -214,7 +217,7 @@ export class UIManager {
 
             row.innerHTML = `
                 <div class="player-status-left">
-                    <span class="player-status-color" style="background-color: ${player.color.hex};"></span>
+                    ${tokenBadge}
                     <span class="player-status-name" style="cursor: pointer;" title="Doble clic para cambiar nombre">${escapeHTML(player.name)}</span>
                     <button class="btn-edit-name" style="background: none; border: none; cursor: pointer; font-size: 0.8rem; opacity: 0.5; margin-left: 6px; display: inline-flex;" title="Editar nombre">✏️</button>
                     ${skipBadge}
@@ -255,7 +258,16 @@ export class UIManager {
         const badgeColor = qs('#current-player-display .player-badge-color');
         const badgeName = qs('#current-player-display .player-badge-name');
         
-        badgeColor.style.backgroundColor = player.color.hex;
+        if (player.token && player.token.type === 'special' && player.token.file_path) {
+            badgeColor.style.backgroundColor = 'transparent';
+            badgeColor.style.backgroundImage = `url("${player.token.file_path}")`;
+            badgeColor.style.backgroundSize = 'contain';
+            badgeColor.style.backgroundRepeat = 'no-repeat';
+            badgeColor.style.backgroundPosition = 'center';
+        } else {
+            badgeColor.style.backgroundColor = player.color.hex;
+            badgeColor.style.backgroundImage = '';
+        }
         badgeName.innerText = player.name;
     }
 

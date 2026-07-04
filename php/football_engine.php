@@ -42,6 +42,31 @@ function triviax_football_default_path(string $side): array {
 }
 
 function triviax_football_default_board(): array {
+    if (function_exists('triviax_db')) {
+        try {
+            $pdo = triviax_db();
+            $stmt = $pdo->prepare('SELECT config_json FROM football_boards WHERE board_key = ? AND enabled = 1 LIMIT 1');
+            $stmt->execute(['football_pitch_30_v1']);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                $board = json_decode($row['config_json'], true);
+                if (is_array($board)) {
+                    return $board;
+                }
+            }
+        } catch (Throwable $e) {
+            // Silencioso
+        }
+    }
+
+    $jsonPath = __DIR__ . '/../images/tableros/football_pitch_30_v1.json';
+    if (is_file($jsonPath)) {
+        $board = json_decode((string)file_get_contents($jsonPath), true);
+        if (is_array($board)) {
+            return $board;
+        }
+    }
+
     return [
         'id' => 'football_pitch_30_v1',
         'label' => 'Cancha de futbol - Camino al Gol',
@@ -58,6 +83,7 @@ function triviax_football_default_board(): array {
     ];
 }
 
+
 function triviax_football_create_state(array $options = []): array {
     $blueMembers = triviax_football_clean_members($options['teams']['blue'] ?? ['Azul']);
     $redMembers = triviax_football_clean_members($options['teams']['red'] ?? ['Rojo']);
@@ -73,6 +99,7 @@ function triviax_football_create_state(array $options = []): array {
         'positions' => ['blue' => 0, 'red' => 0],
         'scores' => ['blue' => 0, 'red' => 0],
         'pendingAction' => null,
+        'usedQuestionIds' => [],
         'winner' => null,
         'winner_side' => null,
         'teamAnswerMode' => triviax_football_answer_mode($options['teamAnswerMode'] ?? 'short_team_help'),
@@ -233,7 +260,7 @@ function triviax_football_submit(array $state, $answer, array $questionProvider)
 function triviax_football_after_movement(array $state, string $side, array $questionProvider): array {
     $position = (int)$state['positions'][$side];
     if ($position >= TRIVIAX_FOOTBALL_GOAL) {
-        $q = triviax_football_pick_question($questionProvider, 'final');
+        $q = triviax_football_take_question($state, $questionProvider, 'final');
         $state['pendingAction'] = [
             'type' => 'final_shot',
             'side' => $side,
@@ -251,7 +278,7 @@ function triviax_football_after_movement(array $state, string $side, array $ques
 
     $special = triviax_football_default_special_cells()[$side][$position] ?? null;
     if ($special) {
-        $q = triviax_football_pick_question($questionProvider, 'special', $special['type']);
+        $q = triviax_football_take_question($state, $questionProvider, 'special', $special['type']);
         $state['pendingAction'] = [
             'type' => 'special_question',
             'side' => $side,
@@ -268,16 +295,61 @@ function triviax_football_after_movement(array $state, string $side, array $ques
     return $state;
 }
 
-function triviax_football_pick_question(array $provider, string $kind, ?string $specialType = null): array {
-    if (isset($provider[$kind]) && is_array($provider[$kind]) && $provider[$kind]) {
-        $pool = $provider[$kind];
-    } else {
-        $pool = $provider['normal'] ?? $provider;
-    }
+/**
+ * Selecciona el pool de preguntas para un tipo de jugada. El proveedor
+ * puede venir agrupado ({normal, special, final, <specialType>}) como el
+ * fixture demo, o ser una lista plana (bancos de proyectos adaptados).
+ */
+function triviax_football_question_pool(array $provider, string $kind, ?string $specialType = null): array {
     if ($specialType && isset($provider[$specialType]) && is_array($provider[$specialType]) && $provider[$specialType]) {
-        $pool = $provider[$specialType];
+        return array_values($provider[$specialType]);
     }
+    if (isset($provider[$kind]) && is_array($provider[$kind]) && $provider[$kind]) {
+        return array_values($provider[$kind]);
+    }
+    return array_values($provider['normal'] ?? $provider);
+}
+
+function triviax_football_pick_question(array $provider, string $kind, ?string $specialType = null): array {
+    $pool = triviax_football_question_pool($provider, $kind, $specialType);
     return $pool[array_rand($pool)];
+}
+
+/**
+ * Toma una pregunta SIN repetir: excluye las ya usadas en la partida
+ * (state.usedQuestionIds). Cuando el pool se agota, libera solo las ids
+ * de ese pool y empieza un nuevo ciclo, así ningún banco chico corta el
+ * juego y ninguna pregunta se repite antes de agotar las demás.
+ */
+function triviax_football_take_question(array &$state, array $provider, string $kind, ?string $specialType = null): array {
+    $pool = triviax_football_question_pool($provider, $kind, $specialType);
+    if (!$pool) {
+        throw new RuntimeException('El banco de preguntas esta vacio.');
+    }
+    $usadas = array_map('strval', $state['usedQuestionIds'] ?? []);
+    $flip = array_flip($usadas);
+    $frescas = array_values(array_filter($pool, static function ($q) use ($flip) {
+        $id = isset($q['id']) ? (string)$q['id'] : '';
+        return $id === '' || !isset($flip[$id]);
+    }));
+    if (!$frescas) {
+        // Ciclo completo de este pool: liberar sus ids y volver a empezar.
+        $poolIds = [];
+        foreach ($pool as $q) {
+            if (isset($q['id'])) {
+                $poolIds[(string)$q['id']] = true;
+            }
+        }
+        $state['usedQuestionIds'] = array_values(array_filter($usadas, static function ($id) use ($poolIds) {
+            return !isset($poolIds[$id]);
+        }));
+        $frescas = $pool;
+    }
+    $q = $frescas[array_rand($frescas)];
+    if (isset($q['id']) && (string)$q['id'] !== '') {
+        $state['usedQuestionIds'][] = (string)$q['id'];
+    }
+    return $q;
 }
 
 function triviax_football_special_delta(string $type, bool $correct): int {

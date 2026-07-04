@@ -17,8 +17,10 @@
  *   - index.html            → textos fallback de los pies de página
  *                             <span data-app-version-full="...">TRIVIAX Plus vX.Y.Z</span>
  *
- * NO toca la versión "resumida" (data-app-version, splash, píldora de marca):
- * esa se deriva sola de APP_VERSION (major.minor) en el script inline de index.html.
+ * La versión "resumida" (data-app-version, splash, píldora de marca) se deriva
+ * sola de APP_VERSION (major.minor) en el script inline de index.html; este
+ * script solo mantiene al día su TEXTO FALLBACK estático (visible sin JS),
+ * que había quedado fosilizado en v5.0 hasta la 7.0.0.
  */
 
 if (PHP_SAPI !== 'cli') {
@@ -50,6 +52,8 @@ $reConfig = "/export const APP_VERSION\s*=\s*'(\d+\.\d+\.\d+)'/";
 $reSw     = "/^const APP_VERSION\s*=\s*'(\d+\.\d+\.\d+)'/m";
 // Texto fallback de los footers: vX.Y.Z dentro de spans con data-app-version-full
 $reFooter = "/data-app-version-full=\"[^\"]*\"[^>]*>[^<]*?v(\d+\.\d+\.\d+)</";
+// Texto fallback de la versión resumida (píldora de marca): vX.Y
+$rePill = "/data-app-version=\"[^\"]*\"[^>]*>[^<]*?v(\d+\.\d+)</";
 
 $contents = array_map('file_get_contents', $files);
 
@@ -58,6 +62,10 @@ $vSw     = extract_version($contents['sw'], $reSw);
 
 preg_match_all($reFooter, $contents['index'], $mFooters);
 $vFooters = array_unique($mFooters[1]);
+
+preg_match_all($rePill, $contents['index'], $mPills);
+$vPills = array_unique($mPills[1]);
+$vShort = $vConfig !== null ? preg_replace('/^(\d+\.\d+)\.\d+$/', '$1', $vConfig) : null;
 
 $arg = $argv[1] ?? '--check';
 
@@ -75,6 +83,9 @@ if ($arg === '--check') {
         $ok = false;
     } elseif (count($vFooters) > 1 || $vFooters[0] !== $vConfig) {
         echo "FAIL: los footers de index.html no coinciden con APP_VERSION ({$vConfig}).\n";
+        $ok = false;
+    } elseif ($vPills && (count($vPills) > 1 || $vPills[0] !== $vShort)) {
+        echo "FAIL: la píldora de marca (fallback) dice v" . implode(', v', $vPills) . " y debería decir v{$vShort}.\n";
         $ok = false;
     } else {
         echo "OK: versión {$vConfig} consistente en todos los archivos.\n";
@@ -100,6 +111,14 @@ $newContents = [
     ),
 ];
 
+// Fallback estático de la píldora de marca (versión resumida major.minor)
+$newShort = preg_replace('/^(\d+\.\d+)\.\d+$/', '$1', $new);
+$newContents['index'] = preg_replace_callback(
+    "/(data-app-version=\"[^\"]*\"[^>]*>[^<]*?v)\d+\.\d+(?:\.\d+)?(<)/",
+    fn($m) => $m[1] . $newShort . $m[2],
+    $newContents['index'], -1, $nPill
+);
+
 if (!$n1 || !$n2 || !$n3) {
     fwrite(STDERR, "ERROR: algún patrón no coincidió (config={$n1}, sw={$n2}, footers={$n3}). No se escribió nada.\n");
     exit(1);
@@ -121,6 +140,6 @@ foreach ($newContents as $label => $content) {
 echo "Versión actualizada a {$new}:\n";
 echo "  js/config.js      ({$vConfig} → {$new})\n";
 echo "  service-worker.js ({$vSw} → {$new})\n";
-echo "  index.html        ({$n3} footer(s) actualizados)\n";
-echo "Recordatorio: la versión resumida del splash/píldora se deriva sola (major.minor).\n";
+echo "  index.html        ({$n3} footer(s) + {$nPill} píldora(s) fallback actualizados)\n";
+echo "Recordatorio: la versión resumida del splash/píldora se deriva sola (major.minor); aquí solo se actualiza su texto fallback.\n";
 exit(0);

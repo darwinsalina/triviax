@@ -700,3 +700,35 @@ function triviax_merge_board_sidecar($projectPath, array $board) {
     }
     return $board;
 }
+
+/**
+ * Fusiona tokens.json en metadata.tokens para que proyectos legacy y JSON usen
+ * la misma configuracion de fichas sin romper actividades antiguas.
+ */
+function triviax_merge_tokens_sidecar($projectPath, array $metadata) {
+    $tokens = [
+        'mode' => 'standard_only',
+        'tokenSetId' => null,
+    ];
+    $sidecar = $projectPath . '/tokens.json';
+    if (is_file($sidecar)) {
+        $tj = json_decode(@file_get_contents($sidecar), true);
+        if (is_array($tj)) {
+            $mode = (string)($tj['mode'] ?? 'standard_only');
+            if (in_array($mode, ['standard_only', 'special_optional', 'special_required'], true)) {
+                $tokens['mode'] = $mode;
+            }
+            $setId = (int)($tj['tokenSetId'] ?? 0);
+            $tokens['tokenSetId'] = $setId > 0 ? $setId : null;
+        }
+    } elseif (isset($metadata['tokens']) && is_array($metadata['tokens'])) {
+        $mode = (string)($metadata['tokens']['mode'] ?? 'standard_only');
+        if (in_array($mode, ['standard_only', 'special_optional', 'special_required'], true)) {
+            $tokens['mode'] = $mode;
+        }
+        $setId = (int)($metadata['tokens']['tokenSetId'] ?? 0);
+        $tokens['tokenSetId'] = $setId > 0 ? $setId : null;
+    }
+    $metadata['tokens'] = $tokens;
+    return $metadata;
+}

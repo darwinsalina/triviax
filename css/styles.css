@@ -1642,6 +1642,77 @@ select:focus {
     border-radius: 50%;
 }
 
+.player-status-token-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+}
+
+.player-token.token-special {
+    background: transparent !important;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+}
+
+.player-token.token-special .token-img {
+    width: var(--token-size, 38px);
+    height: var(--token-size, 38px);
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.42));
+}
+
+.token-choice-panel {
+    margin-top: 16px;
+    padding: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.58);
+}
+
+.token-choice-panel h3 {
+    margin: 0 0 8px;
+    font-size: 1rem;
+}
+
+.token-choice-panel p {
+    margin: 0 0 10px;
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+}
+
+.token-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+    gap: 8px;
+}
+
+.token-choice {
+    min-height: 82px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    background: rgba(255, 255, 255, 0.045);
+    color: #e5e7eb;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 6px;
+}
+
+.token-choice img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+}
+
+.token-choice.selected {
+    border-color: #86efac;
+    background: rgba(16, 185, 129, 0.18);
+}
+
 .player-status-name {
     font-size: 0.95rem;
     font-weight: 600;

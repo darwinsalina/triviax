@@ -309,6 +309,74 @@ export class ApiClient {
     }
 
     // ------------------------------------------------------------------
+    // MODALIDAD "TRIVIAX FUTBOL" (football_goal_race)
+    // El servidor conserva dado, posiciones, puntajes y pregunta pendiente.
+    // ------------------------------------------------------------------
+
+    static async footballBoard() {
+        const response = await fetch(`${this.API_URL}?action=football_board`);
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data.success === false || data.ok === false) {
+            throw new Error(data.error || data.message || `Error HTTP ${response.status}`);
+        }
+        return data;
+    }
+
+    static async footballDemo() {
+        const response = await fetch(`${this.API_URL}?action=football_demo`);
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data.success === false || data.ok === false) {
+            throw new Error(data.error || data.message || `Error HTTP ${response.status}`);
+        }
+        return data;
+    }
+
+    static async footballStart(payload) {
+        return this.postSessionAction('football_start', Object.assign({ csrf_token: this.csrfToken || '' }, payload || {}));
+    }
+
+    static async footballState(sessionId, token) {
+        const params = new URLSearchParams({
+            action: 'football_state',
+            session_id: String(sessionId),
+            token: token
+        });
+        const response = await fetch(`${this.API_URL}?${params.toString()}`);
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data.success === false || data.ok === false) {
+            throw new Error(data.error || data.message || `Error HTTP ${response.status}`);
+        }
+        return data;
+    }
+
+    static async footballRoll(sessionId, token) {
+        return this.postSessionAction('football_roll', { csrf_token: this.csrfToken || '', session_id: sessionId, token });
+    }
+
+    static async footballAnswer(sessionId, token, answer, idempotencyKey) {
+        return this.postSessionAction('football_answer', {
+            csrf_token: this.csrfToken || '',
+            session_id: sessionId,
+            token,
+            answer,
+            idempotency_key: idempotencyKey || `${Date.now()}_${Math.random().toString(36).slice(2)}`
+        });
+    }
+
+    static async tokenSetPublic(tokenSetId) {
+        const params = new URLSearchParams({
+            action: 'tokens_public',
+            id: String(tokenSetId)
+        });
+        const response = await fetch(`${this.API_URL}?${params.toString()}`);
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data.success === false || data.ok === false) {
+            throw new Error(data.error || data.message || `Error HTTP ${response.status}`);
+        }
+        return data;
+    }
+
+    // ------------------------------------------------------------------
     // MODALIDAD "ESTUDIA Y RESPONDE" (study_answer)
     // El servidor evalua, puntua y decide el estado de dominio.
     // ------------------------------------------------------------------

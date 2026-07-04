@@ -453,10 +453,16 @@ $estadoColor = [
             <div class="panel-legado">
                 <a href="<?= TRIVIAX_BASE ?>/index.html" class="btn-legado">🎮 Ir al juego</a>
                 <a href="<?= TRIVIAX_BASE ?>/panel/live_sessions.php" class="btn-legado">Ver partidas en vivo</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/token_sets.php" class="btn-legado">Mis fichas</a>
                 <a href="<?= TRIVIAX_BASE ?>/panel/study_answer.php" class="btn-legado">Estudia y responde</a>
                 <a href="<?= TRIVIAX_BASE ?>/panel/lotto.php" class="btn-legado">TRIVIAX Lotto</a>
                 <a href="<?= TRIVIAX_BASE ?>/panel/jigsaw.php" class="btn-legado">🧩 Puzle</a>
                 <a href="<?= TRIVIAX_BASE ?>/panel/etiquetar.php" class="btn-legado">🏷️ Etiquetar</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/sopa_letras.php" class="btn-legado">🔤 Sopa de letras</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/crucigramas.php" class="btn-legado">✏️ Crucigrama</a>
+                <a href="<?= TRIVIAX_BASE ?>/football.php" class="btn-legado">⚽ Camino al Gol</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/grupos.php" class="btn-legado">👥 Mis grupos</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/acceso.php" class="btn-legado">🔐 Acceso y evaluación</a>
                 <a href="<?= TRIVIAX_BASE ?>/admin.php" class="btn-legado">⚙️ Panel de Actividades</a>
                 <a href="<?= TRIVIAX_BASE ?>/estadisticas.php" class="btn-legado">📊 Estadísticas</a>
             </div>

@@ -41,6 +41,43 @@ try {
     $pdo = null;
 }
 
+$tokenSetsForSelect = [];
+if ($pdo !== null) {
+    try {
+        $stmtTokens = $pdo->prepare(
+            'SELECT ts.id, ts.title, COUNT(ta.id) AS asset_count
+             FROM token_sets ts
+             LEFT JOIN token_assets ta ON ta.token_set_id = ts.id AND ta.active = 1
+             WHERE ts.teacher_id = ? AND ts.status = "active"
+             GROUP BY ts.id
+             HAVING asset_count > 0
+             ORDER BY ts.title ASC'
+        );
+        $stmtTokens->execute([$docenteId]);
+        $tokenSetsForSelect = $stmtTokens->fetchAll();
+    } catch (\Throwable $_tokensErr) {
+        $tokenSetsForSelect = [];
+    }
+}
+
+function triviax_admin_token_config_from_post(array $post, array $availableSets): array {
+    $mode = (string)($post['token_mode'] ?? 'standard_only');
+    if (!in_array($mode, ['standard_only', 'special_optional', 'special_required'], true)) {
+        $mode = 'standard_only';
+    }
+    $setId = (int)($post['token_set_id'] ?? 0);
+    $validIds = array_map('intval', array_column($availableSets, 'id'));
+    if ($mode === 'standard_only') {
+        $setId = 0;
+    } elseif ($setId <= 0 || !in_array($setId, $validIds, true)) {
+        throw new RuntimeException('Selecciona una coleccion de fichas activa para esa opcion.');
+    }
+    return [
+        'token_mode' => $mode,
+        'token_set_id' => $setId > 0 ? $setId : null,
+    ];
+}
+
 // Iniciar sesión para validar CSRF (triviax_requerir_auth ya inicia sesión,
 // pero lo dejamos por compatibilidad con el resto del archivo)
 if (session_status() === PHP_SESSION_NONE) {
@@ -67,7 +104,9 @@ $formValues = [
     'activity_name' => '',
     'questions_text' => '',
     'activity_json' => '',
-    'board_locked_id' => ''
+    'board_locked_id' => '',
+    'token_mode' => 'standard_only',
+    'token_set_id' => ''
 ];
 
 function triviax_prepare_ai_json_text($content) {
@@ -228,8 +267,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             'activity_name' => '',
             'questions_text' => $questionsText,
             'activity_json' => $activityJsonText,
-            'board_locked_id' => trim($_POST['board_locked_id'] ?? '')
+            'board_locked_id' => trim($_POST['board_locked_id'] ?? ''),
+            'token_mode' => trim($_POST['token_mode'] ?? 'standard_only'),
+            'token_set_id' => trim($_POST['token_set_id'] ?? '')
         ];
+        try {
+            $tokenConfigForActivity = triviax_admin_token_config_from_post($_POST, $tokenSetsForSelect);
+        } catch (RuntimeException $e) {
+            $tokenConfigForActivity = ['token_mode' => 'standard_only', 'token_set_id' => null];
+            $errorMsg = $e->getMessage();
+        }
     
     // Validaciones obligatorias
     if (empty($title) || empty($author)) {
@@ -336,6 +383,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                     // Tablero fijado por la actividad (opcional)
                     triviax_guardar_tablero_actividad($folderPath, $_POST['board_locked_id'] ?? '');
+                    triviax_guardar_fichas_actividad($folderPath, $tokenConfigForActivity ?? ['token_mode' => 'standard_only']);
 
                     // Notificar al administrador configurado (ADMIN_EMAIL en triviax.env)
                     $mailTo = triviax_admin_email();
@@ -475,6 +523,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'load_
             $questions = $parsed['questions'] ?? ($parsed['challenges'] ?? []);
             $board = triviax_merge_board_sidecar($projectPath, []);
         }
+        $metadata = triviax_merge_tokens_sidecar($projectPath, is_array($metadata) ? $metadata : []);
 
         // Diagnóstico privado: avisa si la copia importada quedó desfasada,
         // pero el editor siempre abre la fuente completa del filesystem.
@@ -608,6 +657,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $obs     = trim($_POST['obs']     ?? '');
     $mail    = trim($_POST['mail']    ?? '');
     $jsonStr = trim($_POST['activity_json'] ?? '');
+    try {
+        $tokenConfigForActivity = triviax_admin_token_config_from_post($_POST, $tokenSetsForSelect);
+    } catch (RuntimeException $e) {
+        http_response_code(422);
+        echo json_encode(['success' => false, 'error' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
 
     if (empty($title) || empty($author)) {
         http_response_code(400);
@@ -661,6 +717,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 'mail'       => $mail,
                 'date'       => $existing['metadata']['date'] ?? date('d/m/Y'),
                 'background' => $existing['metadata']['background'] ?? 'fondo.jpg',
+                'tokens'     => [
+                    'mode' => $tokenConfigForActivity['token_mode'],
+                    'tokenSetId' => $tokenConfigForActivity['token_set_id'],
+                ],
             ]
         ),
         'board'      => $existing['board'] ?? ['type' => 'serpentine'],
@@ -681,6 +741,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     // Tablero fijado por la actividad (solo si el formulario lo envía).
     if (isset($_POST['board_locked_id'])) {
         triviax_guardar_tablero_actividad($projectPath, $_POST['board_locked_id']);
+        triviax_guardar_fichas_actividad($projectPath, $tokenConfigForActivity);
     }
 
     // Sincronizar metadatos actualizados con la BD + reimportar desafíos
@@ -700,7 +761,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
     }
 
-    echo json_encode(['success' => true, 'title' => $title, 'warning' => $syncWarning], JSON_UNESCAPED_UNICODE);
+    // v7.0: si la actividad es evaluativa y ya tiene entregas, congelar una
+    // nueva versión del contenido editado (las entregas anteriores siguen
+    // asociadas a su versión original — no se sobrescribe en silencio).
+    $versionNueva = null;
+    if ($pdo !== null) {
+        try {
+            require_once __DIR__ . '/php/activity_access.php';
+            $usuarioEdit = triviax_usuario_actual();
+            $guardV7 = triviax_snapshot_after_evaluative_edit('proyecto', $project, $usuarioEdit['id'] ?? null);
+            if (!empty($guardV7['version']['created'])) {
+                $versionNueva = $guardV7['version'];
+            }
+        } catch (\Throwable $eV7) {
+            // El versionado nunca corta el guardado del editor.
+        }
+    }
+
+    echo json_encode([
+        'success' => true,
+        'title' => $title,
+        'warning' => $syncWarning,
+        'nueva_version' => $versionNueva,
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -736,6 +819,22 @@ function triviax_guardar_tablero_actividad($folderPath, $lockedBoardIdRaw) {
     } elseif (is_file($sidecar)) {
         @unlink($sidecar); // se volvió a "estándar": quitar el bloqueo
     }
+}
+
+function triviax_guardar_fichas_actividad($folderPath, array $tokenConfig) {
+    $sidecar = $folderPath . '/tokens.json';
+    $mode = $tokenConfig['token_mode'] ?? 'standard_only';
+    $setId = $tokenConfig['token_set_id'] ?? null;
+    if ($mode === 'standard_only') {
+        if (is_file($sidecar)) {
+            @unlink($sidecar);
+        }
+        return;
+    }
+    file_put_contents($sidecar, json_encode([
+        'mode' => $mode,
+        'tokenSetId' => $setId ? (int)$setId : null,
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 }
 
 function optimizeAndSaveBackgroundToJpg($sourcePath, $destFolder) {
@@ -1726,6 +1825,25 @@ Aquí está el documento de estudio:";
                                     <span class="form-help">Si eliges un tablero personalizado, la actividad se jugará <strong>solo</strong> en ese tablero (los jugadores no podrán cambiarlo) y no necesitas subir fondo: el tablero ya trae su propia imagen.</span>
                                 </div>
 
+                                <!-- Fichas de jugadores -->
+                                <div class="form-group-full">
+                                    <label>Fichas de jugadores</label>
+                                    <select name="token_mode" id="token_mode" class="form-control">
+                                        <option value="standard_only"<?php echo (($formValues['token_mode'] ?? 'standard_only') === 'standard_only') ? ' selected' : ''; ?>>Usar fichas estandar</option>
+                                        <option value="special_optional"<?php echo (($formValues['token_mode'] ?? '') === 'special_optional') ? ' selected' : ''; ?>>Permitir fichas especiales como opcion</option>
+                                        <option value="special_required"<?php echo (($formValues['token_mode'] ?? '') === 'special_required') ? ' selected' : ''; ?>>Usar obligatoriamente fichas especiales</option>
+                                    </select>
+                                    <select name="token_set_id" id="token_set_id" class="form-control" style="margin-top:8px;">
+                                        <option value="">Seleccionar coleccion activa...</option>
+                                        <?php foreach ($tokenSetsForSelect as $ts): ?>
+                                            <option value="<?php echo (int)$ts['id']; ?>"<?php echo ((string)($formValues['token_set_id'] ?? '') === (string)$ts['id']) ? ' selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($ts['title'], ENT_QUOTES, 'UTF-8'); ?> (<?php echo (int)$ts['asset_count']; ?> fichas)
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <span class="form-help">Crea colecciones desde <a href="<?php echo TRIVIAX_BASE; ?>/panel/token_sets.php" target="_blank" rel="noopener">Mis fichas</a>. Si eliges fichas especiales, debes seleccionar una coleccion activa.</span>
+                                </div>
+
                                 <!-- Archivo de Imagen de Fondo (Opcional) -->
                                 <div class="form-group-full" id="bg-upload-group">
                                     <label for="background_file">Imagen de Fondo (Opcional)</label>
@@ -2150,6 +2268,21 @@ Aquí está el documento de estudio:";
                                             <?php endforeach; ?>
                                         </select>
                                         <span class="form-help">Si fijas un tablero personalizado, la actividad se jugará solo en ese tablero y usará su propia imagen (no hace falta fondo).</span>
+                                    </div>
+                                    <div class="form-group-full">
+                                        <label>Fichas de jugadores</label>
+                                        <select id="ep-token-mode" class="form-control">
+                                            <option value="standard_only">Usar fichas estandar</option>
+                                            <option value="special_optional">Permitir fichas especiales como opcion</option>
+                                            <option value="special_required">Usar obligatoriamente fichas especiales</option>
+                                        </select>
+                                        <select id="ep-token-set" class="form-control" style="margin-top:8px;">
+                                            <option value="">Seleccionar coleccion activa...</option>
+                                            <?php foreach ($tokenSetsForSelect as $ts): ?>
+                                                <option value="<?php echo (int)$ts['id']; ?>"><?php echo htmlspecialchars($ts['title'], ENT_QUOTES, 'UTF-8'); ?> (<?php echo (int)$ts['asset_count']; ?> fichas)</option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <span class="form-help">Las fichas especiales permiten adaptar visualmente la actividad al tema del tablero.</span>
                                     </div>
                                 </div>
 
@@ -3068,6 +3201,11 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
             document.getElementById('ep-obs').value    = meta.obs    || '';
             const epBoard = document.getElementById('ep-board-locked');
             if (epBoard) epBoard.value = (data.board && data.board.lockedId) ? data.board.lockedId : '';
+            const tokenConfig = meta.tokens || {};
+            const epTokenMode = document.getElementById('ep-token-mode');
+            const epTokenSet = document.getElementById('ep-token-set');
+            if (epTokenMode) epTokenMode.value = tokenConfig.mode || 'standard_only';
+            if (epTokenSet) epTokenSet.value = tokenConfig.tokenSetId ? String(tokenConfig.tokenSetId) : '';
 
             // Normalizar challenges (soporta formato json y txt parseado)
             const raw = data.questions || [];
@@ -3777,6 +3915,8 @@ Esta imagen de fondo se utilizará en la interfaz web de un videojuego educativo
             payload.append('mail',          document.getElementById('ep-mail').value.trim());
             payload.append('activity_json', JSON.stringify({ challenges: _ep.challenges }));
             payload.append('board_locked_id', document.getElementById('ep-board-locked')?.value || '');
+            payload.append('token_mode', document.getElementById('ep-token-mode')?.value || 'standard_only');
+            payload.append('token_set_id', document.getElementById('ep-token-set')?.value || '');
 
             fetch('admin.php', { method:'POST', body: payload })
                 .then(r => r.json())

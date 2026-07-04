@@ -39,6 +39,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
             throw new Exception('Slug de tablero inválido.');
         }
 
+        if ($slug === 'football_pitch_30_v1') {
+            $redPath = [];
+            $bluePath = [];
+            $positions = $data['customPositions'] ?? [];
+            foreach ($positions as $n => $p) {
+                $x_red = round((float)$p['x'], 2);
+                $y_red = round((float)$p['y'], 2);
+                
+                $redPath[] = [
+                    'n' => $n,
+                    'x' => $x_red,
+                    'y' => $y_red
+                ];
+                $bluePath[] = [
+                    'n' => $n,
+                    'x' => round(100.0 - $x_red, 2),
+                    'y' => round(100.0 - $y_red, 2)
+                ];
+            }
+            require_once __DIR__ . '/../php/football_engine.php';
+            $boardProfile = [
+                'id' => 'football_pitch_30_v1',
+                'label' => trim($data['label']),
+                'description' => trim($data['description'] ?? 'Tablero personalizado de fútbol.'),
+                'image' => 'images/cancha.png',
+                'type' => 'football_goal_race',
+                'size' => ['width' => 1672, 'height' => 941],
+                'goalPosition' => 30,
+                'paths' => [
+                    'blue' => $bluePath,
+                    'red' => $redPath
+                ],
+                'specialCells' => triviax_football_default_special_cells(),
+                'createdAt' => date('Y-m-d'),
+                'source' => 'visual-editor'
+            ];
+            
+            $destDir = __DIR__ . '/../images/tableros';
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0777, true);
+            }
+            $destPath = $destDir . '/football_pitch_30_v1.json';
+            if (file_put_contents($destPath, json_encode($boardProfile, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) === false) {
+                throw new Exception('No se pudo escribir el archivo JSON del tablero de fútbol.');
+            }
+            
+            try {
+                $stmt = $pdo->prepare(
+                    'INSERT INTO football_boards (board_key, mode, label, image_path, config_json, enabled)
+                     VALUES (?, ?, ?, ?, ?, 1)
+                     ON DUPLICATE KEY UPDATE
+                        label = VALUES(label), image_path = VALUES(image_path), config_json = VALUES(config_json)'
+                );
+                $stmt->execute([
+                    'football_pitch_30_v1',
+                    'football_goal_race',
+                    $boardProfile['label'],
+                    $boardProfile['image'],
+                    json_encode($boardProfile, JSON_UNESCAPED_UNICODE)
+                ]);
+                triviax_audit_log('tablero_futbol_guardado', 'tablero', 'football_pitch_30_v1', []);
+            } catch (Throwable $dbe) {
+                // Silencioso
+            }
+            
+            echo json_encode(['success' => true, 'codigo' => 'football_pitch_30_v1']);
+            exit;
+        }
+
+
         // Estructurar el perfil del tablero
         $boardProfile = [
             'id' => $slug,
@@ -269,14 +339,30 @@ if (is_dir($dirTableros)) {
 $editDataJson = 'null';
 if (isset($_GET['edit'])) {
     $editSlug = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['edit']);
-    $editPath = $dirTableros . '/' . $editSlug . '.json';
-    if (is_file($editPath)) {
-        $editContent = file_get_contents($editPath);
-        if ($editContent !== false) {
-            $editDataJson = $editContent;
+    if ($editSlug === 'football_pitch_30_v1') {
+        require_once __DIR__ . '/../php/football_engine.php';
+        $board = triviax_football_default_board();
+        $board['customPositions'] = array_map(function($p) {
+            return ['x' => $p['x'], 'y' => $p['y']];
+        }, $board['paths']['red']);
+        $board['size'] = 30;
+        $board['loop'] = false;
+        $board['cellShape'] = 'square';
+        $board['smoothPath'] = false;
+        
+        $editDataJson = json_encode($board, JSON_UNESCAPED_UNICODE);
+        $selectedImage = 'images/cancha.png';
+    } else {
+        $editPath = $dirTableros . '/' . $editSlug . '.json';
+        if (is_file($editPath)) {
+            $editContent = file_get_contents($editPath);
+            if ($editContent !== false) {
+                $editDataJson = $editContent;
+            }
         }
     }
 }
+
 
 $csrfToken = triviax_csrf_token();
 ?>
@@ -392,6 +478,21 @@ $csrfToken = triviax_csrf_token();
         .editor-space-node.node-special {
             border-color: #ffd43b;
             box-shadow: 0 0 12px #ffd43b;
+        }
+
+        .editor-space-node.node-blue {
+            background: rgba(59, 130, 246, 0.9) !important;
+            border-color: #2563eb !important;
+            color: #ffffff !important;
+            cursor: default;
+            z-index: 9;
+        }
+
+        .editor-space-node.node-red {
+            background: rgba(239, 68, 68, 0.9) !important;
+            border-color: #dc2626 !important;
+            color: #ffffff !important;
+            z-index: 10;
         }
 
         .editor-space-node::after {
@@ -605,11 +706,13 @@ $csrfToken = triviax_csrf_token();
                     <label for="b-image-select">Imagen de Fondo</label>
                     <select id="b-image-select" class="form-control" onchange="changeBgImage(this.value)">
                         <option value="">-- Selecciona una Imagen --</option>
+                        <option value="images/cancha.png" <?= $selectedImage === 'images/cancha.png' ? 'selected' : '' ?>>cancha.png</option>
                         <?php foreach ($images as $img): ?>
                             <option value="<?= htmlspecialchars($img) ?>" <?= $img === $selectedImage ? 'selected' : '' ?>><?= htmlspecialchars(basename($img)) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
+
 
                 <div style="display: flex; gap: 15px; margin-top: 10px;">
                     <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer;">
@@ -730,6 +833,7 @@ $csrfToken = triviax_csrf_token();
 
             if (editData) {
                 loadEditData(editData);
+                checkFootballMode();
             } else {
                 // Seleccionar primer imagen de fondo por defecto
                 const bgSelect = document.getElementById('b-image-select');
@@ -740,6 +844,46 @@ $csrfToken = triviax_csrf_token();
                 generateDefaultPoints();
             }
         });
+
+        function checkFootballMode() {
+            const isFootball = document.getElementById('b-slug').value === 'football_pitch_30_v1';
+            if (isFootball) {
+                document.getElementById('b-name').disabled = true;
+                document.getElementById('b-slug').disabled = true;
+                document.getElementById('b-size').disabled = true;
+                document.getElementById('b-image-select').disabled = true;
+                document.getElementById('b-smooth').disabled = true;
+                document.getElementById('b-circle').disabled = true;
+                
+                // Ocultar prompts de IA y pegar JSON
+                const cards = document.querySelectorAll('.glass-card');
+                cards.forEach(card => {
+                    const h3 = card.querySelector('.editor-card-title');
+                    if (h3 && (h3.innerText.includes('IA') || h3.innerText.includes('JSON') || h3.innerText.includes('Prompt'))) {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Agregar banner explicativo si no existe
+                const sidebar = document.querySelector('.config-sidebar');
+                if (!document.getElementById('football-editor-banner')) {
+                    const banner = document.createElement('div');
+                    banner.id = 'football-editor-banner';
+                    banner.className = 'glass-card';
+                    banner.style.padding = '15px';
+                    banner.style.border = '1px solid rgba(59, 130, 246, 0.4)';
+                    banner.style.background = 'rgba(59, 130, 246, 0.08)';
+                    banner.style.marginBottom = '15px';
+                    banner.innerHTML = `
+                        <h3 class="editor-card-title" style="color: #60a5fa; border-color: rgba(59, 130, 246, 0.2); margin-bottom: 8px;">⚽ Recorrido de Fútbol</h3>
+                        <p style="font-size: 0.78rem; color: #93c5fd; margin: 0; line-height: 1.4;">
+                            Este recorrido tiene <strong>simetría central</strong>. Arrastra las casillas rojas del lado izquierdo y las azules del equipo contrario se moverán de forma idéntica en espejo.
+                        </p>
+                    `;
+                    sidebar.insertBefore(banner, sidebar.firstChild);
+                }
+            }
+        }
 
         function syncSlug() {
             const nameVal = document.getElementById('b-name').value;
@@ -1021,13 +1165,57 @@ Verifica que el array tenga exactamente ${size + 1} elementos y que los valores 
             layer.innerHTML = '';
             
             const isCircle = document.getElementById('b-circle').checked;
+            const isFootball = document.getElementById('b-slug').value === 'football_pitch_30_v1';
+            
+            if (isFootball) {
+                // Dibujar nodos azules simétricos primero
+                points.forEach((p, idx) => {
+                    const bx = 100.0 - p.x;
+                    const by = 100.0 - p.y;
+                    
+                    const node = document.createElement('div');
+                    node.className = 'editor-space-node node-blue';
+                    node.id = `blue-node-${idx}`;
+                    node.style.left = `${bx}%`;
+                    node.style.top = `${by}%`;
+                    node.style.borderRadius = isCircle ? '50%' : '6px';
+                    
+                    if (idx === 0) {
+                        node.classList.add('node-start');
+                        node.innerText = 'S';
+                    } else if (idx === points.length - 1) {
+                        node.classList.add('node-meta');
+                        node.innerText = 'M';
+                    } else {
+                        node.innerText = idx;
+                    }
+                    
+                    // Casilla especial badge para el lado azul
+                    let spec = null;
+                    if (specialCells && typeof specialCells === 'object' && specialCells.blue) {
+                        spec = specialCells.blue[idx];
+                    }
+                    if (spec) {
+                        node.classList.add('node-special');
+                        const icon = spec.type === 'var_risk' ? '💀' : '⭐';
+                        node.setAttribute('data-special-icon', icon);
+                    }
+                    
+                    layer.appendChild(node);
+                });
+            }
             
             points.forEach((p, idx) => {
                 const node = document.createElement('div');
                 node.className = 'editor-space-node';
+                if (isFootball) {
+                    node.classList.add('node-red');
+                    node.style.borderRadius = isCircle ? '50%' : '6px';
+                } else {
+                    node.style.borderRadius = isCircle ? '50%' : '12px';
+                }
                 node.style.left = `${p.x}%`;
                 node.style.top = `${p.y}%`;
-                node.style.borderRadius = isCircle ? '50%' : '12px';
                 
                 if (idx === 0) {
                     node.classList.add('node-start');
@@ -1040,10 +1228,20 @@ Verifica que el array tenga exactamente ${size + 1} elementos y que los valores 
                 }
 
                 // Casilla especial badge
-                const spec = specialCells.find(c => c.cell === idx);
+                let spec = null;
+                if (isFootball) {
+                    if (specialCells && typeof specialCells === 'object' && specialCells.red) {
+                        spec = specialCells.red[idx];
+                    }
+                } else {
+                    if (Array.isArray(specialCells)) {
+                        spec = specialCells.find(c => c.cell === idx);
+                    }
+                }
                 if (spec) {
                     node.classList.add('node-special');
-                    node.setAttribute('data-special-icon', spec.type === 'bonus' ? '⭐' : '💀');
+                    const icon = spec.type === 'var_risk' ? '💀' : '⭐';
+                    node.setAttribute('data-special-icon', icon);
                 }
                 
                 // Evento drag
@@ -1084,18 +1282,42 @@ Verifica que el array tenga exactamente ${size + 1} elementos y que los valores 
             svg.innerHTML = '';
             
             const isSmooth = document.getElementById('b-smooth').checked;
+            const isFootball = document.getElementById('b-slug').value === 'football_pitch_30_v1';
             
-            if (isSmooth) {
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('class', 'editor-path-line');
-                path.setAttribute('d', getCurvePath(points));
-                svg.appendChild(path);
+            if (isFootball) {
+                // Dibujar camino azul (simétrico)
+                const bluePoints = points.map(p => ({
+                    x: 100.0 - p.x,
+                    y: 100.0 - p.y
+                }));
+                
+                const polylineBlue = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                polylineBlue.setAttribute('class', 'editor-path-line');
+                polylineBlue.setAttribute('style', 'stroke: #3b82f6; stroke-dasharray: 4;');
+                let pointsBlueStr = bluePoints.map(p => `${p.x},${p.y}`).join(' ');
+                polylineBlue.setAttribute('points', pointsBlueStr);
+                svg.appendChild(polylineBlue);
+                
+                // Dibujar camino rojo
+                const polylineRed = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                polylineRed.setAttribute('class', 'editor-path-line');
+                polylineRed.setAttribute('style', 'stroke: #ef4444;');
+                let pointsRedStr = points.map(p => `${p.x},${p.y}`).join(' ');
+                polylineRed.setAttribute('points', pointsRedStr);
+                svg.appendChild(polylineRed);
             } else {
-                const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-                polyline.setAttribute('class', 'editor-path-line');
-                let pointsStr = points.map(p => `${p.x},${p.y}`).join(' ');
-                polyline.setAttribute('points', pointsStr);
-                svg.appendChild(polyline);
+                if (isSmooth) {
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('class', 'editor-path-line');
+                    path.setAttribute('d', getCurvePath(points));
+                    svg.appendChild(path);
+                } else {
+                    const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                    polyline.setAttribute('class', 'editor-path-line');
+                    let pointsStr = points.map(p => `${p.x},${p.y}`).join(' ');
+                    polyline.setAttribute('points', pointsStr);
+                    svg.appendChild(polyline);
+                }
             }
         }
 
@@ -1110,8 +1332,11 @@ Verifica que el array tenga exactamente ${size + 1} elementos y que los valores 
             containerRect = container.getBoundingClientRect();
             
             // Añadir clases activas
-            const nodes = document.querySelectorAll('.editor-space-node');
-            nodes[index].classList.add('is-active');
+            const isFootball = document.getElementById('b-slug').value === 'football_pitch_30_v1';
+            const redNodes = document.querySelectorAll(isFootball ? '.editor-space-node.node-red' : '.editor-space-node');
+            if (redNodes[index]) {
+                redNodes[index].classList.add('is-active');
+            }
             
             document.addEventListener('mousemove', handleDrag);
             document.addEventListener('mouseup', endDrag);
@@ -1136,18 +1361,35 @@ Verifica que el array tenga exactamente ${size + 1} elementos y que los valores 
             points[dragIndex].y = parseFloat(y.toFixed(2));
             
             // Actualizar nodo
-            const nodes = document.querySelectorAll('.editor-space-node');
-            nodes[dragIndex].style.left = `${x}%`;
-            nodes[dragIndex].style.top = `${y}%`;
+            const isFootball = document.getElementById('b-slug').value === 'football_pitch_30_v1';
+            if (isFootball) {
+                const redNode = document.querySelectorAll('.editor-space-node.node-red')[dragIndex];
+                if (redNode) {
+                    redNode.style.left = `${x}%`;
+                    redNode.style.top = `${y}%`;
+                }
+                const blueNode = document.getElementById(`blue-node-${dragIndex}`);
+                if (blueNode) {
+                    blueNode.style.left = `${(100.0 - x).toFixed(2)}%`;
+                    blueNode.style.top = `${(100.0 - y).toFixed(2)}%`;
+                }
+            } else {
+                const nodes = document.querySelectorAll('.editor-space-node');
+                if (nodes[dragIndex]) {
+                    nodes[dragIndex].style.left = `${x}%`;
+                    nodes[dragIndex].style.top = `${y}%`;
+                }
+            }
             
             drawPath();
         }
 
         function endDrag() {
             if (isDragging && dragIndex !== -1) {
-                const nodes = document.querySelectorAll('.editor-space-node');
-                if (nodes[dragIndex]) {
-                    nodes[dragIndex].classList.remove('is-active');
+                const isFootball = document.getElementById('b-slug').value === 'football_pitch_30_v1';
+                const redNodes = document.querySelectorAll(isFootball ? '.editor-space-node.node-red' : '.editor-space-node');
+                if (redNodes[dragIndex]) {
+                    redNodes[dragIndex].classList.remove('is-active');
                 }
             }
             isDragging = false;
@@ -1163,6 +1405,11 @@ Verifica que el array tenga exactamente ${size + 1} elementos y que los valores 
         // CASILLAS ESPECIALES
         // ──────────────────────────────────────────────────────────────────
         function selectCell(idx) {
+            const isFootball = document.getElementById('b-slug').value === 'football_pitch_30_v1';
+            if (isFootball) {
+                return;
+            }
+            
             activeIndex = idx;
             document.getElementById('sc-number').innerText = idx;
             

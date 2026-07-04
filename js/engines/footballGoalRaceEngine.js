@@ -140,6 +140,7 @@ async function startGame(e) {
     e.preventDefault();
     $('#football-msg').textContent = 'Creando partido...';
     const payload = {
+        project: $('#question-bank')?.value || window.TRIVIAX_PROJECT_SLUG || '',
         diceSides: 6,
         teamAnswerMode: $('#answer-mode').value,
         teams: {
@@ -147,12 +148,39 @@ async function startGame(e) {
             red: splitTeam($('#team-red').value, 'Rojo'),
         },
     };
-    const res = await api('football_start', payload);
-    sessionId = res.session_id;
-    sessionToken = res.token;
-    $('#football-setup').hidden = true;
-    $('#play-panel').hidden = false;
-    renderState(res, 'Partido creado. Tira el dado.');
+    try {
+        const res = await api('football_start', payload);
+        sessionId = res.session_id;
+        sessionToken = res.token;
+        $('#football-setup').hidden = true;
+        $('#play-panel').hidden = false;
+        const bankTitle = res.activity?.title || '';
+        renderState(res, bankTitle ? `Partido creado con "${bankTitle}". Tira el dado.` : 'Partido creado. Tira el dado.');
+    } catch (err) {
+        $('#football-msg').textContent = err.message;
+    }
+}
+
+// Bancos de preguntas disponibles (proyectos del tablero con preguntas
+// de opciones cerradas). La demo incluida queda siempre como fallback.
+async function loadQuestionBanks() {
+    const select = $('#question-bank');
+    if (!select) return;
+    try {
+        const res = await api('football_projects');
+        (res.projects || []).forEach((p) => {
+            const opt = document.createElement('option');
+            opt.value = p.id;
+            opt.textContent = `${p.title || p.id}${p.nivel ? ' · ' + p.nivel : ''} (${p.preguntas} preguntas)`;
+            select.append(opt);
+        });
+        if (window.TRIVIAX_PROJECT_SLUG) {
+            select.value = window.TRIVIAX_PROJECT_SLUG;
+            if (select.value !== window.TRIVIAX_PROJECT_SLUG) select.value = '';
+        }
+    } catch (err) {
+        // Sin bancos externos: se juega con la demo incluida.
+    }
 }
 
 async function roll() {
@@ -176,6 +204,7 @@ async function init() {
     const boardRes = await api('football_board');
     renderBoard(boardRes.board);
     updateTokens();
+    await loadQuestionBanks();
     $('#football-setup').addEventListener('submit', startGame);
     $('#btn-roll').addEventListener('click', roll);
 }

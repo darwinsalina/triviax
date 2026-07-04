@@ -5,6 +5,7 @@
 
 require_once __DIR__ . '/php/auth.php';
 
+$projectSlug = isset($_GET['project']) ? trim((string)$_GET['project']) : '';
 $csrf = htmlspecialchars(triviax_csrf_token(), ENT_QUOTES, 'UTF-8');
 $usuario = triviax_usuario_actual();
 $nombreUsuario = $usuario ? trim(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? '')) : 'Invitado';
@@ -54,6 +55,12 @@ $nombreUsuario = $nombreUsuario !== '' ? $nombreUsuario : 'Invitado';
 
             <form class="football-setup" id="football-setup">
                 <label class="act-field">
+                    <span class="act-label">Batería de preguntas</span>
+                    <select id="question-bank">
+                        <option value="">Demo de fútbol (incluida)</option>
+                    </select>
+                </label>
+                <label class="act-field">
                     <span class="act-label">Equipo azul</span>
                     <input type="text" id="team-blue" value="Azul" maxlength="120" placeholder="Ana, Luis">
                 </label>
@@ -99,9 +106,10 @@ $nombreUsuario = $nombreUsuario !== '' ? $nombreUsuario : 'Invitado';
     <script>
         window.TRIVIAX_CSRF_TOKEN = <?php echo json_encode($csrf, JSON_UNESCAPED_UNICODE); ?>;
         window.TRIVIAX_BASE = '';
+        window.TRIVIAX_PROJECT_SLUG = <?php echo json_encode($projectSlug, JSON_UNESCAPED_UNICODE); ?>;
     </script>
     <script src="js/brand.js?v=6.1.3"></script>
     <script src="js/validators/footballValidator.js?v=football-1"></script>
-    <script src="js/engines/footballGoalRaceEngine.js?v=football-1"></script>
+    <script src="js/engines/footballGoalRaceEngine.js?v=football-2"></script>
 </body>
 </html>

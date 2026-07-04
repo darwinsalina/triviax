@@ -32,6 +32,11 @@ media/etiquetar/*
 !media/jigsaw/.gitkeep
 !media/etiquetar/.gitkeep
 
+# ── Colecciones de fichas (v7.x): sprite sheets y fichas generadas en runtime ──
+# El código crea uploads/token_sets/<docente>/<set>/ con mkdir recursivo,
+# así que no hace falta versionar la carpeta; solo se ignora su contenido.
+uploads/
+
 # ── Herramientas de agentes / skills instaladas ───────────
 .codex/
 .agents/

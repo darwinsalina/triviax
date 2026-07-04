@@ -339,8 +339,11 @@ export class BoardEngine {
 
             occupants.forEach((player, idx) => {
                 const token = document.createElement('div');
-                token.className = `player-token token-${player.color.id}`;
-                token.style.backgroundColor = player.color.hex;
+                const specialToken = player.token && player.token.type === 'special' && player.token.file_path;
+                token.className = specialToken
+                    ? `player-token token-${player.color.id} token-special`
+                    : `player-token token-${player.color.id}`;
+                token.style.backgroundColor = specialToken ? 'transparent' : player.color.hex;
                 token.style.color = player.color.text;
 
                 const initials = player.name
@@ -349,7 +352,15 @@ export class BoardEngine {
                     .map(w => w[0].toUpperCase())
                     .slice(0, 2)
                     .join('');
-                token.innerText = initials || player.id;
+                if (specialToken) {
+                    const img = document.createElement('img');
+                    img.className = 'token-img';
+                    img.src = player.token.file_path;
+                    img.alt = player.token.label || `Ficha de ${player.name}`;
+                    token.appendChild(img);
+                } else {
+                    token.innerText = initials || player.id;
+                }
 
                 let dx = 0;
                 let dy = 0;
@@ -362,7 +373,9 @@ export class BoardEngine {
 
                 token.style.left = `calc(${coords.x}% + ${dx}%)`;
                 token.style.top = `calc(${coords.y}% + ${dy}%)`;
-                token.title = `${player.name} (${player.color.name}) - Pts: ${player.score}`;
+                token.title = specialToken
+                    ? `${player.name} (${player.token.label || 'ficha especial'}) - Pts: ${player.score}`
+                    : `${player.name} (${player.color.name}) - Pts: ${player.score}`;
 
                 this.tokensLayer.appendChild(token);
             });

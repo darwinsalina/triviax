@@ -68,6 +68,7 @@ export class GameEngine {
                 color: colorConfig,
                 position: 0,         // Casilla inicial (Salida)
                 score: 0,            // Puntuación inicial
+                token: setup.token || null,
                 skipNextTurn: false, // Penalización de turno
                 correctAnswersCount: 0,
                 incorrectAnswersCount: 0

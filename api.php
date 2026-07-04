@@ -267,7 +267,14 @@ if ($action === 'list') {
     usort($projects, function ($a, $b) {
         return strcasecmp($a['title'] ?? $a['id'], $b['title'] ?? $b['id']);
     });
-    
+
+    // v7.0: el catálogo público solo muestra actividades públicas y
+    // actualmente abiertas (el docente dueño sigue viendo las suyas).
+    require_once __DIR__ . '/php/activity_access.php';
+    triviax_session_start();
+    $projects = triviax_filter_catalog(triviax_usuario_actual(), 'proyecto', $projects,
+        function ($p) { return (string)($p['id'] ?? ''); });
+
     echo json_encode([
         'success' => true,
         'projects' => $projects,
@@ -301,7 +308,24 @@ if ($action === 'get') {
         ], JSON_UNESCAPED_UNICODE);
         exit;
     }
-    
+
+    // v7.0: política transversal de acceso (visibilidad, plazos, requisitos).
+    // Debe rechazar desde la API aunque se conozca la URL.
+    require_once __DIR__ . '/php/activity_access.php';
+    triviax_session_start();
+    $codigoAcceso = trim((string)($_GET['codigo'] ?? ''));
+    $accesoV7 = triviax_can_start_activity(triviax_usuario_actual(), 'proyecto', $project,
+        $codigoAcceso !== '' ? $codigoAcceso : null);
+    if (!$accesoV7['ok']) {
+        http_response_code(403);
+        echo json_encode([
+            'success' => false,
+            'error' => $accesoV7['message'],
+            'motivo' => $accesoV7['reason'],
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     $jsonPath = $projectPath . '/proyecto.json';
     $filePath = $projectPath . '/preguntas.txt';
 
@@ -335,9 +359,10 @@ if ($action === 'get') {
             $parsedJsonProject = triviax_parse_project_json($jsonContent);
             $boardOut = is_array($parsedJsonProject['board']) ? $parsedJsonProject['board'] : [];
             $boardOut = triviax_merge_board_sidecar($projectPath, $boardOut);
+            $metadataOut = triviax_merge_tokens_sidecar($projectPath, $parsedJsonProject['metadata']);
             echo json_encode([
                 'success' => true,
-                'metadata' => $parsedJsonProject['metadata'],
+                'metadata' => $metadataOut,
                 // 6.3c: nunca exponer las respuestas correctas al cliente.
                 'questions' => array_map('triviax_board_sanitize_challenge_for_client', $dbChallenges ?? $parsedJsonProject['challenges']),
                 'board' => $boardOut
@@ -375,9 +400,10 @@ if ($action === 'get') {
 
     try {
         $parsedProject = triviax_parse_questions_text($content);
+        $metadataOut = triviax_merge_tokens_sidecar($projectPath, $parsedProject['metadata']);
         echo json_encode([
             'success' => true,
-            'metadata' => $parsedProject['metadata'],
+            'metadata' => $metadataOut,
             // 6.3c: nunca exponer las respuestas correctas al cliente.
             'questions' => array_map('triviax_board_sanitize_challenge_for_client', $dbChallenges ?? $parsedProject['questions']),
             'board' => triviax_merge_board_sidecar($projectPath, [])
@@ -969,6 +995,42 @@ if ($action === 'unirse_sesion') {
             exit;
         }
 
+        // v7.0: la política del proyecto también gobierna la unión a sesiones.
+        require_once __DIR__ . '/php/activity_access.php';
+        triviax_session_start();
+        $usuarioJoin = triviax_usuario_actual();
+        $accesoJoin = triviax_can_start_activity($usuarioJoin, 'proyecto', (string)$sesion['proyecto_id'],
+            trim((string)($input['codigo_actividad'] ?? '')) ?: null);
+        if (!$accesoJoin['ok']) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'error' => $accesoJoin['message'],
+                'motivo' => $accesoJoin['reason'],
+            ], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        $politicaJoin = $accesoJoin['policy'];
+        $esEvalJoin = !$accesoJoin['preview'] && !empty($politicaJoin['evaluativa'])
+            && $accesoJoin['reason'] !== 'owner_preview';
+        // Vincular la sesión de juego con la política/versión si aún no lo está.
+        if (!empty($politicaJoin['id'])) {
+            $versionJoin = $esEvalJoin
+                ? triviax_get_current_activity_version('proyecto', (string)$sesion['proyecto_id'])
+                : null;
+            $pdo->prepare(
+                'UPDATE sesiones SET politica_id = COALESCE(politica_id, ?),
+                        actividad_version_id = COALESCE(actividad_version_id, ?),
+                        evaluativa = GREATEST(evaluativa, ?)
+                 WHERE id = ?'
+            )->execute([
+                (int)$politicaJoin['id'],
+                $versionJoin['id'] ?? null,
+                (int)$esEvalJoin,
+                (int)$sesion['id'],
+            ]);
+        }
+
         // Verificar que no supera el máximo
         $stmtCount = $pdo->prepare('SELECT COUNT(*) FROM sesion_jugadores WHERE sesion_id = ?');
         $stmtCount->execute([$sesion['id']]);
@@ -987,9 +1049,16 @@ if ($action === 'unirse_sesion') {
         // Desde v4.5 se guarda solo el hash del token; el token plano se entrega una vez al navegador.
         $jugadorIds = [];
         $jugadoresSesion = [];
+        // v7.0: si hay UN solo jugador y el navegador tiene sesión iniciada,
+        // se le atribuye identidad y pertenencia; con varios jugadores locales
+        // (modo multijugador compartido) quedan como anónimos.
+        $identidadJoin = (count($jugadores) === 1 && $usuarioJoin !== null)
+            ? $accesoJoin['identity'] : 'anonimo';
+        $usuarioIdJoin = ($identidadJoin !== 'anonimo') ? (int)$usuarioJoin['id'] : null;
         $stmtIns = $pdo->prepare('
-            INSERT INTO sesion_jugadores (sesion_id, usuario_id, nombre_display, player_token, estado, last_seen_at)
-            VALUES (?, NULL, ?, ?, \'activo\', NOW())
+            INSERT INTO sesion_jugadores (sesion_id, usuario_id, nombre_display, player_token, estado, last_seen_at,
+                                          grupo_id, grupo_estudiante_id, identity_status, access_verified_at)
+            VALUES (?, ?, ?, ?, \'activo\', NOW(), ?, ?, ?, NOW())
         ');
         foreach ($jugadores as $nombre) {
             $nombre = mb_substr(trim((string)$nombre), 0, 100);
@@ -997,7 +1066,25 @@ if ($action === 'unirse_sesion') {
                 $nombre = 'Jugador';
             }
             $token = bin2hex(random_bytes(32));
-            $stmtIns->execute([$sesion['id'], $nombre, triviax_api_token_hash($token)]);
+            try {
+                $stmtIns->execute([
+                    $sesion['id'], $usuarioIdJoin, $nombre, triviax_api_token_hash($token),
+                    $identidadJoin !== 'anonimo' ? $accesoJoin['grupo_id'] : null,
+                    $identidadJoin !== 'anonimo' ? $accesoJoin['grupo_estudiante_id'] : null,
+                    $identidadJoin,
+                ]);
+            } catch (PDOException $eIns) {
+                // uq_sesion_usuario: el mismo usuario ya está en la sesión →
+                // se lo registra como jugador adicional sin usuario_id, igual
+                // que antes de v7.0 (no rompe el reingreso).
+                if ((string)$eIns->getCode() !== '23000' || $usuarioIdJoin === null) {
+                    throw $eIns;
+                }
+                $stmtIns->execute([
+                    $sesion['id'], null, $nombre, triviax_api_token_hash($token),
+                    null, null, 'anonimo',
+                ]);
+            }
             $jugadorId = (int)$pdo->lastInsertId();
             $jugadorIds[] = $jugadorId;
             $jugadoresSesion[] = [
@@ -1532,6 +1619,49 @@ if ($action === 'guardar_resultados') {
         $pdo->prepare("UPDATE sesiones SET estado = 'finalizada', fecha_fin = NOW() WHERE id = ?")
             ->execute([$sesionId]);
 
+        // v7.0: entregas transversales por jugador (reporte/evaluación).
+        try {
+            require_once __DIR__ . '/php/activity_access.php';
+            $stmtSes = $pdo->prepare('SELECT proyecto_id, politica_id, actividad_version_id, evaluativa, fecha_inicio FROM sesiones WHERE id = ?');
+            $stmtSes->execute([$sesionId]);
+            $sesV7 = $stmtSes->fetch(PDO::FETCH_ASSOC);
+            if ($sesV7) {
+                $stmtJug = $pdo->prepare(
+                    'SELECT sj.id, sj.usuario_id, sj.grupo_id, sj.grupo_estudiante_id,
+                            r.puntaje, r.correctas, r.incorrectas, r.posicion
+                     FROM sesion_jugadores sj
+                     LEFT JOIN resultados r ON r.sesion_id = sj.sesion_id AND r.jugador_id = sj.id
+                     WHERE sj.sesion_id = ?'
+                );
+                $stmtJug->execute([$sesionId]);
+                foreach ($stmtJug->fetchAll(PDO::FETCH_ASSOC) as $jug) {
+                    if ($jug['puntaje'] === null) { continue; }
+                    triviax_record_activity_submission([
+                        'actividad_tipo' => 'proyecto',
+                        'actividad_ref' => (string)$sesV7['proyecto_id'],
+                        'politica_id' => $sesV7['politica_id'],
+                        'version_id' => $sesV7['actividad_version_id'],
+                        'usuario_id' => $jug['usuario_id'],
+                        'grupo_id' => $jug['grupo_id'],
+                        'grupo_estudiante_id' => $jug['grupo_estudiante_id'],
+                        'source_table' => 'resultados',
+                        'source_id' => $sesionId . ':' . $jug['id'],
+                        'estado' => 'submitted',
+                        'puntaje' => $jug['puntaje'],
+                        'started_at' => $sesV7['fecha_inicio'],
+                        'evaluativa' => (int)$sesV7['evaluativa'],
+                        'summary_json' => [
+                            'correctas' => (int)$jug['correctas'],
+                            'incorrectas' => (int)$jug['incorrectas'],
+                            'posicion' => $jug['posicion'] !== null ? (int)$jug['posicion'] : null,
+                        ],
+                    ]);
+                }
+            }
+        } catch (\Throwable $eV7) {
+            // La entrega transversal nunca corta el guardado clásico.
+        }
+
         echo json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
 
     } catch (Exception $e) {
@@ -1575,6 +1705,57 @@ if (strpos($action, 'jigsaw_') === 0) {
 if (strpos($action, 'etiquetar_') === 0) {
     require_once __DIR__ . '/php/etiquetar_api.php';
     triviax_etiquetar_api_handle($action);
+    exit;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MODALIDAD "SOPA DE LETRAS" (ws_*) — actividad de palabras.
+// ══════════════════════════════════════════════════════════════════
+if (strpos($action, 'ws_') === 0) {
+    require_once __DIR__ . '/php/wordsearch_api.php';
+    triviax_ws_api_handle($action);
+    exit;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MODALIDAD "CRUCIGRAMA" (cw_*) — actividad de palabras.
+// ══════════════════════════════════════════════════════════════════
+if (strpos($action, 'cw_') === 0) {
+    require_once __DIR__ . '/php/crossword_api.php';
+    triviax_cw_api_handle($action);
+    exit;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MODALIDAD "TRIVIAX FUTBOL" (football_*) — Camino al Gol.
+// ══════════════════════════════════════════════════════════════════
+if (strpos($action, 'football_') === 0) {
+    require_once __DIR__ . '/php/football_api.php';
+    triviax_football_api_handle($action);
+    exit;
+}
+
+if (strpos($action, 'tokens_') === 0) {
+    require_once __DIR__ . '/php/token_sets_api.php';
+    triviax_tokens_api_handle($action);
+    exit;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// GRUPOS DE ESTUDIANTES (grp_*) — v7.0: pertenencia e identidad.
+// ══════════════════════════════════════════════════════════════════
+if (strpos($action, 'grp_') === 0) {
+    require_once __DIR__ . '/php/grupos_api.php';
+    triviax_grp_api_handle($action);
+    exit;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// POLÍTICAS DE ACCESO (acceso_*) — v7.0: visibilidad, plazos, evaluación.
+// ══════════════════════════════════════════════════════════════════
+if (strpos($action, 'acceso_') === 0) {
+    require_once __DIR__ . '/php/access_api.php';
+    triviax_acceso_api_handle($action);
     exit;
 }
 

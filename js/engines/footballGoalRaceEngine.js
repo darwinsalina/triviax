@@ -11,6 +11,62 @@ let sessionToken = null;
 let board = null;
 let state = null;
 
+// Posición (n) actualmente pintada de cada ficha, para animar el trayecto
+// casilla por casilla en vez de saltar directo al destino.
+const renderedPositions = { blue: null, red: null };
+// Generación de animación por lado: invalida un recorrido en curso si llega
+// un destino nuevo (evita que dos animaciones se pisen).
+const animGen = { blue: 0, red: 0 };
+// Duración de cada tramo entre casillas contiguas (ms). Igual al de la
+// transición CSS que se fija en runtime → deslizamiento continuo y fluido.
+const STEP_MS = 200;
+
+function wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function prefersReducedMotion() {
+    return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+
+function placeToken(side, p) {
+    const token = $(`#token-${side}`);
+    if (!token) return;
+    token.style.left = `${p.x}%`;
+    token.style.top = `${p.y}%`;
+    if (!token.textContent) token.textContent = side === 'blue' ? 'A' : 'R';
+}
+
+// Coloca la ficha en `n` sin animación (primer render, reduced-motion o cuando
+// no cambió de casilla).
+function snapToken(side, n) {
+    const token = $(`#token-${side}`);
+    if (!token) return;
+    token.style.transition = 'none';
+    placeToken(side, pathPoint(side, n));
+    // Forzar reflow para que el 'none' tenga efecto antes de restaurar la
+    // transición por defecto de la hoja de estilos (para futuros movimientos).
+    void token.offsetWidth;
+    token.style.transition = '';
+    renderedPositions[side] = n;
+}
+
+// Recorre la ruta casilla por casilla desde `fromN` hasta `toN`, deslizando de
+// forma continua (una transición lineal por tramo, encadenadas).
+async function animateTokenAlongPath(side, fromN, toN) {
+    const token = $(`#token-${side}`);
+    if (!token) return;
+    const gen = ++animGen[side];
+    token.style.transition = `left ${STEP_MS}ms linear, top ${STEP_MS}ms linear`;
+    const dir = toN >= fromN ? 1 : -1;
+    for (let n = fromN + dir; dir > 0 ? n <= toN : n >= toN; n += dir) {
+        if (gen !== animGen[side]) return; // llegó un destino más nuevo
+        placeToken(side, pathPoint(side, n));
+        renderedPositions[side] = n;
+        await wait(STEP_MS);
+    }
+}
+
 function api(action, body = null) {
     const options = body
         ? { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF }, body: JSON.stringify(Object.assign({ csrf_token: CSRF }, body)) }
@@ -68,11 +124,15 @@ function renderBoard(newBoard) {
 function updateTokens() {
     if (!board || !state) return;
     ['blue', 'red'].forEach((side) => {
-        const p = pathPoint(side, state.positions[side]);
-        const token = $(`#token-${side}`);
-        token.style.left = `${p.x}%`;
-        token.style.top = `${p.y}%`;
-        token.textContent = side === 'blue' ? 'A' : 'R';
+        const target = state.positions[side];
+        const from = renderedPositions[side];
+        // Primer render, sin cambio de casilla o reduced-motion → colocar directo.
+        if (from === null || from === target || prefersReducedMotion()) {
+            snapToken(side, target);
+            return;
+        }
+        // Cambió de casilla → recorrer la ruta paso a paso.
+        animateTokenAlongPath(side, from, target);
     });
 }
 

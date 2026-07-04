@@ -1475,15 +1475,57 @@ if ($action === 'guardar_resultados') {
                 posicion   = VALUES(posicion)
         ');
 
-        foreach ($resultados as $r) {
-            $jugadorId  = (int)($r['jugador_id']  ?? 0);
-            $puntaje    = (int)($r['puntaje']      ?? 0);
-            $correctas  = (int)($r['correctas']    ?? 0);
-            $incorrectas= (int)($r['incorrectas']  ?? 0);
-            $posicion   = isset($r['posicion']) ? (int)$r['posicion'] : null;
+        // Puntaje y veredictos AUTORITATIVOS: se derivan de `intentos` (evaluado
+        // en el servidor por board_eval en submit_answer), NO del payload del
+        // cliente. El cliente solo dispara el cierre de la partida; los números
+        // que envía en `resultados` se ignoran para que nadie pueda inflar su
+        // puntaje o el ranking final.
+        $agg = [];
+        foreach ($validJugadorIds as $jid) {
+            $agg[$jid] = ['jugador_id' => $jid, 'puntaje' => 0, 'correctas' => 0, 'incorrectas' => 0];
+        }
+        $stmtAgg = $pdo->prepare("
+            SELECT jugador_id,
+                   COALESCE(SUM(points_delta), 0)          AS puntaje,
+                   SUM(resultado =  'correct')             AS correctas,
+                   SUM(resultado <> 'correct')             AS incorrectas
+            FROM intentos
+            WHERE sesion_id = ?
+            GROUP BY jugador_id
+        ");
+        $stmtAgg->execute([$sesionId]);
+        foreach ($stmtAgg->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $jid = (int)$row['jugador_id'];
+            if (isset($agg[$jid])) {
+                $agg[$jid] = [
+                    'jugador_id'  => $jid,
+                    'puntaje'     => (int)$row['puntaje'],
+                    'correctas'   => (int)$row['correctas'],
+                    'incorrectas' => (int)$row['incorrectas'],
+                ];
+            }
+        }
 
-            if ($jugadorId <= 0 || !in_array($jugadorId, $validJugadorIds, true)) continue;
-            $stmtR->execute([$sesionId, $jugadorId, $puntaje, $correctas, $incorrectas, $posicion]);
+        // Posición final (ranking) también autoritativa: por puntaje y, a igualdad,
+        // por respuestas correctas.
+        $ranking = array_values($agg);
+        usort($ranking, static function (array $a, array $b): int {
+            return ($b['puntaje'] <=> $a['puntaje']) ?: ($b['correctas'] <=> $a['correctas']);
+        });
+        $posicionPorJugador = [];
+        foreach ($ranking as $i => $row) {
+            $posicionPorJugador[$row['jugador_id']] = $i + 1;
+        }
+
+        foreach ($agg as $jugadorId => $a) {
+            $stmtR->execute([
+                $sesionId,
+                $jugadorId,
+                $a['puntaje'],
+                $a['correctas'],
+                $a['incorrectas'],
+                $posicionPorJugador[$jugadorId] ?? null,
+            ]);
         }
 
         // Marcar la sesión como finalizada

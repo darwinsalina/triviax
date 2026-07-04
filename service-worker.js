@@ -114,23 +114,12 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // 2. Estrategia Network First para archivos de datos del proyecto (preguntas.txt, proyecto.json, stats.json)
+    // 2. Los datos del proyecto (proyecto.json, preguntas.txt, stats.json) NO se
+    // interceptan ni se cachean: contienen las respuestas correctas y el servidor
+    // los bloquea (proyectos/.htaccess). El juego los consume solo vía
+    // api.php?action=get, que sanea las respuestas. Dejar que la petición pase
+    // directa a la red evita servir un solucionario cacheado por versiones previas.
     if (url.pathname.includes('/proyectos/') && (url.pathname.endsWith('.txt') || url.pathname.endsWith('.json'))) {
-        event.respondWith(
-            fetch(request)
-                .then((response) => {
-                    if (response.status === 200) {
-                        const responseClone = response.clone();
-                        caches.open(CACHE_NAMES.projects).then((cache) => {
-                            cache.put(request, responseClone);
-                        });
-                    }
-                    return response;
-                })
-                .catch(() => {
-                    return caches.match(request);
-                })
-        );
         return;
     }
 

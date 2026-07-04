@@ -1,0 +1,21 @@
+# triviax/proyectos/.htaccess — Protección del solucionario
+# ──────────────────────────────────────────────────────────────
+# proyecto.json y preguntas.txt contienen las RESPUESTAS CORRECTAS.
+# El juego nunca los pide directamente: los carga vía api.php?action=get,
+# que sanea las respuestas y aplica la política de acceso v7.0.
+# stats.json contiene analítica interna que tampoco debe ser pública.
+#
+# Se bloquea toda descarga directa de .json y .txt bajo proyectos/.
+# Las imágenes (fondo.jpg y media de las actividades) siguen públicas.
+<FilesMatch "\.(json|txt)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Sin listado de directorios (no enumerar carpetas de proyectos).
+Options -Indexes

@@ -52,8 +52,21 @@ if (!$sesion) {
     exit;
 }
 
+// Interruptor operativo para uso intensivo simultaneo: cada stream SSE retiene
+// un worker de Apache/PHP mientras dura (un docente monitoreando = ~1 worker
+// ocupado). Si LIVE_SSE_ENABLED=false, no se abren streams: el monitor del
+// docente cae solo a polling liviano cada 5 s (peticiones cortas que liberan el
+// worker de inmediato). Permite degradar bajo carga sin desplegar codigo.
+if (!triviax_env_bool('LIVE_SSE_ENABLED', true)) {
+    http_response_code(503);
+    header('Content-Type: application/json; charset=utf-8');
+    header('Retry-After: 5');
+    echo json_encode(['success' => false, 'error' => 'Stream en vivo deshabilitado; usar polling.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 ignore_user_abort(true);
-@set_time_limit(35);
+@set_time_limit(40);
 @ini_set('zlib.output_compression', '0');
 @ini_set('output_buffering', 'off');
 
@@ -74,7 +87,9 @@ while (ob_get_level() > 0) {
 $lastHash = '';
 $startedAt = time();
 $lastHeartbeat = 0;
-$maxSeconds = 25;
+// Streams un poco mas largos → menos reconexiones (cada una reejecuta auth + 2
+// consultas de setup). Debe quedar por debajo de set_time_limit(40).
+$maxSeconds = 30;
 
 triviax_sse_comment('triviax live stream ready');
 
@@ -102,7 +117,10 @@ while (!connection_aborted() && (time() - $startedAt) < $maxSeconds) {
         break;
     }
 
-    usleep(1000000);
+    // 2 s en vez de 1 s: la mitad de consultas por stream bajo uso intensivo. El
+    // cliente tolera hasta 15 s sin eventos y recibe heartbeat cada <=10 s, asi
+    // que el docente sigue viendo cambios con ~2 s de latencia (aceptable).
+    usleep(2000000);
 }
 
 triviax_sse_comment('stream closing');

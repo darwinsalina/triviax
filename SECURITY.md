@@ -79,3 +79,19 @@ Para los proyectos y reportes basados en el sistema de archivos local (retrocomp
 Para evitar la acumulación innecesaria de archivos JSON en el servidor y reducir la superficie de ataque:
 - **Sesión local (Legacy):** Escribe el reporte como un archivo JSON físico en `/proyectos/[proyecto]/reportes/reporte_[fecha].json`.
 - **Sesión conectada (BD):** **No se genera ningún archivo en el filesystem**. Cuando el docente solicita o envía el reporte, la API (`api.php?action=send_report`) consulta dinámicamente las tablas `sesiones`, `sesion_jugadores` e `intentos` para generar el correo electrónico.
+
+---
+
+## 7. v7.0 — Códigos, identidad y acceso a actividades
+
+### 7.1. Códigos compartibles (grupo, actividad, docente)
+Todos los códigos que se comparten (inscripción a grupo de 6–8 caracteres, código de acceso a actividad de 8, código docente personal de 12) se generan con `random_int()` sobre un alfabeto sin caracteres confusos (`O`, `0`, `I`, `1`, `L`) y **se almacenan únicamente como hash Bcrypt** (`triviax_code_hash`/`triviax_code_verify`, insensibles a mayúsculas). El texto plano viaja UNA sola vez en la respuesta que lo genera; si se pierde, se regenera (el anterior queda invalidado). Los intentos de código de acceso a actividad tienen rate limit propio (scope `act_code`, 10/10min por IP+actividad).
+
+### 7.2. Niveles de identidad
+`anonimo` → `login` → `email_verificado` → `validado_docente` (asociado a un grupo y confirmado por el docente en `panel/grupos.php`). Las actividades restringidas pueden exigir cualquier nivel; la verificación es **siempre server-side** (`triviax_can_start_activity`): el frontend oculta actividades pero nunca es la única barrera, y la API rechaza con 403 aunque se conozca la URL.
+
+### 7.3. Privacidad de estudiantes (mínima recolección)
+No se solicita ni almacena edad. El registro usa solo: nombre, apellido, email, contraseña y código de grupo opcional. El alias de aula identifica dentro del grupo; el login global sigue siendo por email.
+
+### 7.4. Auditoría v7.0
+Se registran en `audit_log`: creación/edición de grupos, importaciones, validación/rechazo de estudiantes, regeneración de códigos (grupo y docente), cambios de política de acceso (visibilidad/plazos/evaluación), creación de versiones evaluativas y backfills.

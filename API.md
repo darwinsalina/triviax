@@ -288,6 +288,7 @@ Guardado directo de respuestas individuales. Usado en modo híbrido.
   ```
 
 ### 2.8. Guardar Resultados Finales (`action=guardar_resultados`)
+Al finalizar, además de `resultados`, se registra una fila por jugador en la tabla transversal `actividad_entregas` (v7.0) con política, versión y pertenencia si corresponden.
 Cierra la sesión de la partida y registra las métricas acumuladas finales de todos los jugadores.
 * **Cuerpo (JSON):**
   ```json
@@ -310,3 +311,82 @@ Cierra la sesión de la partida y registra las métricas acumuladas finales de t
     "success": true
   }
   ```
+
+---
+
+## 3. v7.0 — Acceso, grupos e identidad
+
+Desde v7.0 los endpoints de juego y catálogo aplican la **política de acceso transversal** (`actividad_acceso_politicas`):
+
+* `action=list` y los `*_list_published` de cada modalidad solo muestran actividades **públicas y actualmente abiertas** (el docente dueño y el superadmin siguen viendo las suyas).
+* `action=get`, `unirse_sesion`, `study_start`, `jigsaw_start`, `etiquetar_start`, `ws_get`, `cw_get` y `lotto_student_login` **rechazan con HTTP 403** cuando la política lo exige, con cuerpo `{"success":false,"error":"<mensaje>","motivo":"<código>"}`.
+* `ws_submit` y `cw_submit` registran la entrega transversal en `actividad_entregas` al completar Sopa de letras o Crucigrama; revalidan la misma política de acceso y aceptan `codigo` en el cuerpo cuando la actividad lo requiere.
+* Motivos posibles: `no_publicada`, `no_disponible_aun`, `plazo_finalizado`, `requiere_login`, `requiere_email_verificado`, `requiere_codigo`, `codigo_invalido`, `codigo_bloqueado`, `dominio_no_permitido`, `fuera_de_grupo`, `pendiente_validacion`, `bloqueado`, `max_intentos`.
+* Si la actividad tiene código de acceso, se envía como parámetro `codigo` (GET en `action=get`/`ws_get`/`cw_get`; en el cuerpo JSON en los `*_start`; `codigo_actividad` en `unirse_sesion`).
+
+### 3.1. Grupos (`grp_*`)
+
+| Acción | Método | Quién | Descripción |
+|---|---|---|---|
+| `grp_list` | GET | docente | Grupos propios con conteos de estudiantes y pendientes. |
+| `grp_create` / `grp_update` | POST | docente | Crear/editar grupo (`nombre`, `nivel`, `descripcion`, `activo`). |
+| `grp_regen_code` | POST | docente | Regenera el código de inscripción (6–8 chars). **Se devuelve una única vez**; en BD queda solo el hash. |
+| `grp_students` | GET | docente | Estudiantes del grupo. |
+| `grp_student_add` | POST | docente | Alta manual (alias sugerido automáticamente). |
+| `grp_student_estado` | POST | docente | `validado` / `rechazado` / `desactivado` / `pendiente`. Auditado. |
+| `grp_import_preview` | POST (multipart o JSON) | docente | Previsualiza CSV: detecta columnas `nombre`/`apellido`/`email`, sugiere alias, marca duplicados. No escribe. |
+| `grp_import_confirm` | POST | docente | Importa las filas confirmadas (máx. 500) y registra el resumen en `grupo_importaciones`. |
+| `grp_export` | GET | docente | Descarga CSV de la lista del grupo. |
+| `grp_join` | POST | estudiante | Unirse con código de inscripción; si su email fue importado, vincula la fila existente (estado `pendiente`). |
+| `grp_mis_grupos` | GET | estudiante | Grupos a los que pertenece. |
+| `grp_codigo_docente_regen` | POST | docente | Genera/rota el código docente personal de 12 caracteres (hash en `docente_perfiles`). |
+
+### 3.2. Políticas de acceso (`acceso_*`)
+
+| Acción | Método | Quién | Descripción |
+|---|---|---|---|
+| `acceso_get` | GET | docente dueño | Política de una actividad (`tipo`, `ref`) + versión congelada actual + si tiene entregas. Nunca expone hashes. |
+| `acceso_save` | POST | docente dueño | Crea/actualiza la política: `visibilidad` (`publica`/`no_listada`/`restringida`), `estado_publicacion` (`borrador`/`programada`/`abierta`/`cerrada`/`desactivada`/`archivada`), `abre_at`/`cierra_at`, `requiere_login`/`requiere_email_verificado`/`requiere_validacion_docente`, `evaluativa`, `max_intentos`, `feedback_policy`, `dominios[]`, `grupos[]`, `estudiantes[]`, `generar_codigo`/`quitar_codigo`. Si queda evaluativa y abierta, congela una versión (snapshot). El código generado viaja una única vez. |
+| `acceso_check` | GET | público | ¿Puede el usuario actual iniciar la actividad? Devuelve `puede_iniciar`, `motivo`, `mensaje`, `identidad` (`anonimo`/`login`/`email_verificado`/`validado_docente`). |
+| `acceso_versiones` | GET | docente dueño | Historial de versiones congeladas. |
+| `acceso_grupos_disponibles` | GET | docente | Grupos activos propios (para la UI de configuración). |
+| `acceso_entregas` | GET | docente | Entregas transversales con filtros (`tipo`+`ref`, `grupo_id`, `evaluativa`, `version_id`, `desde`, `hasta`). Con `format=csv` descarga el archivo. |
+
+Los tipos de actividad válidos son: `proyecto`, `study_deck`, `lotto_activity`, `crossword_project`, `wordsearch_project`, `jigsaw_project`, `etiquetar_project`. `actividad_ref` es el id (o slug, para `proyecto`) como string.
+
+---
+
+## 4. TRIVIAX Futbol (`football_*`)
+
+Modalidad `football_goal_race`, primera version funcional en sesion PHP.
+
+| Acción | Método | Descripción |
+|---|---|---|
+| `football_board` | GET | Devuelve el tablero demo con cancha, rutas azul/roja, casillas especiales y coordenadas porcentuales. |
+| `football_demo` | GET | Devuelve el fixture demo completo (`docs/fixtures/football_goal_race_demo.json`). |
+| `football_start` | POST | Crea una partida demo; devuelve `session_id`, `token`, `state` publico y `board`. |
+| `football_state` | GET | Recupera estado publico de una partida usando `session_id` + `token`. |
+| `football_roll` | POST | Resuelve el dado en servidor y asigna pregunta normal. |
+| `football_answer` | POST | Procesa respuesta normal, especial o tiro final; acepta `idempotency_key`. |
+
+El cliente no envia posiciones, puntajes ni resultado de dado. El servidor mantiene `pendingAction` y sanea la pregunta publica para no exponer `correct`.
+
+---
+
+## 5. Colecciones de fichas / avatares (`tokens_*`)
+
+Modulo docente para crear colecciones de 24 fichas y usarlas en actividades.
+
+| Accion | Metodo | Descripcion |
+|---|---|---|
+| `tokens_list` | GET | Lista colecciones del docente autenticado. |
+| `tokens_active` | GET | Lista colecciones activas con fichas para asociar a actividades. |
+| `tokens_get` | GET | Devuelve una coleccion propia y sus assets (`id`). |
+| `tokens_public` | GET | Devuelve una coleccion activa/archivada para el juego (`id`). |
+| `tokens_save` | POST | Crea o actualiza metadata y prompts de una coleccion. |
+| `tokens_upload_source` | POST multipart | Sube imagen madre 6 x 4. |
+| `tokens_slice` | POST | Corta la imagen madre en `ficha_01.png` ... `ficha_24.png`. |
+| `tokens_assets_update` | POST | Actualiza etiquetas, categorias y estado activo de fichas. |
+| `tokens_status` | POST | Cambia estado `draft`, `active` o `archived`. |
+
+Las escrituras requieren sesion docente y CSRF. El corte es deterministico con GD: valida imagen real, proporcion 3:2, conserva alfa y guarda PNGs en `uploads/token_sets/{teacher_id}/{token_set_id}/tokens/`.

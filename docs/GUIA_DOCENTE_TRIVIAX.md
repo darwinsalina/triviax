@@ -1,4 +1,4 @@
-# Manual del Docente — TRIVIAX
+# Manual del Docente — TRIVIAX v7.0
 
 > **El Camino del Conocimiento**
 > Plataforma educativa para gamificar el aula, crear actividades y evaluar aprendizajes.
@@ -11,34 +11,34 @@
 2. [Qué puedes esperar como docente](#2-qué-puedes-esperar-como-docente)
 3. [Qué viven tus estudiantes](#3-qué-viven-tus-estudiantes)
 4. [Crear tu cuenta y acceder](#4-crear-tu-cuenta-y-acceder)
-5. [El panel docente y las estadísticas](#5-el-panel-docente-y-las-estadísticas)
-6. [Modalidad A — Juego de Tablero](#6-modalidad-a--juego-de-tablero)
-7. [Modalidad B — Estudia y Responde](#7-modalidad-b--estudia-y-responde)
-8. [Modalidad C — TRIVIAX Lotto](#8-modalidad-c--triviax-lotto)
-9. [Tipos de desafíos que puedes crear](#9-tipos-de-desafíos-que-puedes-crear)
-10. [Crear contenido con ayuda de la IA](#10-crear-contenido-con-ayuda-de-la-ia)
-11. [Seguridad y privacidad](#11-seguridad-y-privacidad)
-12. [Buenas prácticas y preguntas frecuentes](#12-buenas-prácticas-y-preguntas-frecuentes)
+5. [El panel de control y estadísticas](#5-el-panel-de-control-y-estadísticas)
+6. [Gestión de Grupos y Estudiantes](#6-gestión-de-grupos-y-estudiantes)
+7. [Políticas de Acceso y Evaluación Transversal](#7-políticas-de-acceso-y-evaluación-transversal)
+8. [Modalidad A — Juego de Tablero Tradicional](#8-modalidad-a--juego-de-tablero-tradicional)
+9. [Modalidad B — TRIVIAX Fútbol: Camino al Gol](#9-modalidad-b--triviax-fútbol-camino-al-gol)
+10. [Modalidad C — Estudia y Responde](#10-modalidad-c--estudia-y-responde)
+11. [Modalidad D — TRIVIAX Lotto (Evaluación Oral en Vivo)](#11-modalidad-d--triviax-lotto-evaluación-oral-en-vivo)
+12. [Otras Modalidades: Puzles, Etiquetado, Crucigramas y Sopa de Letras](#12-otras-modalidades-puzles-etiquetado-crucigramas-y-sopa-de-letras)
+13. [Personalización: Fichas y Avatares](#13-personalización-fichas-y-avatares)
+14. [Tipos de desafíos que puedes crear](#14-tipos-de-desafíos-que-puedes-crear)
+15. [Crear contenido con ayuda de la IA](#15-crear-contenido-con-ayuda-de-la-ia)
+16. [Protección y seguridad de datos](#16-protección-y-seguridad-de-datos)
+17. [Buenas prácticas y preguntas frecuentes](#17-buenas-prácticas-y-preguntas-frecuentes)
 
 ---
 
 ## 1. Qué es TRIVIAX
 
-**TRIVIAX** es una plataforma educativa web que transforma cualquier tema de clase en una experiencia de juego. En lugar de un cuestionario plano, tus estudiantes tiran dados en un tablero, estudian con fichas inteligentes o participan de sorteos y evaluaciones orales proyectadas en la pizarra del salón.
+**TRIVIAX** es una plataforma educativa web que transforma cualquier tema de clase en una experiencia de juego interactivo. En lugar de un cuestionario plano, tus estudiantes tiran dados en un tablero, compiten en un partido de fútbol de preguntas, estudian con fichas inteligentes o participan de sorteos y evaluaciones orales proyectadas en la pizarra del salón.
 
-La idea de fondo es simple: **aprender se disfruta más cuando se juega**, y el juego también te da información valiosa sobre qué entendió cada grupo y qué conviene repasar.
+La idea de fondo es simple: **aprender se disfruta más cuando se juega**, y el juego también te da información valiosa en tiempo real sobre qué entendió cada grupo y qué conceptos conviene repasar.
 
-TRIVIAX reúne en un solo lugar tres formas complementarias de trabajar:
+TRIVIAX reúne en un solo lugar modalidades de trabajo cooperativas, competitivas e individuales:
 
-- Un **juego de tablero** para competir en equipos respondiendo preguntas.
-- Un sistema de **fichas de estudio** para el repaso individual y autónomo.
-- Una herramienta de **evaluación oral en vivo** con sorteos dinámicos para clases presenciales.
-
-Todo se administra desde un panel pensado para docentes, sin necesidad de conocimientos técnicos.
-
-![Pantalla de inicio de TRIVIAX](img/juego_inicio.png)
-
-*Pantalla de inicio de TRIVIAX: el punto de partida para jugar y acceder a las modalidades.*
+-   **Juegos de Tablero e Interactivos:** para competir en equipos en tableros clásicos o canchas de fútbol respondiendo desafíos.
+-   **Autoestudio y Puzles:** un sistema de fichas de estudio adaptativo y minijuegos (rompecabezas y etiquetado visual) para el repaso individual.
+-   **Sopa de Letras y Crucigramas:** actividades de vocabulario interactivo conectadas al registro de entregas.
+-   **TRIVIAX Lotto:** una herramienta de evaluación oral en vivo con sorteos dinámicos para clases presenciales.
 
 ---
 
@@ -46,264 +46,224 @@ Todo se administra desde un panel pensado para docentes, sin necesidad de conoci
 
 Con tu cuenta docente puedes:
 
-- **Crear actividades** sobre cualquier materia y nivel, desde preguntas simples hasta desafíos interactivos (asociar pares, ordenar, clasificar, completar espacios).
-- **Acelerar la creación con IA**: TRIVIAX te entrega instrucciones listas para pegar en un asistente como ChatGPT o Gemini, y luego importa el resultado en un clic.
-- **Lanzar partidas de tablero** para tu grupo y compartir un código de acceso de 6 caracteres para que se sumen.
-- **Publicar mazos de estudio** con repaso adaptativo para que tus estudiantes practiquen a su ritmo.
-- **Dirigir evaluaciones orales** con sorteo proyectado, rúbrica de calificación y registro de observaciones.
-- **Seguir el desempeño** de tu grupo con estadísticas que priorizan automáticamente las preguntas más difíciles.
-- **Monitorear las partidas en vivo**, ver quién está conectado y cerrar la sesión cuando termina la clase.
-
-Todo queda asociado a tu cuenta, así que puedes reutilizar tus actividades clase tras clase.
+-   **Crear actividades** sobre cualquier materia y nivel, desde preguntas simples hasta desafíos interactivos (asociar pares, ordenar, clasificar, completar espacios, hotspot visual y desafíos de código).
+-   **Diseñar tableros visuales propios**: Con el *Generador de Tableros* puedes trazar rutas personalizadas y configurar recorridos de fútbol con **simetría central automática**.
+-   **Administrar Colecciones de Fichas (Avatares)**: Crea tus propios sets de avatares para que tus alumnos jueguen con personajes temáticos personalizados en los tableros.
+-   **Gestionar Grupos de Estudiantes**: Importa listas de alumnos desde archivos de texto y realiza un control de identidad seguro.
+-   **Definir Políticas de Acceso y Evaluación**: Controla plazos de entrega, limita intentos, requiere inicio de sesión, restringe accesos por código o dominio, y congela versiones de exámenes para evaluaciones justas.
+-   **Acelerar la creación con IA**: TRIVIAX te entrega instrucciones listas para usar en asistentes inteligentes y luego importa el resultado en un clic con un validador en tiempo real en español.
+-   **Lanzar partidas** para tu grupo y compartir un código de acceso de 6 caracteres para que se sumen en vivo.
+-   **Seguir el desempeño** de tu grupo con estadísticas que priorizan automáticamente las preguntas más difíciles.
 
 ---
 
 ## 3. Qué viven tus estudiantes
 
-Para que sepas qué van a encontrar del otro lado (tus estudiantes tienen su propio manual), esto es lo esencial:
+Para que sepas qué van a encontrar del otro lado, esto es lo esencial:
 
-- **Pueden sumarse sin complicaciones.** A una partida de tablero entran con un código de 6 caracteres; a una actividad Lotto, con el código y su número de lista.
-- **No necesitan instalar nada.** Todo funciona desde el navegador del celular, la tablet o la computadora.
-- **Pueden tener cuenta propia (opcional).** Si se registran, guardan su historial de partidas; si no, igual pueden jugar como invitados.
-- **Nunca ven las respuestas correctas antes de tiempo.** El sistema las oculta en los dispositivos de los estudiantes para que la evaluación sea justa.
+-   **Acceso rápido y sin instalación:** Entran desde el navegador de su celular, tablet o PC usando un código de 6 caracteres. No necesitan instalar nada en sus dispositivos.
+-   **Interactividad adaptada a móviles:** Elementos como el *Arrastrar y soltar (Drag & Drop)* cuentan con soporte táctil y un método alternativo de pulsación simple para pantallas pequeñas.
+-   **Sin cuentas obligatorias:** Pueden ingresar como invitados con su nombre o alias sugerido para jugar en tableros abiertos, aunque se requiere cuenta de estudiante para participar en grupos validados de clase.
+-   **Sin recolección de edad:** Cumpliendo con la privacidad, la plataforma no almacena la edad de los estudiantes.
+-   **Juego justo:** Las respuestas correctas se validan del lado de la plataforma para evitar que se puedan filtrar o visualizar antes de responder.
 
 ---
 
 ## 4. Crear tu cuenta y acceder
 
 ### 4.1. Registro abierto
-
-El registro docente es **abierto**: no necesitas ningún código de habilitación. Desde la pantalla de inicio de TRIVIAX, elige **Crear cuenta docente** y completa:
-
-- **Nombre y apellido.**
-- **Correo electrónico.**
-- **Contraseña** (mínimo 6 caracteres; se guarda cifrada, nadie puede leerla).
-
-Si aparece una breve **verificación anti-robots**, complétala; en la mayoría de los casos es automática y ni siquiera tendrás que hacer clic. Esta verificación protege al sistema de registros masivos automatizados.
-
-![Formulario de registro docente](img/registro_docente.png)
-
-*Formulario de creación de cuenta docente, con la verificación anti-robots integrada.*
+El registro docente es abierto: desde la pantalla de inicio de TRIVIAX, elige **Crear cuenta docente** y completa tu Nombre, Apellido, Correo y Contraseña. Un filtro automático protege la plataforma de registros automatizados maliciosos.
 
 ### 4.2. Verificación de tu correo
-
-Por tu seguridad, la cuenta queda **inactiva hasta que confirmes tu correo**. Recibirás un email con un enlace de activación: al abrirlo, tu cuenta se activa y entras directamente a tu panel. El enlace tiene una validez limitada; si vence, simplemente vuelve a registrarte.
-
-> **Consejo:** si no ves el correo en unos minutos, revisa la carpeta de spam o correo no deseado.
-
-### 4.3. Iniciar sesión
-
-Una vez activada la cuenta, ingresas siempre con tu **correo y contraseña** desde la opción **Iniciar sesión**. Tu acceso ya no depende de ningún código compartido.
-
-![Pantalla de inicio de sesión](img/login.png)
-
-*Inicio de sesión con correo y contraseña, común para docentes y estudiantes.*
+Por seguridad, la cuenta queda inactiva hasta que confirmes tu correo. Recibirás un correo electrónico de verificación para activar tu perfil.
 
 ---
 
-## 5. El panel docente y las estadísticas
+## 5. El panel de control y estadísticas
 
-Al iniciar sesión llegas a tu **panel**, el centro de mando de TRIVIAX. Desde allí accedes a las tres modalidades:
-
-1. **Mis sesiones de tablero** — crear, monitorear y cerrar partidas.
-2. **Estudia y Responde** — diseñar y publicar mazos de repaso.
-3. **TRIVIAX Lotto** — configurar y lanzar rondas de sorteo y evaluación oral.
-
-![Panel docente de TRIVIAX](img/panel_docente.png)
-
-*Panel docente: métricas rápidas, tus sesiones y accesos a todas las herramientas.*
+Al iniciar sesión ingresas a tu **Panel de Control Docente**, desde donde puedes crear tus proyectos, gestionar avatares y monitorear sesiones activas de juego.
 
 ### 5.1. Estadísticas acumuladas
-
-En la sección de **Estadísticas** ves el desempeño consolidado de las actividades jugadas con código de sesión:
-
-- **Orden pedagógico:** las preguntas se ordenan automáticamente mostrando primero las de **menor porcentaje de acierto** (las que más cuestan a tu grupo), y dejan al final las que aún nadie respondió. Así detectas de un vistazo qué conviene repasar.
-- **Actualización en vivo:** con el botón **Actualizar datos** refrescas el reporte mientras la clase juega, con la marca de hora de la última carga.
-
-![Estadísticas por pregunta](img/estadisticas.png)
-
-*Desglose de rendimiento por pregunta, ordenado primero por las de menor acierto.*
+Las estadísticas organizan el desempeño por **orden pedagógico**:
+-   Te muestran primero las preguntas con **menor porcentaje de acierto** (las que requieren refuerzo prioritario en clase).
+-   Puedes actualizar las estadísticas en tiempo real mediante el botón de actualización durante la sesión de juego.
 
 ---
 
-## 6. Modalidad A — Juego de Tablero
+## 6. Gestión de Grupos y Estudiantes
 
-La modalidad insignia: hasta **4 jugadores o equipos** compiten en un tablero, tiran el dado y responden desafíos. Ideal para repasar en grupo y cerrar una unidad con energía.
+La sección de **Mis Grupos** te permite organizar a tus alumnos en aulas virtuales:
 
-### 6.1. Crear una sesión de tablero
-
-1. En tu panel, entra a **Mis sesiones de tablero** y elige **Nueva sesión**.
-2. Selecciona la **actividad** que quieres jugar.
-3. Elige el **tipo de sesión**:
-   - **Educativa:** exclusiva para tu grupo del aula.
-   - **Abierta:** pública, pensada para torneos o campeonatos del colegio.
-4. El sistema genera un **código de acceso de 6 caracteres** (por ejemplo, `MAT102`).
-5. **Comparte ese código** con tus estudiantes para que se sumen.
-
-### 6.2. Configurar la partida
-
-Antes de empezar puedes ajustar:
-
-- **Código de sesión:** si los estudiantes ingresan el código, los puntajes se **guardan** y alimentan tus estadísticas. Si juegan sin código, la partida sirve solo para practicar y los resultados no se conservan.
-- **Tipo de tablero:**
-  - *Oca tradicional* — 50 casillas; se gana por meta exacta o por puntos.
-  - *Monopoly educativo* — 40 casillas en circuito cerrado; se juega por puntos.
-  - *Circular* — 36 casillas simplificadas; se juega por puntos.
-- **Forma de ganar:** llegar a la meta, meta exacta (si el dado se pasa, retrocede el sobrante) o alcanzar un puntaje objetivo (de 50 a 250 puntos).
-- **Tiempo de respuesta:** configurable por pregunta (30 segundos es un buen punto de partida) o sin límite.
-- **Penalizaciones:** perder el próximo turno, restar puntos, o ambas.
-
-### 6.3. Juego justo y sin errores
-
-TRIVIAX coordina cada partida con el servidor para que sea **confiable incluso con muchos dispositivos conectados**:
-
-- **Sin puntos duplicados:** si un estudiante toca el botón varias veces por mala conexión, su respuesta se registra una sola vez.
-- **Identidad protegida:** cada participante juega con una credencial propia; nadie puede responder en nombre de otro.
-- **Sin pestañas tramposas:** si alguien abre la misma partida en dos pestañas, la segunda pasa a **solo lectura** automáticamente.
-
-### 6.4. Durante y al final de la clase
-
-Desde el detalle de la sesión puedes seguir el avance en vivo y, cuando termina la clase, **cerrar la sesión**. Los resultados quedan disponibles en tus estadísticas.
+-   **Crear y Editar Grupos:** Configura el nombre del grupo, el nivel/curso (ej. *7mo A*) y añade descripciones internas.
+-   **Código de Inscripción:** Cada grupo cuenta con un código único de 6 a 8 caracteres que compartes con tus estudiantes para que puedan unirse. Por seguridad, este código se genera de forma privada y solo se le muestra al docente una vez al crearlo, manteniendo seguros los accesos.
+-   **Importación desde archivos de texto (CSV):**
+    -   Puedes importar una lista de alumnos subiendo un archivo de texto en formato separado por comas o pegando el texto directamente en el formulario.
+    -   El sistema procesa los nombres y apellidos y genera automáticamente un **alias sugerido único** para cada alumno (útil para el ingreso rápido y el anonimato didáctico, ej. `j.perez`).
+    -   Permite previsualizar los registros, corregir datos de manera interactiva y detecta automáticamente duplicados de correos o nombres para excluirlos antes de la importación.
+    -   Capacidad de importación de hasta 500 registros por lote.
+-   **Control de Identidad y Validaciones:** Cada alumno dentro del grupo posee un estado que determina su permiso:
+    -   *Importado:* Añadido por el docente pero aún no ha vinculado su cuenta o dispositivo.
+    -   *Pendiente:* El estudiante se ha auto-inscrito usando el código del grupo y está a la espera de que el docente confirme su identidad.
+    -   *Validado:* Confirmado por el docente, puede acceder a las actividades restringidas asignadas al grupo.
+    -   *Rechazado / Desactivado:* Acceso bloqueado.
+-   **Mínima Recolección de Datos:** Cumpliendo con normativas educativas, no se almacena la edad de los estudiantes ni datos personales no esenciales.
+-   **Código Docente Personal:** Puedes generar tu código docente personal de 12 caracteres. Te servirá para referir y habilitar el registro de nuevos colegas docentes en la plataforma. Se muestra una única vez y se maneja de forma protegida.
 
 ---
 
-## 7. Modalidad B — Estudia y Responde
+## 7. Políticas de Acceso y Evaluación Transversal
 
-Una modalidad **individual** para el autoestudio. No usa dados ni tablero: cada estudiante avanza por un mazo de **fichas de estudio** a su propio ritmo.
+A través de la sección de **Configuración de Acceso**, puedes establecer de forma centralizada las reglas y el carácter evaluativo de cualquier actividad de la plataforma:
 
-```
-Creas el mazo  →  lo publicas  →  tus estudiantes entran  →  estudian y responden
-```
-
-### 7.1. Repaso adaptativo (método Leitner)
-
-Cada ficha presenta un concepto breve (unas pocas líneas) y luego una pregunta:
-
-- Si el estudiante **acierta**, la ficha "sube de caja" y tarda más en volver a aparecer.
-- Si **falla**, el sistema la reprograma para que reaparezca pronto.
-
-Así cada estudiante repasa **justo lo que más le cuesta**, hasta dominarlo.
-
-### 7.2. Crear un mazo
-
-En la sección **Estudia y Responde** de tu panel, elige **Crear actividad (asistente)** y sigue los pasos:
-
-1. Escribe el **título** y la **descripción** del mazo.
-2. Define cuántas fichas tendrá y qué tipos de pregunta admite.
-3. Elige el método de carga:
-   - **Manual:** completas ficha por ficha (texto de estudio, pregunta, respuestas correctas e incorrectas y explicación).
-   - **Asistente con IA:** copias el texto guía que te da TRIVIAX, lo pegas en ChatGPT o Gemini junto a tu material, y traes de vuelta el resultado.
-4. Pulsa **Validar** para detectar errores y luego **Publicar**.
-
-### 7.3. Compartir con tus estudiantes
-
-Una vez publicado, comparte el mazo desde tu panel. Tus estudiantes podrán resolverlo desde la **biblioteca de estudio**, donde encuentran los mazos disponibles.
-
-![Biblioteca de Estudia y Responde](img/estudia_responde.png)
-
-*Biblioteca de mazos: cada estudiante elige uno y avanza ficha por ficha a su ritmo.*
+-   **Visibilidad:**
+    -   *Pública:* Disponible para cualquier usuario en la página principal.
+    -   *No listada:* Accesible solo mediante enlace directo o código de actividad.
+    -   *Restringida:* Requiere pertenecer a grupos específicos o estar explícitamente habilitado.
+-   **Estados de Publicación:** Define el ciclo del proyecto: `Borrador`, `Programada` (solo abre en las fechas indicadas), `Abierta` (disponible), `Cerrada` (plazo vencido), `Desactivada` o `Archivada`.
+-   **Ventana Temporal de Disponibilidad:** Configura plazos de **Apertura** y **Cierre**. El sistema bloquea automáticamente los intentos fuera de este horario.
+-   **Requisitos de Seguridad:**
+    -   Exigir inicio de sesión obligatorio de alumnos.
+    -   Exigir que el estudiante tenga un correo electrónico verificado.
+    -   Requerir validación previa del docente dentro del grupo asignado.
+    -   Restricción de dominios de email (ej: solo admitir cuentas que finalicen con el dominio de la institución).
+-   **Código de Acceso de Actividad:** Genera códigos obligatorios para entrar a una actividad específica. Solo se visualiza al momento de su creación.
+-   **Versionado Evaluativo:**
+    -   Al activar una actividad como **Evaluativa** y abrirla, el sistema fija el contenido del desafío.
+    -   Esto asegura la consistencia de la evaluación: si modificas las preguntas de la actividad en tu biblioteca más adelante, los alumnos que ya estén rindiendo la evaluación seguirán jugando con la versión original con la que comenzó su prueba. Las actualizaciones crearán versiones independientes sin alterar los reportes históricos.
+-   **Límite de Intentos:** Define el número máximo de veces que un estudiante puede enviar resultados.
+-   **Política de Feedback (Retroalimentación):**
+    -   *Inmediato:* El estudiante ve si acertó y la respuesta correcta al instante de responder.
+    -   *Al final:* El estudiante ve la retroalimentación al culminar todo el juego.
+    -   *Al cierre:* Los aciertos y respuestas correctas solo se revelan una vez finalizado el plazo general de entrega.
+    -   *Nunca:* No se revela la plantilla de respuestas correctas (ideal para exámenes).
+-   **Registro y Exportación de Entregas:**
+    -   Todas las entregas se recopilan de manera uniforme en la sección de **Entregas**.
+    -   Filtra entregas por tipo de juego, grupos, versión de la actividad, carácter evaluativo y plazos.
+    -   Exporta las notas, porcentajes y respuestas de los alumnos a un archivo compatible con planillas de cálculo (como Excel).
 
 ---
 
-## 8. Modalidad C — TRIVIAX Lotto
+## 8. Modalidad A — Juego de Tablero Tradicional
 
-Pensada para **clases presenciales** y evaluaciones formativas uno a uno mediante **sorteos en vivo** proyectados en la pizarra del salón. Combina estudio, redacción y exposición oral.
+Hasta **4 jugadores o equipos** compiten en un tablero tirando dados.
 
-```
-Ingreso abierto  →  Estudio  →  Redacción  →  Rondas orales  →  Cierre
-```
-
-### 8.1. Paso a paso en el aula
-
-1. **Crea la actividad Lotto** desde tu panel: título, grupo, lista de estudiantes y el apunte de clase (que el asistente puede convertir en fichas con ayuda de IA).
-2. **Abre el ingreso.** Proyecta la **pizarra** en el salón. Tus estudiantes entran desde sus dispositivos con el código de la actividad y seleccionan su número de lista.
-
-![Ingreso a una actividad Lotto desde el celular](img/lotto_ingreso.png)
-
-*Así ingresan tus estudiantes a una actividad Lotto: código de actividad y número de lista.*
-3. **Fase de estudio.** Inicias la lectura: cada estudiante ve su ficha (texto de estudio y preguntas guía) **sin** las respuestas correctas. Tienen un tiempo para leer (prorrogable).
-4. **Fase de respuesta.** Cada estudiante redacta y **envía** por escrito su respuesta a la pregunta de su tema.
-5. **Rondas orales.** Las pantallas de los estudiantes se bloquean. En la pizarra aparece un **carrusel de sorteo**: al pulsar **Sortear**, las tarjetas giran y se detienen en un estudiante con un destello dorado.
-6. **Evaluación oral.** Al pulsar **Evaluar oral**, se abre en la pizarra la respuesta escrita del estudiante junto a la pregunta sugerida, la **rúbrica** (puntaje por criterio) y un espacio para tus observaciones.
-7. **Cierre.** Cuando terminas, pulsas **Finalizar actividad**: la sesión se cierra y se genera un **reporte con las calificaciones** en tu historial.
-
-### 8.2. Monitoreo de conexión en vivo
-
-Los dispositivos envían una señal periódica al sistema. Si un estudiante se queda sin conexión, su indicador en la pizarra se marca en **rojo suave (desconectado)**. Así evitas sortear a alguien que se quedó sin batería o sin señal. Si hace falta, puedes **liberar** su número para que vuelva a ingresar.
+1.  **Tableros prediseñados y personalizados:** Selecciona tableros como la *Oca tradicional* (50 casillas), *Monopoly educativo* (40 casillas) o el *Circular*. También puedes diseñar tus propios tableros usando el **Generador de Tableros** en tu panel.
+2.  **Forma de ganar:** Configura si se gana por meta exacta (el rebote del dado aplica si se pasa), llegada simple o puntaje objetivo.
+3.  **Seguridad y Concurrencia:** El sistema controla el orden de turnos en tiempo real e impide que un jugador responda fuera de su turno o haga trampas abriendo el juego en múltiples pantallas del navegador (las pestañas duplicadas pasan automáticamente a modo de solo lectura).
 
 ---
 
-## 9. Tipos de desafíos que puedes crear
+## 9. Modalidad B — TRIVIAX Fútbol: Camino al Gol
 
-Tus actividades pueden combinar varios tipos de desafío, además de la pregunta clásica:
+Un emocionante tablero de fútbol temático de **30 casillas** con dinámica de dos equipos: **Azul vs Rojo**. 
 
-| Tipo | Qué hace el estudiante |
+```
+El jugador azul avanza hacia el arco izquierdo   ← [Centro (Casilla 0)] →   El jugador rojo avanza hacia el arco derecho
+```
+
+### 9.1. Reglas de Juego:
+- Los dos equipos avanzan simultáneamente desde el centro de la cancha hacia la portería rival.
+- Se avanza respondiendo preguntas del catálogo de desafíos.
+- **Casillas Especiales del Campo:**
+  *   ⚽ **Pared (Casilla 7 y 14):** Permite realizar una jugada colectiva rápida y avanzar casillas adicionales.
+  *   🚀 **Pase Largo (Casilla 19):** Avanza al jugador hacia adelante.
+  *   🟨 **VAR (Casilla 15):** Casilla de riesgo que puede penalizar o cambiar la decisión según el desafío.
+  *   🥅 **Tiro al Arco Final:** Al llegar a la casilla 30, el equipo debe acertar la pregunta final para meter gol. Si falla, es penalizado retrocediendo a la casilla 28.
+
+### 9.2. Editor de Recorrido con Simetría Central:
+Como docente, puedes editar este tablero visualmente. Dado que ambos equipos deben jugar en igualdad de condiciones, el editor visual aplica una **simetría central estricta**:
+*   Al arrastrar una casilla del camino del jugador rojo (mitad derecha), el sistema automáticamente desplaza de forma simétrica la casilla azul correspondiente (mitad izquierda).
+*   El diseño final del recorrido se guarda automáticamente en tu perfil docente.
+
+---
+
+## 10. Modalidad C — Estudia y Responde
+
+Una modalidad de **autoestudio individual** sin dados. El estudiante avanza por un mazo de fichas de repaso a su propio ritmo.
+
+### 10.1. Algoritmo de Repaso Adaptativo (Método Leitner):
+*   Cada ficha presenta un texto de estudio corto seguido de una pregunta.
+*   Si el estudiante acierta, la ficha se programa para aparecer más tarde. Si falla, el sistema la reprograma para aparecer en el corto plazo.
+*   Garantiza que el alumno se concentre en repasar los conceptos que más le cuestan.
+
+---
+
+## 11. Modalidad D — TRIVIAX Lotto (Evaluación Oral en Vivo)
+
+Diseñada para **evaluaciones formativas uno a uno en clases presenciales** proyectadas en la pantalla del salón.
+
+1.  **Fase de Estudio:** Los estudiantes leen una ficha de apunte asignada en su dispositivo.
+2.  **Fase de Respuesta Escrita:** Cada estudiante redacta y envía una respuesta rápida en su celular o tablet.
+3.  **Carrusel del Sorteo:** La pantalla de proyección del salón sortea dinámicamente un alumno en vivo mediante animaciones.
+4.  **Rúbrica Evaluativa:** El docente ve la respuesta del alumno proyectada en pantalla y califica con una rúbrica interactiva sumando notas al reporte de la sesión.
+5.  **Indicador de Conexión:** Si un estudiante se desconecta, su tarjeta se marca en color rojo en la pantalla de proyección, evitando sortear a estudiantes desconectados.
+
+---
+
+## 12. Otras Modalidades: Puzles, Etiquetado, Crucigramas y Sopa de Letras
+
+Para diversificar el tipo de tareas en el aula, puedes configurar:
+
+-   **Puzles:** El estudiante debe reconstruir una imagen conceptual del tema de estudio arrastrando las piezas en orden.
+-   **Etiquetado:** Se presenta una imagen (como una célula, mapa o circuito) y el alumno debe arrastrar etiquetas de texto a las zonas correctas del gráfico.
+-   **Crucigramas:** Cuadrículas de palabras cruzadas que el alumno debe completar según pistas horizontales y verticales.
+-   **Sopas de Letras:** Sopas de caracteres donde el alumno busca conceptos clave del tema de estudio.
+
+*Nota:* Los crucigramas y las sopas de letras cuentan con integración completa en el registro de entregas. Al resolverlas, los porcentajes de avance y los puntajes de los estudiantes se registran de forma automática para la evaluación del docente.
+
+---
+
+## 13. Personalización: Fichas y Avatares
+
+Para fomentar el compromiso en el aula, cuentas con la sección de **Colecciones de Fichas**:
+-   Crea sets de fichas personalizados subiendo imágenes (por ejemplo, temática de dinosaurios, científicos históricos, personajes de literatura).
+-   Los alumnos podrán seleccionar estas fichas personalizadas antes de comenzar a jugar en los tableros.
+
+---
+
+## 14. Tipos de desafíos que puedes crear
+
+TRIVIAX soporta una gran variedad de preguntas evaluativas interactivas:
+
+| Desafío | Acción del Estudiante |
 |---|---|
-| **Opción múltiple** | Elige la respuesta correcta entre 3 o 4 opciones. |
-| **Verdadero / Falso** | Decide si una afirmación es verdadera o falsa. |
-| **Asociar pares** | Une cada término con su definición (de 2 a 6 pares). |
-| **Ordenar elementos** | Coloca una serie de pasos o elementos en el orden correcto. |
-| **Clasificar elementos** | Arrastra cada elemento a su categoría correspondiente. |
-| **Completar espacios** | Elige la palabra correcta en cada hueco de una frase. |
-
-Esta variedad te permite evaluar desde el reconocimiento simple hasta la comprensión de procesos y relaciones.
-
----
-
-## 10. Crear contenido con ayuda de la IA
-
-Tanto en **Estudia y Responde** como en **TRIVIAX Lotto**, TRIVIAX te ofrece un **asistente** que arma el texto de instrucciones ideal para un modelo de lenguaje (ChatGPT, Gemini u otro). El flujo es:
-
-1. **Copia** el texto guía que te entrega TRIVIAX.
-2. **Pégalo** en tu asistente de IA junto con tu material de clase (un resumen, apunte o documento).
-3. **Pega de vuelta** en TRIVIAX el resultado que te devuelve la IA.
-
-### Recomendaciones para un buen resultado
-
-- Pide a la IA que responda **únicamente con el contenido estructurado**, sin saludos, explicaciones ni adornos.
-- Ajusta el material y las explicaciones al **nivel de tu grupo** (por ejemplo, lenguaje para estudiantes de 12 años).
-- Antes de guardar, usa el botón **Validar**: TRIVIAX revisa la estructura y, si algo falta, te indica **en español** exactamente qué corregir.
-
-> Siempre conviene **revisar pedagógicamente** lo que genera la IA: tú conoces a tu grupo mejor que cualquier modelo.
+| **Opción múltiple** | Selección simple entre 3 o 4 respuestas posibles (se autogenera en dos columnas si son 4). |
+| **Verdadero / Falso** | Selección simple de lógica dicotómica (Verdadero o Falso). |
+| **Asociar pares** | Une conceptos o definiciones arrastrando conectores. |
+| **Ordenar elementos** | Organiza cronológicamente o procedimentalmente una secuencia. |
+| **Arrastrar y soltar (Drag & Drop)** | Clasifica palabras en categorías arrastrando cajas (soporta toques móviles). |
+| **Completar espacios (Fill in the blanks)** | Selecciona la palabra ausente en el texto. |
+| **Media choice** | Selección de opciones representadas por imágenes o sonidos. |
+| **Hotspot de Imagen** | Tocar la zona correcta de una imagen según la consigna. |
+| **Desafío de Código** | Escribir fragmentos de programación estructurada simples. |
 
 ---
 
-## 11. Seguridad y privacidad
+## 15. Crear contenido con ayuda de la IA
 
-TRIVIAX cuida la información de docentes y estudiantes:
-
-- **Contraseñas cifradas:** se almacenan con técnicas seguras; ni siquiera el administrador puede leerlas.
-- **Registro protegido:** varias capas (límite de intentos por conexión, verificación anti-robots y otros controles) impiden el registro masivo automatizado y los abusos.
-- **Respuestas ocultas:** los estudiantes no pueden "espiar" las respuestas correctas desde su navegador; el sistema las retira de los datos que llegan a sus dispositivos.
-- **Protección de formularios:** todas las acciones del panel exigen una validación de seguridad interna que bloquea solicitudes fraudulentas.
-- **Protección contra fuerza bruta:** tras varios intentos fallidos de inicio de sesión desde una misma conexión, el acceso se bloquea temporalmente.
-
-### Sobre los datos de tus estudiantes
-
-El registro está abierto a cualquiera, igual que en otras plataformas educativas conocidas. Por eso, las funciones que involucran datos sensibles de estudiantes están separadas del simple "crear y jugar actividades". Comparte siempre los **códigos de sesión** solo con tu grupo y cierra las sesiones al terminar la clase.
+Puedes redactar desafíos manualmente o usar la IA:
+1.  **Copia el Prompt** prediseñado por TRIVIAX.
+2.  **Pégalo** en tu asistente de IA (como ChatGPT o Gemini) junto a tus apuntes o PDFs de clase.
+3.  **Importa el contenido** generado de vuelta en la plataforma.
+4.  **Validador:** El sistema analiza automáticamente la estructura importada y alerta en español si existen preguntas incompletas, falta el título de la actividad o el formato no cumple con lo requerido, garantizando que todo funcione correctamente.
 
 ---
 
-## 12. Buenas prácticas y preguntas frecuentes
+## 16. Protección y seguridad de datos
 
-**¿Mis estudiantes necesitan cuenta para jugar?**
-No. Pueden sumarse como invitados con el código de la sesión. La cuenta es opcional y solo sirve para que guarden su historial.
-
-**¿Qué pasa si juego sin código de sesión?**
-La partida sirve para practicar, pero los puntajes no se guardan ni alimentan tus estadísticas. Usa un código siempre que quieras conservar resultados.
-
-**Un estudiante ve el aviso "solo lectura". ¿Por qué?**
-Tiene la misma partida abierta en más de una pestaña. Debe cerrar las pestañas extra y esperar unos segundos a que el sistema lo reconecte.
-
-**Los estudiantes no logran unirse a la sesión.**
-Verifica en el detalle de la sesión que esté **activa** (no en pausa o en espera) y confirma que estén usando el **código correcto** de 6 caracteres.
-
-**Veo problemas con tildes o caracteres especiales en un contenido importado.**
-Asegúrate de que el material original esté guardado en codificación **UTF-8**.
-
-**¿Puedo reutilizar mis actividades?**
-Sí. Todo queda asociado a tu cuenta; puedes volver a lanzar una misma actividad en distintas clases y grupos.
+-   **Protección de Datos y Privacidad:** TRIVIAX utiliza métodos avanzados de seguridad para prevenir accesos no autorizados y proteger la información de tus alumnos, manteniendo un entorno seguro en el aula. Todos los datos de las partidas y calificaciones se transmiten y guardan en servidores seguros con cifrado de datos.
+-   **Seguridad de Cuentas:** Bloqueo temporal automático tras intentos repetidos fallidos de inicio de sesión para proteger las cuentas docentes.
 
 ---
 
+## 17. Buenas prácticas y preguntas frecuentes
+
+*   **¿Puedo jugar al fútbol en equipos?**
+    Sí, la modalidad *Camino al Gol* permite configurar equipos con rotación automática de turnos para que todos respondan preguntas y sumen al marcador grupal.
+*   **¿Cómo evito que se copien en el tablero?**
+    Las respuestas correctas no se envían al dispositivo del estudiante hasta que su respuesta es enviada y verificada de forma segura en la plataforma, evitando que puedan descifrarse de antemano.
+*   **¿Dónde se guardan las actividades del editor de tableros?**
+    Se guardan automáticamente de forma segura en tu perfil docente en la plataforma online.
+
+---
 *TRIVIAX — El Camino del Conocimiento.*

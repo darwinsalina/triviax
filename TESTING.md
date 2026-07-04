@@ -67,3 +67,17 @@ RESULTADO: 31 pasaron, 0 fallaron
 
 > [!TIP]
 > **Autocleanup:** Ambos scripts eliminan automáticamente todos los registros y archivos temporales creados durante la ejecución al finalizar (`CLEANUP` establecido en true), dejando el sistema en su estado limpio original.
+
+---
+
+## 5. Suite unitaria sin BD (`tests/run.php`)
+
+Desde v6.x–7.0 la suite principal corre sin BD con el PHP de WAMP:
+
+```powershell
+C:\wamp64\bin\php\php8.2.0\php.exe tests/run.php
+```
+
+Suites actuales (9): `activity_access` (alias con ñ y sufijos, códigos seguros y hash, dominios, ventanas de plazo — 40 casos), `board_eval`, `board_grade`, `challenge_validator`, `football_questions` (adaptador de bancos y rotación sin repetición — 15 casos), `grupos_import` (parser CSV: cabeceras, separadores, BOM, Latin-1, filas inválidas — 13 casos), `project_import`.
+
+Las pruebas de integración con BD y HTTP (acceso público/no listado/restringido, plazos, máx. de intentos, grupos, entregas) se verificaron end-to-end contra el entorno local WAMP el 2026-07-03; los scripts con BD viven en `scratch/` (solo local, no se despliegan).

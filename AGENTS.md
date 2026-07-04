@@ -9,7 +9,18 @@ TRIVIAX es una aplicación web educativa de juego de preguntas y respuestas con 
 
 ---
 
-## 2. Versión actual: 6.1.1 (en desarrollo activo — base estable)
+## 2. Versión actual: 7.0.0 (acceso, grupos, identidad y evaluación)
+
+> v7.0 agrega la capa transversal de identidad/pertenencia/acceso/evaluación:
+> grupos de estudiantes con importación CSV y alias sugeridos, políticas de
+> acceso por actividad (pública/no listada/restringida, plazos, requisitos,
+> código de acceso con hash), versionado evaluativo con snapshots congelados y
+> entregas transversales (`actividad_entregas`).
+> Migración: `db/migraciones/6.4_acceso_identidad_evaluacion.sql` (aplicada en
+> local y producción) + backfill `tools/backfill_activity_policies.php`.
+> Helper central: `php/activity_access.php`. Paneles nuevos: `panel/grupos.php`
+> y `panel/acceso.php`. Endpoints nuevos: `grp_*` y `acceso_*` (ver API.md §3).
+> Sin edad de estudiantes: mínima recolección de datos.
 
 ### 2.1. Qué funciona y NO debe tocarse salvo causa directa con la migración
 
@@ -32,6 +43,8 @@ TRIVIAX es una aplicación web educativa de juego de preguntas y respuestas con 
 | Modalidad "TRIVIAX Lotto" | ✅ Completa (Fase 6 host activa) | `lotto.php`, `lotto_host.php`, `panel/lotto.php`, `js/engines/lottoStudentEngine.js`, `js/engines/lottoHostEngine.js`, `js/panel/lottoPanel.js`, `php/lotto_*`, `NoSubir/triviax_db_lotto.sql` |
 | Modalidad Puzles (jigsaw) | ✅ Catálogo jugador + panel docente | `jigsaw.php`, `panel/jigsaw.php`, `js/engines/jigsawEngine.js`, `js/panel/jigsawPanel.js`, `php/jigsaw_*` |
 | Modalidad Etiquetado | ✅ Catálogo jugador + panel docente | `etiquetar.php`, `panel/etiquetar.php`, `js/engines/etiquetarEngine.js`, `js/panel/etiquetarPanel.js`, `php/etiquetar_*` |
+| Modalidad TRIVIAX Fútbol — Camino al Gol | ✅ v1 demo jugable + motor + API | `football.php`, `php/football_engine.php`, `php/football_api.php`, `js/engines/footballGoalRaceEngine.js`, `docs/FOOTBALL_GOAL_RACE.md`, `db/migraciones/6.5_football_goal_race.sql` |
+| Módulo de fichas / avatares | ✅ v1 docente + corte + uso en tablero | `panel/token_sets.php`, `php/token_sets.php`, `php/token_sets_api.php`, `js/panel/tokenSetsPanel.js`, `db/migraciones/6.6_token_sets.sql` |
 | Acceso docente por código `tkey` | ✅ Funcional (legado) | `php/triviax_core.php` |
 | Proyectos en carpetas `/proyectos/` | ✅ Funcional (legado) | `proyectos/` |
 
@@ -61,8 +74,9 @@ Duración actual del splash: **4000 ms** en total; el fade comienza a los 3300 m
 |---|---|---|---|
 | v3 | amarillo-naranja | violeta | `#7030A0` |
 | v4 | amarillo | rojo-violeta | `#B13E97` |
-| **v5** | **amarillo-verde** | **rojo** | **`#E31B23`** ← actual |
+| v5 | amarillo-verde | rojo | `#E31B23` |
 | v6 | verde | rojo-naranja | `#F15A24` |
+| **v7** | **verde-azulado** | **naranja** | *(auto vía `getSplashTextColor`)* ← actual |
 
 ### 2.3. Estética y diseño (INMUTABLE salvo mejoras explícitas)
 
@@ -642,6 +656,13 @@ localStorage.setItem(`triviax_tab_${sesionId}`, Date.now().toString())  // heart
 | 2026-06-18 | Épica #7 / #1 Etapa 2 cerrada: importador filesystem→BD del tablero (`php/project_import.php`, `tools/import_projects.php`, migración `6.2_desafios.sql`), lectura desde BD con fallback, grader server-side para todos los tipos, endpoint `grade` y saneo de `action=get` para no exponer respuestas. Verificado con `tests/run.php` (81 OK) y HTTP local `demo_mixto` sin claves sensibles. |
 | 2026-06-18 | Épica #10 iniciada: monitor docente `panel/live_session.php` usa SSE mediante `events.php` y helper compartido `php/live_session_summary.php`; mantiene fallback a polling. Agregado `scratch/test_live_session_summary.php` (10 OK) y `tools/check_production_readiness.php` para validar producción/Turnstile/BD. |
 | 2026-06-23 | v6.1.1: Puzles y Etiquetado incorporados al catálogo principal y al catálogo docente. Corregida la edición de actividades tras la migración: el editor ya no consume la respuesta pública saneada, muestra errores por desafío y la sincronización masiva importa también `data_json`. Auditoría local: 12/12 proyectos en paridad canónica y 0 respuestas diferentes. |
+| 2026-07-03 | **v7.0.0 publicada.** Capa transversal de acceso/identidad/evaluación: migración `db/migraciones/6.4_acceso_identidad_evaluacion.sql` (12 tablas nuevas + ALTERs aditivos), helper `php/activity_access.php`, endpoints `grp_*` (grupos, importación CSV con alias, validación docente, código de inscripción con hash) y `acceso_*` (políticas: visibilidad/plazos/requisitos/dominios/grupos/código, versionado evaluativo, entregas + export CSV). Paneles `panel/grupos.php` y `panel/acceso.php`. Enforcement server-side en catálogos y endpoints de inicio de TODAS las modalidades. Registro estudiante con código de grupo opcional y auto-vinculación por email importado; sin edad (mínima recolección). Backfill `tools/backfill_activity_policies.php`. Suite: 9 suites / 0 FAIL. |
+| 2026-07-03 | "Hacia el Gol" corregido: `triviax_db_connect()` inexistente impedía cargar bancos desde BD (caía siempre al fixture demo de 3 preguntas); ahora carga BD/filesystem con adaptador multiple_choice/true_false, selector de batería en `football.php` (endpoint `football_projects` filtrado por políticas v7.0) y rotación sin repetición (`usedQuestionIds`; nueva `triviax_football_take_question`). Verificado e2e: 8 turnos, 8 preguntas distintas, payload saneado. |
+| 2026-07-03 | Despliegue a producción por FTPS acordado: Claude sube los archivos implicados en cada cambio (credenciales en `dbconn/dbkey_triviax.php` rama remota). Migraciones SQL siempre por phpMyAdmin. `proyectos/`, `media/`, `uploads/`, `trash/` jamás se suben (datos de producción). |
+| 2026-07-03 | Reanudación de la tanda v6.3/v7.0: Sopa de letras y Crucigrama conservan `codigo` en enlaces directos y registran entregas transversales al finalizar (`ws_submit`, `cw_submit`) para que `actividad_entregas`, máximos de intentos y exportación evaluativa cubran también las modalidades de palabras. Verificado con `php -l`, `node --check` y `tests/run.php` (6 suites, 0 fallos). |
+| 2026-07-03 | Implementada v1 de `football_goal_race` ("TRIVIAX Fútbol — Camino al Gol"): tablero con `images/cancha.png`, overlay responsive, motor PHP autoritativo, API `football_*`, fixture demo, migración SQL 6.5, prueba `tests/football_goal_race_test.php` y documentación `docs/FOOTBALL_GOAL_RACE.md`. |
+| 2026-07-03 | Implementado v1 del módulo de fichas/avatares: panel docente `panel/token_sets.php`, API `tokens_*`, generación de prompts, subida y corte 6x4 con GD, migración 6.6, asociación por actividad mediante `tokens.json`/`metadata.tokens`, selección previa en partida y render PNG en tablero con fallback a fichas estándar. Verificado con `tests/token_sets_test.php` y suite completa (8 suites, 0 fallos). |
+| 2026-07-03 | Desactivados los límites de intentos (rate limits) en local, y habilitado el inicio de sesión sin contraseña para superadmin (`saltmine.development@gmail.com`) en modo local con auto-creación al vuelo. |
 
 ## 9. Glosario
 

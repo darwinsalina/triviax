@@ -1,0 +1,34 @@
+# Normalización de fin de línea para TRIVIAX
+# El repositorio almacena texto con LF; evita el ruido CRLF en Windows/WAMP.
+
+# Por defecto: detectar texto y normalizar a LF en el repo.
+* text=auto eol=lf
+
+# Scripts que deben conservar LF sí o sí
+*.php   text eol=lf
+*.js    text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+*.sql   text eol=lf
+*.txt   text eol=lf
+*.svg   text eol=lf
+*.env.example text eol=lf
+
+# Binarios: nunca aplicar conversión de fin de línea
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.eot   binary
+*.mp3   binary
+*.mp4   binary
+*.zip   binary

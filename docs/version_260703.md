@@ -1,10 +1,10 @@
 # TRIVIAX — Reporte de estado actual
 
-**Fecha del reporte:** 3 de julio de 2026
-**Versión de código:** 6.1.3 (`js/config.js`, sincronizada por `tools/bump_version.php`)
-**Último commit:** `a87902f` — 24 de junio de 2026 — "feat: omite el splash de inicio en entorno local"
+**Fecha del reporte:** 3 de julio de 2026 (actualizado el 5 de julio de 2026)
+**Versión de código:** 7.0.2 (`js/config.js` y `service-worker.js`, sincronizadas por `tools/bump_version.php`)
+**Último commit:** `d6e25ff` — 4 de julio de 2026 — "chore(release): 7.0.2 — despliegue del movimiento fluido de «Camino al Gol»"
 
-> Nota de consistencia: `AGENTS.md` declara todavía "Versión actual: 6.1.1", pero el código fuente (`js/config.js`) y el último commit registran la 6.1.3. La fuente de verdad es `js/config.js`, ya que `tools/bump_version.php` es el único mecanismo autorizado para sincronizar el número de versión entre ese archivo, `service-worker.js` y los footers de `index.html`. Conviene actualizar `AGENTS.md` para evitar confusiones.
+> Nota de consistencia (5 de julio de 2026): `js/config.js`, `service-worker.js` y `AGENTS.md` ya declaran de forma coherente la **7.0.2**. La fuente de verdad sigue siendo `js/config.js`, ya que `tools/bump_version.php` es el único mecanismo autorizado para sincronizar el número de versión entre ese archivo, `service-worker.js` y los footers de `index.html`. Verificar consistencia con `php tools/bump_version.php --check`.
 
 ## 1. Qué es TRIVIAX
 
@@ -102,4 +102,4 @@ La carpeta `tests/` mantiene una suite versionada ejecutable con `tests/run.php`
 
 ## 12. Resumen ejecutivo
 
-TRIVIAX es una plataforma educativa PHP/MySQL con siete modalidades jugables (tablero, estudia y responde, lotto, crucigrama, sopa de letras, jigsaw y etiquetar), panel docente completo, sistema de estadísticas, PWA instalable y una base de seguridad razonable (CSRF, rate limiting, bcrypt, auditoría). Está en desarrollo activo: la versión de código es 6.1.3, con trabajo reciente centrado en portabilidad, migración de datos filesystem→BD y tiempo real vía SSE. Los principales pendientes son la finalización de casillas especiales de tablero, la extensión de tiempo real a Lotto, la activación de Turnstile en producción y una mayor cobertura de pruebas de integración.
+TRIVIAX es una plataforma educativa PHP/MySQL con siete modalidades jugables (tablero, estudia y responde, lotto, crucigrama, sopa de letras, jigsaw y etiquetar), panel docente completo, sistema de estadísticas, PWA instalable y una base de seguridad razonable (CSRF, rate limiting, bcrypt, auditoría). Está en desarrollo activo: la versión de código es 7.0.2, con trabajo reciente centrado en la capa de identidad/acceso/evaluación (v7.0), el modo «Camino al Gol» de fútbol con movimiento fluido, portabilidad, migración de datos filesystem→BD y tiempo real vía SSE. Los principales pendientes son la finalización de casillas especiales de tablero, la extensión de tiempo real a Lotto, la activación de Turnstile en producción y una mayor cobertura de pruebas de integración.

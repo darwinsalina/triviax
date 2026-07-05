@@ -9,7 +9,7 @@ TRIVIAX es una aplicación web educativa de juego de preguntas y respuestas con 
 
 ---
 
-## 2. Versión actual: 7.0.0 (acceso, grupos, identidad y evaluación)
+## 2. Versión actual: 7.0.2 (acceso, grupos, identidad y evaluación)
 
 > v7.0 agrega la capa transversal de identidad/pertenencia/acceso/evaluación:
 > grupos de estudiantes con importación CSV y alias sugeridos, políticas de

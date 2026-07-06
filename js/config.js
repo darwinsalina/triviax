@@ -6,7 +6,7 @@
 // de service-worker.js (un SW clásico no puede importar módulos ES).
 // Usar `php tools/bump_version.php X.Y.Z` para actualizar ambos a la vez,
 // y `php tools/bump_version.php --check` para verificar consistencia.
-export const APP_VERSION = '7.0.2';
+export const APP_VERSION = '7.1.0';
 
 // ── Rueda de color RYB — 12 posiciones en sentido horario ───────────────────
 // Usada para calcular automáticamente el color del texto del splash en cada versión.

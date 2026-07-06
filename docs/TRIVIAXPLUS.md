@@ -16,6 +16,13 @@ Este documento contiene el plan de ruta técnico, arquitectónico y metodológic
 
 ## 1. Épica 1: Arquitectura del Metajuego (XP, Logros y Recompensas)
 
+> ✅ **Implementada en v7.1.0 (2026-07-06).** Migración `6.7_metajuego.sql`,
+> motor `php/metagame_engine.php`, API `metagame_*`, hook de recompensas en
+> `submit_answer`/`guardar_intento` y `js/services/metagameClient.js`.
+> Documentación: `docs/METAJUEGO.md`. Nota: el helper se llamó
+> `triviax_metagame_add_rewards()` (convención de prefijos del proyecto) en
+> lugar de `metagame_engine.php::addRewards`.
+
 ### 1.1. Modificaciones en Base de Datos (MySQL)
 
 Crear las tablas de persistencia para el sistema de economía y cosméticos:

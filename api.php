@@ -1327,12 +1327,30 @@ if ($action === 'submit_answer') {
             ->execute([$pointsDelta, $boardPositionAfter, $sesionId, $jugadorId]);
         $pdo->prepare('UPDATE sesion_turnos SET estado = \'answered\', answered_at = NOW(), board_position_after = COALESCE(?, board_position_after) WHERE id = ?')
             ->execute([$boardPositionAfter, $turnoId]);
+
+        // ── TRIVIAX+ Épica 1: recompensas del metajuego (XP/monedas/racha) ──
+        // Solo para jugadores vinculados a una cuenta de usuario. Nunca corta
+        // el flujo: si la migración 6.7 no está aplicada devuelve null.
+        $metagame = null;
+        try {
+            require_once __DIR__ . '/php/metagame_engine.php';
+            $stmtU = $pdo->prepare('SELECT usuario_id FROM sesion_jugadores WHERE id = ? AND sesion_id = ?');
+            $stmtU->execute([$jugadorId, $sesionId]);
+            $metagameUserId = (int)($stmtU->fetchColumn() ?: 0);
+            if ($metagameUserId > 0) {
+                $metagame = triviax_metagame_add_rewards($pdo, $metagameUserId, $pointsDelta, $resultado);
+            }
+        } catch (Throwable $eMg) {
+            $metagame = null;
+        }
+
         $pdo->commit();
         triviax_api_success([
             'turno_id'     => $turnoId,
             'points_delta' => $pointsDelta,
             'resultado'    => $resultado,
             'overridden'   => $serverEval['overridden'],
+            'metagame'     => $metagame,
         ]);
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) {
@@ -1485,7 +1503,21 @@ if ($action === 'guardar_intento') {
             $resultado, $resultado
         ]);
 
-        echo json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+        // TRIVIAX+ Épica 1: recompensas del metajuego también en el flujo legado.
+        $metagame = null;
+        try {
+            require_once __DIR__ . '/php/metagame_engine.php';
+            $stmtU = $pdo->prepare('SELECT usuario_id FROM sesion_jugadores WHERE id = ? AND sesion_id = ?');
+            $stmtU->execute([$jugadorId, $sesionId]);
+            $metagameUserId = (int)($stmtU->fetchColumn() ?: 0);
+            if ($metagameUserId > 0) {
+                $metagame = triviax_metagame_add_rewards($pdo, $metagameUserId, (int)($input['points_delta'] ?? 0), $resultado);
+            }
+        } catch (Throwable $eMg) {
+            $metagame = null;
+        }
+
+        echo json_encode(['success' => true, 'metagame' => $metagame], JSON_UNESCAPED_UNICODE);
 
     } catch (Exception $e) {
         http_response_code(500);
@@ -1756,6 +1788,15 @@ if (strpos($action, 'grp_') === 0) {
 if (strpos($action, 'acceso_') === 0) {
     require_once __DIR__ . '/php/access_api.php';
     triviax_acceso_api_handle($action);
+    exit;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// METAJUEGO (metagame_*) — TRIVIAX+ Épica 1: XP, monedas, rachas y tienda.
+// ══════════════════════════════════════════════════════════════════
+if (strpos($action, 'metagame_') === 0) {
+    require_once __DIR__ . '/php/metagame_api.php';
+    triviax_metagame_api_handle($action);
     exit;
 }
 

@@ -9,7 +9,14 @@ TRIVIAX es una aplicación web educativa de juego de preguntas y respuestas con 
 
 ---
 
-## 2. Versión actual: 7.0.2 (acceso, grupos, identidad y evaluación)
+## 2. Versión actual: 7.1.0 (TRIVIAX+ Épica 1: metajuego)
+
+> v7.1 inaugura el plan TRIVIAX+ v8.0 (`docs/TRIVIAXPLUS.md`) con el metajuego:
+> XP, monedas, racha diaria con multiplicador y tienda de cosméticos para
+> estudiantes con cuenta. Migración `db/migraciones/6.7_metajuego.sql`,
+> motor `php/metagame_engine.php`, API `metagame_*`, recompensas en
+> `submit_answer`/`guardar_intento` y toasts en `js/services/metagameClient.js`.
+> Detalle: `docs/METAJUEGO.md`.
 
 > v7.0 agrega la capa transversal de identidad/pertenencia/acceso/evaluación:
 > grupos de estudiantes con importación CSV y alias sugeridos, políticas de
@@ -45,6 +52,7 @@ TRIVIAX es una aplicación web educativa de juego de preguntas y respuestas con 
 | Modalidad Etiquetado | ✅ Catálogo jugador + panel docente | `etiquetar.php`, `panel/etiquetar.php`, `js/engines/etiquetarEngine.js`, `js/panel/etiquetarPanel.js`, `php/etiquetar_*` |
 | Modalidad TRIVIAX Fútbol — Camino al Gol | ✅ v1 demo jugable + motor + API | `football.php`, `php/football_engine.php`, `php/football_api.php`, `js/engines/footballGoalRaceEngine.js`, `docs/FOOTBALL_GOAL_RACE.md`, `db/migraciones/6.5_football_goal_race.sql` |
 | Módulo de fichas / avatares | ✅ v1 docente + corte + uso en tablero | `panel/token_sets.php`, `php/token_sets.php`, `php/token_sets_api.php`, `js/panel/tokenSetsPanel.js`, `db/migraciones/6.6_token_sets.sql` |
+| Metajuego TRIVIAX+ (XP, monedas, rachas, tienda) | ✅ v1 backend + recompensas en partida | `php/metagame_engine.php`, `php/metagame_api.php`, `js/services/metagameClient.js`, `db/migraciones/6.7_metajuego.sql`, `docs/METAJUEGO.md` |
 | Acceso docente por código `tkey` | ✅ Funcional (legado) | `php/triviax_core.php` |
 | Proyectos en carpetas `/proyectos/` | ✅ Funcional (legado) | `proyectos/` |
 
@@ -663,6 +671,7 @@ localStorage.setItem(`triviax_tab_${sesionId}`, Date.now().toString())  // heart
 | 2026-07-03 | Implementada v1 de `football_goal_race` ("TRIVIAX Fútbol — Camino al Gol"): tablero con `images/cancha.png`, overlay responsive, motor PHP autoritativo, API `football_*`, fixture demo, migración SQL 6.5, prueba `tests/football_goal_race_test.php` y documentación `docs/FOOTBALL_GOAL_RACE.md`. |
 | 2026-07-03 | Implementado v1 del módulo de fichas/avatares: panel docente `panel/token_sets.php`, API `tokens_*`, generación de prompts, subida y corte 6x4 con GD, migración 6.6, asociación por actividad mediante `tokens.json`/`metadata.tokens`, selección previa en partida y render PNG en tablero con fallback a fichas estándar. Verificado con `tests/token_sets_test.php` y suite completa (8 suites, 0 fallos). |
 | 2026-07-03 | Desactivados los límites de intentos (rate limits) en local, y habilitado el inicio de sesión sin contraseña para superadmin (`saltmine.development@gmail.com`) en modo local con auto-creación al vuelo. |
+| 2026-07-06 | **TRIVIAX+ Épica 1 (v7.1.0): Metajuego.** XP, monedas, racha diaria con multiplicador (x1.0→x1.6) y tienda de cosméticos para estudiantes con cuenta. Migración `db/migraciones/6.7_metajuego.sql` (`estudiante_perfiles`, `item_tienda`, `estudiante_inventario` + seed 6 ítems en `images/tienda/`). Motor `php/metagame_engine.php` (funciones puras + BD, siempre falla en silencio), API `metagame_*` en `php/metagame_api.php` (perfil/tienda/compra/equipar, identidad por sesión PHP o terna de jugador), hook en `submit_answer` y `guardar_intento` (campo `metagame` en la respuesta) y `js/services/metagameClient.js` (toast de recompensa + celebración de nivel, `prefers-reduced-motion`, `aria-live`). Docs: `docs/METAJUEGO.md`, API.md §6. Verificado: `tests/metagame_test.php` (31 OK, suite 10/0), smoke BD (25 OK) y E2E HTTP contra Apache local (15 OK). |
 
 ## 9. Glosario
 

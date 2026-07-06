@@ -390,3 +390,20 @@ Modulo docente para crear colecciones de 24 fichas y usarlas en actividades.
 | `tokens_status` | POST | Cambia estado `draft`, `active` o `archived`. |
 
 Las escrituras requieren sesion docente y CSRF. El corte es deterministico con GD: valida imagen real, proporcion 3:2, conserva alfa y guarda PNGs en `uploads/token_sets/{teacher_id}/{token_set_id}/tokens/`.
+
+---
+
+## 6. Metajuego TRIVIAX+ (`metagame_*`) — v7.1
+
+Progresión persistente para estudiantes con cuenta: XP, monedas, racha diaria con multiplicador y tienda de cosméticos. Detalle completo en `docs/METAJUEGO.md`.
+
+| Acción | Método | Descripción |
+|---|---|---|
+| `metagame_profile` | GET | Perfil del estudiante: xp, monedas, racha, nivel, umbrales e inventario. 401 sin identidad. |
+| `metagame_shop` | GET | Catálogo público de la tienda; marca `adquirido`/`equipado` si hay identidad. |
+| `metagame_buy` | POST + CSRF | Compra un ítem (`item_id`) descontando monedas de forma atómica. |
+| `metagame_equip` | POST + CSRF | Equipa o desequipa un ítem adquirido (`item_id`, `equipar`). |
+
+Identidad aceptada: sesión PHP autenticada, o la terna `sesion_id` + `jugador_id` + `player_token` de una partida cuyo jugador esté vinculado a una cuenta (`sesion_jugadores.usuario_id`).
+
+Además, `submit_answer` y `guardar_intento` devuelven un campo `metagame` (o `null`) con `xp_ganada`, `monedas_ganadas`, `multiplicador`, `xp_total`, `monedas_total`, `racha_dias`, `nivel`, `subio_nivel` y `xp_siguiente_nivel`.

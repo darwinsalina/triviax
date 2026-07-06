@@ -18,6 +18,7 @@ import { BoardEngine } from './engines/boardEngine.js';
 import { Dice } from './dice.js';
 import { UIManager } from './ui.js';
 import { ApiClient } from './services/apiClient.js';
+import { MetagameClient } from './services/metagameClient.js';
 import { StorageService } from './services/storageService.js';
 import { ScoringEngine } from './engines/scoringEngine.js';
 import { normalizeProjectChallenges, validateProjectData } from './validators/challengeValidators.js';
@@ -1496,9 +1497,11 @@ async function resolveTurn(result, challenge, diceValue) {
                     jugador_id: jugadorId,
                     turno_id:   capturedTurnoId,
                     ...bdPayload
-                }).then(() =>
-                    ApiClient.endTurn(activeSesionId, jugadorId, capturedTurnoId, playerToken)
-                ).catch(e =>
+                }).then(resp => {
+                    // TRIVIAX+ Épica 1: recompensas del metajuego (XP/monedas/racha)
+                    MetagameClient.handleAnswerResponse(resp, player.name);
+                    return ApiClient.endTurn(activeSesionId, jugadorId, capturedTurnoId, playerToken);
+                }).catch(e =>
                     console.warn('[TRIVIAX v5.0] submit/end_turn falló (resultado local preservado):', e.message)
                 );
             } else {

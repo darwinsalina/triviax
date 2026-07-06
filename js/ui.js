@@ -8,6 +8,7 @@ import { playWarningBeep, playQuestionPopupSound, playOptionSelectSound, playHom
 import { ActivityRendererRegistry } from './activityRenderers/activityRendererRegistry.js';
 import { FeedbackEngine } from './engines/feedbackEngine.js';
 import { ApiClient } from './services/apiClient.js';
+import { TtsService } from './services/ttsService.js';
 import { DiagnosticsService } from './services/diagnosticsService.js';
 import { getChallengeTypeLabel, getChallengeInstruction } from './validators/challengeValidators.js';
 
@@ -21,6 +22,148 @@ export class UIManager {
 
         this.setupDiagnosticsEvents();
         this.setupQuestionOptionSoundEvents();
+    }
+
+    /**
+     * TRIVIAX+ Épica 5 — Accesibilidad DUA del modal de pregunta:
+     *  · Botón flotante 🔊 (Web Speech API) junto al enunciado, que lee la
+     *    consigna y las opciones visibles.
+     *  · Navegación completa por teclado: flechas para recorrer los controles
+     *    del desafío, Home/End, y Enter/Space para activar (sin mouse).
+     *  · aria-live en el panel de feedback y foco inicial en el primer control.
+     */
+    _setupModalAccessibility(qTextEl, optionsContainer, feedbackPanel) {
+        // ── ARIA ──────────────────────────────────────────────────
+        feedbackPanel.setAttribute('aria-live', 'assertive');
+        optionsContainer.setAttribute('role', 'group');
+        optionsContainer.setAttribute('aria-label', 'Opciones del desafío');
+
+        // ── Botón 🔊 (solo si el navegador soporta síntesis de voz) ──
+        const header = qTextEl.parentElement;
+        header?.querySelector('.tts-speak-btn')?.remove();
+        const speakBtn = TtsService.createSpeakButton(() => {
+            const textos = [...optionsContainer.querySelectorAll(
+                'button, .draggable-card, .pair-card, .option-card, label'
+            )]
+                .filter(el => el.offsetParent !== null && !el.querySelector('button'))
+                .map(el => el.innerText)
+                .filter(t => t && t.trim().length > 0)
+                .slice(0, 12);
+            return TtsService.challengeText(qTextEl.innerText, textos);
+        });
+        if (speakBtn && header) {
+            this._ensureTtsStyles();
+            header.appendChild(speakBtn);
+        }
+
+        // ── Navegación por teclado ────────────────────────────────
+        const focusables = () => [...optionsContainer.querySelectorAll(
+            'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )].filter(el => el.offsetParent !== null);
+
+        // Elementos interactivos no nativos (cards arrastrables) entran al
+        // orden de tabulación y responden a Enter/Space como un click.
+        optionsContainer.querySelectorAll('.draggable-card, .pair-card, .option-card').forEach(el => {
+            if (!el.hasAttribute('tabindex')) {
+                el.setAttribute('tabindex', '0');
+            }
+        });
+
+        if (this._modalKeyHandler) {
+            document.removeEventListener('keydown', this._modalKeyHandler, true);
+        }
+        this._modalKeyHandler = (e) => {
+            const modal = qs('#modal-question');
+            if (!modal || !modal.classList.contains('active')) {
+                return;
+            }
+            const lista = focusables();
+            if (!lista.length) {
+                return;
+            }
+            const idx = lista.indexOf(document.activeElement);
+            const esCampoTexto = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || '');
+
+            if (['ArrowDown', 'ArrowRight'].includes(e.key) && !esCampoTexto) {
+                e.preventDefault();
+                lista[(idx + 1 + lista.length) % lista.length].focus();
+            } else if (['ArrowUp', 'ArrowLeft'].includes(e.key) && !esCampoTexto) {
+                e.preventDefault();
+                lista[(idx - 1 + lista.length) % lista.length].focus();
+            } else if (e.key === 'Home' && !esCampoTexto) {
+                e.preventDefault();
+                lista[0].focus();
+            } else if (e.key === 'End' && !esCampoTexto) {
+                e.preventDefault();
+                lista[lista.length - 1].focus();
+            } else if ((e.key === 'Enter' || e.key === ' ') && idx >= 0) {
+                // Botones nativos ya manejan Enter/Space; replicarlo en cards
+                const el = document.activeElement;
+                if (el && !/^(BUTTON|INPUT|TEXTAREA|SELECT|A)$/.test(el.tagName)) {
+                    e.preventDefault();
+                    el.click();
+                }
+            }
+        };
+        document.addEventListener('keydown', this._modalKeyHandler, true);
+
+        // Foco inicial en el primer control del desafío (tras el render)
+        setTimeout(() => {
+            const primero = focusables()[0];
+            if (primero) {
+                primero.focus();
+            }
+        }, 60);
+    }
+
+    /** Estilos del botón 🔊 (inyectados una sola vez). */
+    _ensureTtsStyles() {
+        if (document.getElementById('tts-styles')) {
+            return;
+        }
+        const style = document.createElement('style');
+        style.id = 'tts-styles';
+        style.textContent = `
+            .tts-speak-btn {
+                position: absolute;
+                top: 14px;
+                right: 14px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 1px solid rgba(255,255,255,0.2);
+                background: rgba(99,102,241,0.25);
+                color: #fff;
+                font-size: 1.15rem;
+                cursor: pointer;
+                z-index: 5;
+                transition: transform 0.15s, background 0.2s;
+            }
+            .tts-speak-btn:hover, .tts-speak-btn:focus-visible {
+                background: rgba(99,102,241,0.55);
+                transform: scale(1.08);
+                outline: 2px solid #a5b4fc;
+                outline-offset: 2px;
+            }
+            .tts-speak-btn.tts-speaking {
+                background: rgba(168,85,247,0.65);
+                animation: ttsPulse 1s ease-in-out infinite;
+            }
+            @keyframes ttsPulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.12); }
+            }
+            .modal-header { position: relative; }
+            #options-container button:focus-visible,
+            #options-container [tabindex]:focus-visible {
+                outline: 3px solid #a5b4fc;
+                outline-offset: 2px;
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .tts-speak-btn, .tts-speak-btn.tts-speaking { animation: none; transition: none; }
+            }
+        `;
+        document.head.appendChild(style);
     }
 
     setupQuestionOptionSoundEvents() {
@@ -351,6 +494,7 @@ export class UIManager {
         const handleUserSubmission = (isCorrect, responseText, isTimeout = false, raw = null, solution = null) => {
             clearInterval(this.timerInterval);
             timerText.classList.remove('timer-warning');
+            TtsService.stop(); // Épica 5: cortar la lectura al resolver
 
             const elapsedSeconds = Math.round((Date.now() - startTime) / 1000);
 
@@ -387,6 +531,7 @@ export class UIManager {
             nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
             
             newNextBtn.onclick = () => {
+                TtsService.stop(); // Épica 5: no seguir leyendo tras cerrar
                 this.hideModal('modal-question');
                 onAnswerCallback({
                     isCorrect,
@@ -396,6 +541,8 @@ export class UIManager {
                     raw // #1 Etapa 2: respuesta cruda estructurada para validación server-side
                 });
             };
+            // Épica 5: llevar el foco al feedback para lectores de pantalla y teclado
+            newNextBtn.focus();
         };
 
         // Renderizar el contenido específico del desafío desde la Registry
@@ -420,6 +567,9 @@ export class UIManager {
         this.activityRegistry.renderChallenge(challenge, optionsContainer, projectName, (res) => {
             resolveAndShow(res, false);
         });
+
+        // TRIVIAX+ Épica 5: accesibilidad del modal (TTS + teclado + ARIA)
+        this._setupModalAccessibility(qText, optionsContainer, feedbackPanel);
 
         // Loop del temporizador
         if (!isTimeFree) {

@@ -144,6 +144,12 @@ Añadir una capa analítica no relacional o vistas optimizadas sobre `stats_desa
 
 ## 5. Épica 5: Accesibilidad Universal (Inclusión DUA Nativa)
 
+> ✅ **Implementada en v7.5.0 (2026-07-06).** `js/services/ttsService.js`
+> (Web Speech API con voz es-*), botón 🔊 y navegación por teclado inyectados
+> en el punto común `UIManager.showQuestionModal` (cubre TODOS los tipos de
+> desafío sin tocar cada renderer), `aria-live` en feedback y registro de
+> juego, gestión de foco sin mouse. Documentación: `docs/ACCESIBILIDAD.md`.
+
 ### 5.1. Implementación en Frontend (Vanilla JS)
 
 No requiere cambios estructurales en la base de datos, sino un rediseño de la capa de componentes en el cliente (`js/activityRenderers/`).

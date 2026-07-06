@@ -21,6 +21,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 require_once __DIR__ . '/php/triviax_core.php';
 require_once __DIR__ . '/php/auth.php';
 require_once __DIR__ . '/php/board_eval.php'; // #1: evaluación autoritativa del tablero
+require_once __DIR__ . '/php/session_mode.php'; // TRIVIAX+ Épica 2: modo tarea asíncrono
 
 if (triviax_env_bool('APP_DEBUG', false)) {
     ini_set('display_errors', 1);
@@ -577,6 +578,33 @@ if ($action === 'grade') {
     ]);
 }
 
+// TRIVIAX+ Épica 2: precisión histórica de una actividad (para bots fantasma).
+// Devuelve solo un agregado global (sin claves ni detalle por desafío).
+if ($action === 'project_accuracy') {
+    triviax_api_throttle('project_accuracy', 120, 60);
+    $project = trim((string)($_GET['project'] ?? ''));
+    if ($project === '' || !preg_match('/^[a-zA-Z0-9_-]+$/', $project)) {
+        triviax_api_error('VALIDATION_ERROR', 'Proyecto inválido.', 400);
+    }
+    $accuracy = null;
+    $muestras = 0;
+    try {
+        require_once __DIR__ . '/php/db.php';
+        if (triviax_db_available()) {
+            $stmt = triviax_db()->prepare('SELECT COALESCE(SUM(shown), 0), COALESCE(SUM(correct), 0) FROM stats_desafios WHERE proyecto_id = ?');
+            $stmt->execute([$project]);
+            [$shown, $correct] = array_map('intval', $stmt->fetch(PDO::FETCH_NUM) ?: [0, 0]);
+            $muestras = $shown;
+            if ($shown >= 10) { // con pocas muestras el promedio no es representativo
+                $accuracy = round($correct / $shown, 3);
+            }
+        }
+    } catch (Throwable $e) {
+        $accuracy = null;
+    }
+    triviax_api_success(['accuracy' => $accuracy, 'muestras' => $muestras]);
+}
+
 // Acción: Enviar reporte de partida por correo al docente
 if ($action === 'send_report') {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -979,9 +1007,10 @@ if ($action === 'unirse_sesion') {
     try {
         $pdo = triviax_db();
 
-        // Buscar la sesión activa con ese código
+        // Buscar la sesión activa con ese código (SELECT * para incluir las
+        // columnas del modo tarea si la migración 6.8 está aplicada)
         $stmt = $pdo->prepare("
-            SELECT id, proyecto_id, nombre, estado, max_jugadores
+            SELECT *
             FROM sesiones
             WHERE codigo_acceso = ?
             AND estado IN ('pendiente','activa')
@@ -992,6 +1021,17 @@ if ($action === 'unirse_sesion') {
         if (!$sesion) {
             http_response_code(404);
             echo json_encode(['success' => false, 'error' => 'Sesión no encontrada o ya finalizada.'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        // TRIVIAX+ Épica 2: una tarea vencida no acepta nuevos jugadores.
+        if (triviax_sesion_tarea_vencida($sesion)) {
+            http_response_code(403);
+            echo json_encode([
+                'success' => false,
+                'error'   => 'La fecha límite de esta tarea ya venció.',
+                'motivo'  => 'task_expired',
+            ], JSON_UNESCAPED_UNICODE);
             exit;
         }
 
@@ -1107,6 +1147,8 @@ if ($action === 'unirse_sesion') {
             'jugadores'     => $jugadoresSesion,
             'sesion_nombre' => $sesion['nombre'],
             'proyecto_id'   => $sesion['proyecto_id'],
+            'modalidad_sincronia' => (string)($sesion['modalidad_sincronia'] ?? 'sincrono'),
+            'fecha_limite_tarea'  => $sesion['fecha_limite_tarea'] ?? null,
         ], JSON_UNESCAPED_UNICODE);
 
     } catch (Exception $e) {
@@ -1150,6 +1192,8 @@ if ($action === 'session_state') {
             'current_turn_player_id' => isset($sesion['current_turn_player_id']) ? (int)$sesion['current_turn_player_id'] : null,
             'current_turn_number' => (int)($sesion['current_turn_number'] ?? 0),
             'updated_at' => $sesion['updated_at'] ?? null,
+            'modalidad_sincronia' => (string)($sesion['modalidad_sincronia'] ?? 'sincrono'),
+            'fecha_limite_tarea' => $sesion['fecha_limite_tarea'] ?? null,
         ],
         'jugadores' => $stmtJ->fetchAll(PDO::FETCH_ASSOC),
         'turno' => $stmtT->fetch(PDO::FETCH_ASSOC) ?: null,
@@ -1178,16 +1222,32 @@ if ($action === 'start_turn') {
             $pdo->rollBack();
             triviax_api_error('SESSION_CLOSED', 'La sesión no está activa.', 409);
         }
-        if (!empty($sesion['current_turn_player_id']) && (int)$sesion['current_turn_player_id'] !== $jugadorId) {
+        // TRIVIAX+ Épica 2: en modo tarea cada estudiante juega su propia
+        // instancia aislada: no hay bloqueo por orden de turnos ni contador
+        // global; el número de turno es por jugador.
+        $esAsincrona = triviax_sesion_es_asincrona($sesion);
+        if (triviax_sesion_tarea_vencida($sesion)) {
+            $pdo->rollBack();
+            triviax_api_error('TASK_EXPIRED', 'La fecha límite de esta tarea ya venció.', 409);
+        }
+        if (!$esAsincrona && !empty($sesion['current_turn_player_id']) && (int)$sesion['current_turn_player_id'] !== $jugadorId) {
             $pdo->rollBack();
             triviax_api_error('TURN_NOT_ACTIVE', 'No es el turno de este jugador.', 409);
         }
         // Expirar turnos huérfanos en pending_roll de este jugador (roll_dice nunca llegó)
         $pdo->prepare('UPDATE sesion_turnos SET estado = \'expired\' WHERE sesion_id = ? AND jugador_id = ? AND estado = \'pending_roll\'')
             ->execute([$sesionId, $jugadorId]);
-        $turnNumber = ((int)($sesion['current_turn_number'] ?? 0)) + 1;
-        $pdo->prepare('UPDATE sesiones SET current_turn_player_id = ?, current_turn_number = ?, started_at = COALESCE(started_at, NOW()) WHERE id = ?')
-            ->execute([$jugadorId, $turnNumber, $sesionId]);
+        if ($esAsincrona) {
+            $stmtN = $pdo->prepare('SELECT COUNT(*) FROM sesion_turnos WHERE sesion_id = ? AND jugador_id = ?');
+            $stmtN->execute([$sesionId, $jugadorId]);
+            $turnNumber = ((int)$stmtN->fetchColumn()) + 1;
+            $pdo->prepare('UPDATE sesiones SET started_at = COALESCE(started_at, NOW()) WHERE id = ?')
+                ->execute([$sesionId]);
+        } else {
+            $turnNumber = ((int)($sesion['current_turn_number'] ?? 0)) + 1;
+            $pdo->prepare('UPDATE sesiones SET current_turn_player_id = ?, current_turn_number = ?, started_at = COALESCE(started_at, NOW()) WHERE id = ?')
+                ->execute([$jugadorId, $turnNumber, $sesionId]);
+        }
         $pdo->prepare('INSERT INTO sesion_turnos (sesion_id, jugador_id, turn_number, board_position_before, estado) VALUES (?, ?, ?, ?, \'pending_roll\')')
             ->execute([$sesionId, $jugadorId, $turnNumber, (int)($jugador['posicion'] ?? 0)]);
         $turnoId = (int)$pdo->lastInsertId();
@@ -1382,6 +1442,16 @@ if ($action === 'end_turn') {
         if (!$turno || !in_array($turno['estado'], ['answered', 'skipped', 'expired'], true)) {
             $pdo->rollBack();
             triviax_api_error('TURN_NOT_ACTIVE', 'El turno no puede finalizarse todavía.', 409);
+        }
+        // TRIVIAX+ Épica 2: en modo tarea no hay rotación de turnos; el mismo
+        // jugador continúa en su instancia aislada.
+        $stmtSesMode = $pdo->prepare('SELECT * FROM sesiones WHERE id = ? LIMIT 1');
+        $stmtSesMode->execute([$sesionId]);
+        $sesionMode = $stmtSesMode->fetch(PDO::FETCH_ASSOC) ?: [];
+        if (triviax_sesion_es_asincrona($sesionMode)) {
+            $pdo->prepare('UPDATE sesion_turnos SET estado = \'completed\' WHERE id = ?')->execute([$turnoId]);
+            $pdo->commit();
+            triviax_api_success(['next_player_id' => $jugadorId]);
         }
         $stmtNext = $pdo->prepare('SELECT id FROM sesion_jugadores WHERE sesion_id = ? AND estado IN (\'activo\', \'esperando\', \'joined\', \'active\') AND id > ? ORDER BY id ASC LIMIT 1');
         $stmtNext->execute([$sesionId, $jugadorId]);

@@ -11,6 +11,16 @@ triviax_requerir_auth(TRIVIAX_ROL_DOCENTE);
 $usuario = triviax_usuario_actual();
 $pdo     = triviax_db();
 
+// TRIVIAX+ Épica 2: el modo tarea requiere la migración 6.8. Si las columnas
+// no existen todavía, el formulario oculta la opción y todo sigue como antes.
+$tareaDisponible = false;
+try {
+    $pdo->query('SELECT modalidad_sincronia FROM sesiones LIMIT 1');
+    $tareaDisponible = true;
+} catch (Throwable $eTarea) {
+    $tareaDisponible = false;
+}
+
 // ─── Proyectos disponibles ──────────────────────────────────────────
 // Proyectos propios del docente + proyectos sin dueño (del sistema/legado)
 $stmtP = $pdo->prepare('
@@ -32,6 +42,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $proyectoId   = trim($_POST['proyecto_id']   ?? '');
     $tipo         = trim($_POST['tipo']          ?? 'educativa');
     $maxJugadores = (int)($_POST['max_jugadores'] ?? 4);
+    // TRIVIAX+ Épica 2: modalidad de sincronía + fecha límite de tarea
+    $modalidad    = $tareaDisponible ? trim($_POST['modalidad_sincronia'] ?? 'sincrono') : 'sincrono';
+    $fechaLimite  = trim($_POST['fecha_limite_tarea'] ?? '');
+    $esTarea      = ($modalidad === 'asincrono_tarea');
+    if ($esTarea) {
+        // En modo tarea toda la clase juega en instancias aisladas: el máximo
+        // de jugadores es la capacidad total de la tarea.
+        $maxJugadores = (int)($_POST['max_jugadores_tarea'] ?? 40);
+    }
 
     // Validaciones
     if ($nombre === '') {
@@ -40,8 +59,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Selecciona un proyecto.';
     } elseif (!in_array($tipo, ['educativa', 'abierta'], true)) {
         $error = 'Tipo de sesión no válido.';
-    } elseif ($maxJugadores < 2 || $maxJugadores > 8) {
+    } elseif (!in_array($modalidad, ['sincrono', 'asincrono_tarea'], true)) {
+        $error = 'Modalidad de sincronía no válida.';
+    } elseif (!$esTarea && ($maxJugadores < 2 || $maxJugadores > 8)) {
         $error = 'El máximo de jugadores debe ser entre 2 y 8.';
+    } elseif ($esTarea && ($maxJugadores < 1 || $maxJugadores > 60)) {
+        $error = 'El máximo de estudiantes de la tarea debe ser entre 1 y 60.';
+    } elseif ($esTarea && $fechaLimite !== '' && strtotime($fechaLimite) === false) {
+        $error = 'La fecha límite de la tarea no es válida.';
+    } elseif ($esTarea && $fechaLimite !== '' && strtotime($fechaLimite) <= time()) {
+        $error = 'La fecha límite de la tarea debe ser futura.';
     } else {
         // Verificar que el proyecto existe
         $stmtVerP = $pdo->prepare('SELECT id FROM proyectos WHERE id = ?');
@@ -69,11 +96,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($intentos >= 20) {
             $error = 'No se pudo generar un código único. Intenta de nuevo.';
         } else {
-            $stmt = $pdo->prepare('
-                INSERT INTO sesiones (proyecto_id, docente_id, nombre, tipo, codigo_acceso, estado, max_jugadores)
-                VALUES (?, ?, ?, ?, ?, \'pendiente\', ?)
-            ');
-            $stmt->execute([$proyectoId, $usuario['id'], $nombre, $tipo, $codigo, $maxJugadores]);
+            if ($tareaDisponible) {
+                $stmt = $pdo->prepare('
+                    INSERT INTO sesiones (proyecto_id, docente_id, nombre, tipo, codigo_acceso, estado, max_jugadores, modalidad_sincronia, fecha_limite_tarea)
+                    VALUES (?, ?, ?, ?, ?, \'pendiente\', ?, ?, ?)
+                ');
+                $stmt->execute([
+                    $proyectoId, $usuario['id'], $nombre, $tipo, $codigo, $maxJugadores,
+                    $modalidad,
+                    ($esTarea && $fechaLimite !== '') ? date('Y-m-d H:i:s', strtotime($fechaLimite)) : null,
+                ]);
+            } else {
+                $stmt = $pdo->prepare('
+                    INSERT INTO sesiones (proyecto_id, docente_id, nombre, tipo, codigo_acceso, estado, max_jugadores)
+                    VALUES (?, ?, ?, ?, ?, \'pendiente\', ?)
+                ');
+                $stmt->execute([$proyectoId, $usuario['id'], $nombre, $tipo, $codigo, $maxJugadores]);
+            }
             $nuevaId = (int) $pdo->lastInsertId();
 
             header('Location: ' . TRIVIAX_BASE . '/panel/sesion_detalle.php?id=' . $nuevaId . '&nueva=1');
@@ -395,7 +434,50 @@ $csrfToken = triviax_csrf_token();
                         </div>
                     </div>
 
+                    <?php if ($tareaDisponible): ?>
                     <div class="form-group">
+                        <label>Modalidad</label>
+                        <div class="tipo-grid">
+                            <div class="tipo-opcion">
+                                <input type="radio" id="mod_sincrono" name="modalidad_sincronia" value="sincrono"
+                                    <?= ($_POST['modalidad_sincronia'] ?? 'sincrono') === 'sincrono' ? 'checked' : '' ?>>
+                                <label for="mod_sincrono">
+                                    <span class="tipo-nombre">🎲 En vivo</span>
+                                    <span class="tipo-desc">Partida sincrónica por turnos: todos juegan a la vez.</span>
+                                </label>
+                            </div>
+                            <div class="tipo-opcion">
+                                <input type="radio" id="mod_tarea" name="modalidad_sincronia" value="asincrono_tarea"
+                                    <?= ($_POST['modalidad_sincronia'] ?? '') === 'asincrono_tarea' ? 'checked' : '' ?>>
+                                <label for="mod_tarea">
+                                    <span class="tipo-nombre">📝 Tarea</span>
+                                    <span class="tipo-desc">Cada estudiante juega solo, cuando quiera, antes de la fecha límite.</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="grupo-fecha-limite" style="display:none;">
+                        <label for="fecha_limite_tarea">Fecha límite (opcional)</label>
+                        <input type="datetime-local" id="fecha_limite_tarea" name="fecha_limite_tarea"
+                               value="<?= htmlspecialchars($_POST['fecha_limite_tarea'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                        <span class="hint">Pasada esta fecha nadie más podrá unirse ni seguir jugando la tarea.</span>
+                    </div>
+
+                    <div class="form-group" id="grupo-max-tarea" style="display:none;">
+                        <label for="max_jugadores_tarea">Máximo de estudiantes de la tarea</label>
+                        <select id="max_jugadores_tarea" name="max_jugadores_tarea">
+                            <?php foreach ([10,20,30,40,50,60] as $n): ?>
+                                <option value="<?= $n ?>"
+                                    <?= ((int)($_POST['max_jugadores_tarea'] ?? 40)) === $n ? 'selected' : '' ?>>
+                                    <?= $n ?> estudiantes
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <?php endif; ?>
+
+                    <div class="form-group" id="grupo-max-jugadores">
                         <label for="max_jugadores">Máximo de jugadores</label>
                         <select id="max_jugadores" name="max_jugadores">
                             <?php foreach ([2,3,4,5,6,7,8] as $n): ?>
@@ -420,5 +502,23 @@ $csrfToken = triviax_csrf_token();
     </main>
 </div>
 <script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
+<script>
+// TRIVIAX+ Épica 2: alternar campos según la modalidad elegida
+(function () {
+    const radios = document.querySelectorAll('input[name="modalidad_sincronia"]');
+    if (!radios.length) return;
+    const grupoFecha = document.getElementById('grupo-fecha-limite');
+    const grupoMaxTarea = document.getElementById('grupo-max-tarea');
+    const grupoMaxVivo = document.getElementById('grupo-max-jugadores');
+    function actualizar() {
+        const esTarea = document.getElementById('mod_tarea').checked;
+        grupoFecha.style.display = esTarea ? '' : 'none';
+        grupoMaxTarea.style.display = esTarea ? '' : 'none';
+        grupoMaxVivo.style.display = esTarea ? 'none' : '';
+    }
+    radios.forEach(r => r.addEventListener('change', actualizar));
+    actualizar();
+})();
+</script>
 </body>
 </html>

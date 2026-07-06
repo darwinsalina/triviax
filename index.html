@@ -59,7 +59,7 @@
             <div class="cover-layout">
                 <aside class="cover-brand-panel" aria-hidden="true">
                     <div class="cover-brand-content">
-                        <span class="version-pill" data-app-version="TRIVIAX Plus v{v}">TRIVIAX Plus v7.1</span>
+                        <span class="version-pill" data-app-version="TRIVIAX Plus v{v}">TRIVIAX Plus v7.2</span>
                         <h1 class="logo-text" aria-label="TRIVIAX">
                             <span class="triviax-wordmark" aria-hidden="true">
                                 <span class="triviax-wordmark__main" aria-hidden="true">TRIVIA</span><span class="triviax-wordmark__x" aria-hidden="true">X</span>
@@ -137,7 +137,7 @@
                         </div>
 
                         <footer class="app-version-footer">
-                            <span data-app-version-full="TRIVIAX Plus v{v}">TRIVIAX Plus v7.1.0</span>
+                            <span data-app-version-full="TRIVIAX Plus v{v}">TRIVIAX Plus v7.2.0</span>
                             <span>by Darwin Salina © 2026</span>
                         </footer>
                     </div>
@@ -298,6 +298,7 @@
                             <h3 class="setup-col-label">Jugadores</h3>
 
                             <div class="player-count-selector">
+                                <button type="button" class="btn btn-tab btn-count" data-count="1">1 Jugador</button>
                                 <button type="button" class="btn btn-tab btn-count active" data-count="2">2 Jugadores</button>
                                 <button type="button" class="btn btn-tab btn-count" data-count="3">3 Jugadores</button>
                                 <button type="button" class="btn btn-tab btn-count" data-count="4">4 Jugadores</button>
@@ -341,6 +342,20 @@
                                     <span class="color-badge" style="background-color: #ec4899;"></span>
                                     <input type="text" placeholder="Jugador 8" maxlength="15" class="player-name-input">
                                 </div>
+                            </div>
+
+                            <!-- TRIVIAX+ Épica 2: compañeros fantasma (bots locales) -->
+                            <div class="bots-group" style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox" id="bots-checkbox" style="width: 18px; height: 18px; cursor: pointer;">
+                                    <label for="bots-checkbox" style="font-size: 0.9rem; color: var(--text-secondary); cursor: pointer; user-select: none;">Compañeros fantasma 🤖 (bots)</label>
+                                    <select id="bots-count-select" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: 8px; padding: 4px 8px; color: var(--text-primary);">
+                                        <option value="1">1 bot</option>
+                                        <option value="2" selected>2 bots</option>
+                                        <option value="3">3 bots</option>
+                                    </select>
+                                </div>
+                                <span style="font-size: 0.78rem; color: var(--text-muted);">Rivales simulados que responden según la dificultad real de la actividad. Ideales para jugar en solitario o en modo tarea.</span>
                             </div>
 
                             <!-- Código de sesión: el alumno pega/escribe el código y el botón lo lleva directo a la actividad de esa sesión -->
@@ -490,7 +505,7 @@
                 </form>
 
                 <footer class="app-version-footer">
-                    <span data-app-version-full="TRIVIAX v{v}">TRIVIAX v7.1.0</span>
+                    <span data-app-version-full="TRIVIAX v{v}">TRIVIAX v7.2.0</span>
                     <span>by Darwin Salina © 2026</span>
                 </footer>
             </div>
@@ -628,7 +643,7 @@
                     </button>
                 </div>
                 <footer class="app-version-footer">
-                    <span data-app-version-full="TRIVIAX Plus v{v}">TRIVIAX Plus v7.1.0</span>
+                    <span data-app-version-full="TRIVIAX Plus v{v}">TRIVIAX Plus v7.2.0</span>
                     <span>by Darwin Salina © 2026</span>
                 </footer>
             </div>

@@ -407,3 +407,18 @@ Progresión persistente para estudiantes con cuenta: XP, monedas, racha diaria c
 Identidad aceptada: sesión PHP autenticada, o la terna `sesion_id` + `jugador_id` + `player_token` de una partida cuyo jugador esté vinculado a una cuenta (`sesion_jugadores.usuario_id`).
 
 Además, `submit_answer` y `guardar_intento` devuelven un campo `metagame` (o `null`) con `xp_ganada`, `monedas_ganadas`, `multiplicador`, `xp_total`, `monedas_total`, `racha_dias`, `nivel`, `subio_nivel` y `xp_siguiente_nivel`.
+
+---
+
+## 7. Modo Tarea asíncrono y bots (v7.2)
+
+Detalle completo en `docs/MODO_TAREA.md`. Con `sesiones.modalidad_sincronia = 'asincrono_tarea'` (migración 6.8):
+
+- `unirse_sesion` devuelve además `modalidad_sincronia` y `fecha_limite_tarea`, y rechaza con 403/`task_expired` si la tarea venció.
+- `start_turn` no exige ni actualiza el turno global; `turn_number` es por jugador. Rechaza con 409/`TASK_EXPIRED` si la tarea venció.
+- `end_turn` no rota el turno: `next_player_id` es el mismo jugador.
+- `session_state` expone `modalidad_sincronia` y `fecha_limite_tarea` dentro de `sesion`.
+
+| Acción | Método | Descripción |
+|---|---|---|
+| `project_accuracy` | GET | Precisión histórica global de una actividad (`accuracy` 0–1 o `null` con menos de 10 muestras, `muestras`). Calibra los compañeros fantasma (`js/engines/botEngine.js`). |

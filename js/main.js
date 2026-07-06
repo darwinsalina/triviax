@@ -14,6 +14,7 @@ import {
 } from './config.js';
 import { GameEngine } from './engines/gameEngine.js';
 import { ChallengeEngine } from './engines/challengeEngine.js';
+import { BotEngine } from './engines/botEngine.js';
 import { BoardEngine } from './engines/boardEngine.js';
 import { Dice } from './dice.js';
 import { UIManager } from './ui.js';
@@ -267,6 +268,7 @@ function selectedTokenAssetsForPlayers(count) {
 }
 
 // -- v4.0: estado de sesion BD (null si no hay sesion activa) --
+let activeBotEngine   = null;   // TRIVIAX+ Épica 2: motor de compañeros fantasma
 let activeSesionId    = null;   // ID de la sesion en BD
 let activeJugadorIds  = [];     // [jugadorId_p1, jugadorId_p2, ...]
 let activePlayerTokens = [];    // [playerToken_p1, playerToken_p2, ...]
@@ -1165,6 +1167,27 @@ async function startGameFlow() {
         });
     }
 
+    // ── TRIVIAX+ Épica 2: compañeros fantasma (bots) locales ─────
+    // Se agregan al final de la lista para no alterar los índices de los
+    // jugadores humanos en la sesión de BD (los bots NUNCA se registran).
+    activeBotEngine = null;
+    const botsCheckbox = qs('#bots-checkbox');
+    if (botsCheckbox?.checked) {
+        const botsWanted = parseInt(qs('#bots-count-select')?.value || '2', 10);
+        const botCount = Math.max(0, Math.min(botsWanted, colors.length - count));
+        if (botCount > 0) {
+            activeBotEngine = await BotEngine.forProject(activeProjectName);
+            BotEngine.botNames(botCount).forEach((botName, i) => {
+                playerSetupList.push({
+                    name: botName,
+                    colorId: colors[count + i],
+                    token: null,
+                    isBot: true
+                });
+            });
+        }
+    }
+
     currentPlayersSetup = playerSetupList;
     recordProjectPlay(activeProjectName);
 
@@ -1180,7 +1203,8 @@ async function startGameFlow() {
     activeTurnoId    = null;
 
     if (sessionCode !== '') {
-        const playerNames = playerSetupList.map(p => p.name);
+        // Los bots no se inscriben en la sesión de BD: solo los humanos.
+        const playerNames = playerSetupList.filter(p => !p.isBot).map(p => p.name);
         try {
             const sesData = await ApiClient.unirseASesion(sessionCode, playerNames);
             if (sesData.success) {
@@ -1533,7 +1557,72 @@ async function resolveTurn(result, challenge, diceValue) {
     });
 
     updateGameUI();
-    qs('#btn-roll-dice').removeAttribute('disabled');
+    // TRIVIAX+ Épica 2: si siguen bots, juegan solos antes de devolver el dado
+    await runBotTurnsIfAny();
+}
+
+/**
+ * TRIVIAX+ Épica 2: ejecuta en cadena los turnos de los compañeros fantasma
+ * hasta que vuelva a tocar un humano. Los bots no consumen desafíos de la
+ * batería ni escriben en la BD: su acierto se sortea con la tasa histórica
+ * de la actividad (BotEngine) y mueven ficha/puntaje solo en local.
+ */
+async function runBotTurnsIfAny() {
+    const rollBtn = qs('#btn-roll-dice');
+    while (activeBotEngine && game.getCurrentPlayer()?.isBot && !game.isGameOver) {
+        rollBtn.setAttribute('disabled', 'true');
+        const bot = game.getCurrentPlayer();
+        const originalPos = bot.position;
+
+        const { dice, isCorrect } = await activeBotEngine.playTurn(bot, {
+            onRolling: (b) => ui.addLog(`🤖 Turno de ${b.name}. Tirando dado...`),
+            onAnswering: (b, d) => ui.addLog(`¡${b.name} sacó un ${d}! Está pensando su respuesta...`, 'roll')
+        });
+
+        if (isCorrect) {
+            const earned = ScoringEngine.calculateScore({ difficulty: 1 }, true, game.baseTimeSeconds, game.baseTimeSeconds, false);
+            bot.score += earned;
+            bot.correctAnswersCount++;
+            const targetPos = game.advancePlayer(dice);
+            ui.addLog(`✅ ¡Correcto! ${bot.name} sumó ${earned} puntos. Avanza ${dice} casillas.`, 'correct');
+            if (game.lastMove?.path?.length > 0 && typeof board.animateTokenPath === 'function') {
+                await board.animateTokenPath(bot, game.lastMove.path);
+            } else {
+                await board.animateTokenMove(bot, originalPos, targetPos);
+            }
+            if (game.victoryMode === 'points' && game.lastMove?.lapsCompleted > 0) {
+                const bonus = game.lastMove.bonusPoints || 0;
+                bot.score += bonus;
+                ui.addLog(`${bot.name} completó ${game.lastMove.lapsCompleted} vuelta(s) y suma ${bonus} puntos de bono.`, 'correct');
+            }
+        } else {
+            const penalty = ScoringEngine.applyPenalty(bot, game.penaltyMode);
+            const desc = penalty.pointsDeducted > 0
+                ? `pierde ${penalty.pointsDeducted} puntos`
+                : 'pierde su próximo turno';
+            ui.addLog(`❌ Incorrecto. ${bot.name} ${desc}. Permanece en la casilla ${originalPos}.`, 'incorrect');
+            board.updateTokens(game.players);
+        }
+
+        activeBotEngine.finishTurn(bot);
+        updateGameUI();
+
+        if (isCorrect && game.checkWinCondition()) {
+            const winMessage = game.victoryMode === 'points'
+                ? `🏆 ¡${bot.name} alcanzó ${game.scoreTarget} puntos y ganó la partida!`
+                : `🏆 ¡${bot.name} llegó a la meta y ganó la partida!`;
+            ui.addLog(winMessage, 'correct');
+            setTimeout(() => endGameFlow(), 1000);
+            return;
+        }
+
+        const skipped = game.nextTurn();
+        skipped.forEach(p => ui.addLog(`⚠️ ${p.name} se salta su turno por penalización.`, 'incorrect'));
+        updateGameUI();
+    }
+    if (!game.isGameOver) {
+        rollBtn.removeAttribute('disabled');
+    }
 }
 
 /**

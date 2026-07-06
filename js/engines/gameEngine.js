@@ -71,7 +71,8 @@ export class GameEngine {
                 token: setup.token || null,
                 skipNextTurn: false, // Penalización de turno
                 correctAnswersCount: 0,
-                incorrectAnswersCount: 0
+                incorrectAnswersCount: 0,
+                isBot: Boolean(setup.isBot) // TRIVIAX+ Épica 2: compañero fantasma local
             };
         });
     }

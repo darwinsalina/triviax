@@ -9,9 +9,16 @@ TRIVIAX es una aplicación web educativa de juego de preguntas y respuestas con 
 
 ---
 
-## 2. Versión actual: 7.1.0 (TRIVIAX+ Épica 1: metajuego)
+## 2. Versión actual: 7.2.0 (TRIVIAX+ Épica 2: modo tarea y bots)
 
-> v7.1 inaugura el plan TRIVIAX+ v8.0 (`docs/TRIVIAXPLUS.md`) con el metajuego:
+> v7.2 desacopla la sesión del tiempo real: sesiones tarea asíncronas con
+> fecha límite (migración `db/migraciones/6.8_modo_tarea.sql`, helpers
+> `php/session_mode.php`, turnos por jugador en `api.php`, selector en
+> `panel/sesion_nueva.php`) y compañeros fantasma locales
+> (`js/engines/botEngine.js` + `action=project_accuracy`).
+> Detalle: `docs/MODO_TAREA.md`.
+>
+> v7.1 inauguró el plan TRIVIAX+ v8.0 (`docs/TRIVIAXPLUS.md`) con el metajuego:
 > XP, monedas, racha diaria con multiplicador y tienda de cosméticos para
 > estudiantes con cuenta. Migración `db/migraciones/6.7_metajuego.sql`,
 > motor `php/metagame_engine.php`, API `metagame_*`, recompensas en
@@ -53,6 +60,7 @@ TRIVIAX es una aplicación web educativa de juego de preguntas y respuestas con 
 | Modalidad TRIVIAX Fútbol — Camino al Gol | ✅ v1 demo jugable + motor + API | `football.php`, `php/football_engine.php`, `php/football_api.php`, `js/engines/footballGoalRaceEngine.js`, `docs/FOOTBALL_GOAL_RACE.md`, `db/migraciones/6.5_football_goal_race.sql` |
 | Módulo de fichas / avatares | ✅ v1 docente + corte + uso en tablero | `panel/token_sets.php`, `php/token_sets.php`, `php/token_sets_api.php`, `js/panel/tokenSetsPanel.js`, `db/migraciones/6.6_token_sets.sql` |
 | Metajuego TRIVIAX+ (XP, monedas, rachas, tienda) | ✅ v1 backend + recompensas en partida | `php/metagame_engine.php`, `php/metagame_api.php`, `js/services/metagameClient.js`, `db/migraciones/6.7_metajuego.sql`, `docs/METAJUEGO.md` |
+| Modo Tarea asíncrono + compañeros fantasma | ✅ v1 sesiones tarea + bots locales | `php/session_mode.php`, `panel/sesion_nueva.php`, `js/engines/botEngine.js`, `db/migraciones/6.8_modo_tarea.sql`, `docs/MODO_TAREA.md` |
 | Acceso docente por código `tkey` | ✅ Funcional (legado) | `php/triviax_core.php` |
 | Proyectos en carpetas `/proyectos/` | ✅ Funcional (legado) | `proyectos/` |
 
@@ -671,6 +679,7 @@ localStorage.setItem(`triviax_tab_${sesionId}`, Date.now().toString())  // heart
 | 2026-07-03 | Implementada v1 de `football_goal_race` ("TRIVIAX Fútbol — Camino al Gol"): tablero con `images/cancha.png`, overlay responsive, motor PHP autoritativo, API `football_*`, fixture demo, migración SQL 6.5, prueba `tests/football_goal_race_test.php` y documentación `docs/FOOTBALL_GOAL_RACE.md`. |
 | 2026-07-03 | Implementado v1 del módulo de fichas/avatares: panel docente `panel/token_sets.php`, API `tokens_*`, generación de prompts, subida y corte 6x4 con GD, migración 6.6, asociación por actividad mediante `tokens.json`/`metadata.tokens`, selección previa en partida y render PNG en tablero con fallback a fichas estándar. Verificado con `tests/token_sets_test.php` y suite completa (8 suites, 0 fallos). |
 | 2026-07-03 | Desactivados los límites de intentos (rate limits) en local, y habilitado el inicio de sesión sin contraseña para superadmin (`saltmine.development@gmail.com`) en modo local con auto-creación al vuelo. |
+| 2026-07-06 | **TRIVIAX+ Épica 2 (v7.2.0): Modo Tarea y bots.** Sesiones `asincrono_tarea` con fecha límite: cada estudiante juega su instancia aislada (turnos por jugador, sin bloqueo global ni rotación; unicidad de `sesion_turnos` ahora por jugador). Migración `6.8_modo_tarea.sql`, helpers puros `php/session_mode.php`, selector de modalidad y fecha límite en `panel/sesion_nueva.php` (hasta 60 estudiantes por tarea; se oculta sin migración). Compañeros fantasma: `js/engines/botEngine.js` (FSM con tiempos humanos, acierto calibrado con `action=project_accuracy` sobre `stats_desafios`), pestaña «1 Jugador» y control de bots en `index.html`, turnos automáticos encadenados en `main.js` (solo locales, jamás en BD). Docs: `docs/MODO_TAREA.md`, API.md §7. Verificado: `tests/session_mode_test.php` (11 OK, suite 11/0), E2E HTTP tarea (19 OK) y partida real en navegador con 2 bots. |
 | 2026-07-06 | **TRIVIAX+ Épica 1 (v7.1.0): Metajuego.** XP, monedas, racha diaria con multiplicador (x1.0→x1.6) y tienda de cosméticos para estudiantes con cuenta. Migración `db/migraciones/6.7_metajuego.sql` (`estudiante_perfiles`, `item_tienda`, `estudiante_inventario` + seed 6 ítems en `images/tienda/`). Motor `php/metagame_engine.php` (funciones puras + BD, siempre falla en silencio), API `metagame_*` en `php/metagame_api.php` (perfil/tienda/compra/equipar, identidad por sesión PHP o terna de jugador), hook en `submit_answer` y `guardar_intento` (campo `metagame` en la respuesta) y `js/services/metagameClient.js` (toast de recompensa + celebración de nivel, `prefers-reduced-motion`, `aria-live`). Docs: `docs/METAJUEGO.md`, API.md §6. Verificado: `tests/metagame_test.php` (31 OK, suite 10/0), smoke BD (25 OK) y E2E HTTP contra Apache local (15 OK). |
 
 ## 9. Glosario

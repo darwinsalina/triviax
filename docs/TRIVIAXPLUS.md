@@ -64,6 +64,13 @@ CREATE TABLE estudiante_inventario (
 
 ## 2. Épica 2: Desacoplamiento Sincrónico (Modo Tarea y Bots)
 
+> ✅ **Implementada en v7.2.0 (2026-07-06).** Migración `6.8_modo_tarea.sql`,
+> helpers `php/session_mode.php`, turnos aislados por jugador en `api.php`,
+> selector de modalidad + fecha límite en `panel/sesion_nueva.php` y bots
+> FSM en `js/engines/botEngine.js` calibrados con `action=project_accuracy`.
+> Documentación: `docs/MODO_TAREA.md`. Nota: la lógica de turnos vive en
+> `api.php` (no existe `php/tablero_engine.php` en la base real).
+
 ### 2.1. Modificaciones en Base de Datos (MySQL)
 
 Expandir los estados e identificadores de sesión:

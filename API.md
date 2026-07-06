@@ -422,3 +422,17 @@ Detalle completo en `docs/MODO_TAREA.md`. Con `sesiones.modalidad_sincronia = 'a
 | Acción | Método | Descripción |
 |---|---|---|
 | `project_accuracy` | GET | Precisión histórica global de una actividad (`accuracy` 0–1 o `null` con menos de 10 muestras, `muestras`). Calibra los compañeros fantasma (`js/engines/botEngine.js`). |
+
+---
+
+## 8. Marketplace educativo (`marketplace_*`) — v7.3
+
+Red de contenidos libres entre docentes. Detalle en `docs/MARKETPLACE.md`. Requiere sesión docente; mutaciones con POST + CSRF.
+
+| Acción | Método | Descripción |
+|---|---|---|
+| `marketplace_list` | GET | Actividades públicas con filtros `q`, `nivel`, `orden` (`recientes`/`descargas`). |
+| `marketplace_levels` | GET | Niveles disponibles para el filtro. |
+| `marketplace_mine` | GET | Proyectos propios con estado de publicación. |
+| `marketplace_publish` | POST + CSRF | Publica/retira un proyecto propio (`project_id`, `publico`). |
+| `marketplace_clone` | POST + CSRF | Clona una actividad pública: duplica proyecto + desafíos + carpeta pública (sin `reportes/` ni `stats.json`), reasigna docente, registra `clonado_desde_id` e incrementa `descargas_count`. |

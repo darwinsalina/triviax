@@ -463,6 +463,7 @@ $estadoColor = [
                 <a href="<?= TRIVIAX_BASE ?>/football.php" class="btn-legado">⚽ Camino al Gol</a>
                 <a href="<?= TRIVIAX_BASE ?>/panel/grupos.php" class="btn-legado">👥 Mis grupos</a>
                 <a href="<?= TRIVIAX_BASE ?>/panel/acceso.php" class="btn-legado">🔐 Acceso y evaluación</a>
+                <a href="<?= TRIVIAX_BASE ?>/panel/marketplace.php" class="btn-legado">🛒 Marketplace</a>
                 <a href="<?= TRIVIAX_BASE ?>/admin.php" class="btn-legado">⚙️ Panel de Actividades</a>
                 <a href="<?= TRIVIAX_BASE ?>/estadisticas.php" class="btn-legado">📊 Estadísticas</a>
             </div>

@@ -90,6 +90,14 @@ ALTER TABLE sesiones
 
 ## 3. Épica 3: Marketplace Educativo y Red de Contenidos Libres
 
+> ✅ **Implementada en v7.3.0 (2026-07-06).** Migración `6.9_marketplace.sql`
+> (`clonado_desde_id` es VARCHAR porque `proyectos.id` es slug),
+> motor `php/marketplace_engine.php`, API `marketplace_*`, panel
+> `panel/marketplace.php` enlazado desde el dashboard. La clonación duplica
+> proyecto + desafíos + carpeta pública (excluye `reportes/` y `stats.json`)
+> y mantiene intacto el versionado evaluativo original.
+> Documentación: `docs/MARKETPLACE.md`.
+
 ### 3.1. Modificaciones en Base de Datos (MySQL)
 
 Permitir el intercambio seguro de proyectos entre profesores sin violar el aislamiento original de datos:

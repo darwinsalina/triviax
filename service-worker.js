@@ -1,6 +1,6 @@
 // Debe coincidir con APP_VERSION de js/config.js (este SW clásico no puede importarla).
 // Actualizar SIEMPRE con `php tools/bump_version.php X.Y.Z`, nunca a mano por separado.
-const APP_VERSION = '7.2.0';
+const APP_VERSION = '7.3.0';
 const CACHE_PREFIX = 'triviax-';
 
 const CACHE_NAMES = {

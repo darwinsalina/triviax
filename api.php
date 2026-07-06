@@ -1871,6 +1871,15 @@ if (strpos($action, 'metagame_') === 0) {
 }
 
 // ══════════════════════════════════════════════════════════════════
+// MARKETPLACE (marketplace_*) — TRIVIAX+ Épica 3: red de contenidos libres.
+// ══════════════════════════════════════════════════════════════════
+if (strpos($action, 'marketplace_') === 0) {
+    require_once __DIR__ . '/php/marketplace_api.php';
+    triviax_marketplace_api_handle($action);
+    exit;
+}
+
+// ══════════════════════════════════════════════════════════════════
 
 http_response_code(400);
 echo json_encode([

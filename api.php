@@ -1880,6 +1880,15 @@ if (strpos($action, 'marketplace_') === 0) {
 }
 
 // ══════════════════════════════════════════════════════════════════
+// DIAGNÓSTICO PEDAGÓGICO (diagnostico_*) — TRIVIAX+ Épica 4.
+// ══════════════════════════════════════════════════════════════════
+if (strpos($action, 'diagnostico_') === 0) {
+    require_once __DIR__ . '/php/diagnostico_api.php';
+    triviax_diagnostico_api_handle($action);
+    exit;
+}
+
+// ══════════════════════════════════════════════════════════════════
 
 http_response_code(400);
 echo json_encode([

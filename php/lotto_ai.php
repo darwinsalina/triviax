@@ -21,10 +21,11 @@
 
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/lotto_validator.php';
+require_once __DIR__ . '/llm_client.php'; // TRIVIAX+ Épica 4: cliente LLM real
 
 /** ¿Hay un proveedor LLM configurado para generación directa? */
 function triviax_lotto_ai_available(): bool {
-    return _triviax_env('LLM_PROVIDER', '') !== '' && _triviax_env('LLM_API_KEY', '') !== '';
+    return triviax_llm_available();
 }
 
 /**
@@ -50,9 +51,15 @@ function triviax_lotto_ai_generate(string $sourceText, array $students, array $s
 }
 
 /**
- * Punto de integración futuro con el proveedor LLM.
- * Implementar aquí la llamada HTTP cuando se configure LLM_PROVIDER.
+ * Llamada al proveedor LLM configurado (TRIVIAX+ Épica 4: php/llm_client.php).
+ * El prompt reutiliza el del asistente del panel; el resultado se valida en
+ * triviax_lotto_ai_generate() con el validador oficial.
  */
 function _lotto_ai_call_provider(string $sourceText, array $students, array $settings): string {
-    throw new RuntimeException('Proveedor LLM no implementado todavía.');
+    $prompt = function_exists('triviax_lotto_build_ai_prompt')
+        ? triviax_lotto_build_ai_prompt($sourceText, $students, $settings)
+        : "Genera una actividad TRIVIAX Lotto en JSON a partir de este material:\n\n" . $sourceText;
+    $texto = triviax_llm_generate($prompt);
+    $json = triviax_llm_extract_json($texto);
+    return $json !== null ? json_encode($json, JSON_UNESCAPED_UNICODE) : $texto;
 }

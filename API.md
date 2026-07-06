@@ -436,3 +436,14 @@ Red de contenidos libres entre docentes. Detalle en `docs/MARKETPLACE.md`. Requi
 | `marketplace_mine` | GET | Proyectos propios con estado de publicación. |
 | `marketplace_publish` | POST + CSRF | Publica/retira un proyecto propio (`project_id`, `publico`). |
 | `marketplace_clone` | POST + CSRF | Clona una actividad pública: duplica proyecto + desafíos + carpeta pública (sin `reportes/` ni `stats.json`), reasigna docente, registra `clonado_desde_id` e incrementa `descargas_count`. |
+
+---
+
+## 9. Diagnóstico pedagógico (`diagnostico_*`) — v7.4
+
+Capa analítica sin migración SQL. Detalle en `docs/DIAGNOSTICO.md`. Requiere sesión docente.
+
+| Acción | Método | Descripción |
+|---|---|---|
+| `diagnostico_perfiles` | GET | Agrupa a los estudiantes del proyecto en tres perfiles (Comprensión Crítica, Inconsistencia de Aplicación, Dominio Avanzado) con métricas y desafíos débiles. |
+| `diagnostico_sugerir` | POST + CSRF | Sub-proyecto remedial: con LLM configurado (`LLM_PROVIDER`/`LLM_API_KEY` en triviax.env) genera y valida el JSON; sin configurar devuelve el prompt para el chatbot del docente. |

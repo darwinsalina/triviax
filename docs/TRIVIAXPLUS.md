@@ -118,6 +118,15 @@ ALTER TABLE proyectos
 
 ## 4. Épica 4: Inteligencia Predictiva y Diagnóstico Pedagógico
 
+> ✅ **Implementada en v7.4.0 (2026-07-06).** Motor
+> `php/diagnostico_engine.php` (umbrales estricto-pedagógicos, opción prevista
+> por el plan), API `diagnostico_*`, sección en `estadisticas.php` (la página
+> real; no existe `panel/estadisticas.php`) y cliente LLM genérico
+> `php/llm_client.php` (Anthropic/Gemini) que además deja operativa la
+> generación directa en `php/lotto_ai.php`. El validador usado es
+> `php/challenge_validator.php` (no existe `php/project_validator.php`).
+> Documentación: `docs/DIAGNOSTICO.md`.
+
 ### 4.1. Modificaciones en Base de Datos (MySQL)
 
 Añadir una capa analítica no relacional o vistas optimizadas sobre `stats_desafios` y `resultados` para procesar agrupaciones.

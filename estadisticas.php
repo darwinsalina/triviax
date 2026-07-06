@@ -258,6 +258,30 @@ foreach ($questions as $q) {
     ];
 }
 
+// ── TRIVIAX+ Épica 4: diagnóstico pedagógico por perfiles ────────────
+// Agrupa a los estudiantes del proyecto (datos BD de `intentos`) en tres
+// perfiles pedagógicos. Nunca rompe la página: sin BD queda vacío.
+$diagnosticoPerfiles = null;
+$diagnosticoTotal = 0;
+$diagnosticoDebiles = [];
+if (!empty($activeProject)) {
+    try {
+        require_once __DIR__ . '/php/db.php';
+        require_once __DIR__ . '/php/diagnostico_engine.php';
+        if (triviax_db_available()) {
+            $pdoDiag = triviax_db();
+            $metricasDiag = triviax_diagnostico_metricas_proyecto($pdoDiag, $activeProject);
+            $diagnosticoTotal = count($metricasDiag);
+            if ($diagnosticoTotal > 0) {
+                $diagnosticoPerfiles = triviax_diagnostico_clasificar($metricasDiag);
+            }
+            $diagnosticoDebiles = triviax_diagnostico_desafios_debiles($pdoDiag, $activeProject, 5);
+        }
+    } catch (\Throwable $eDiag) {
+        $diagnosticoPerfiles = null;
+    }
+}
+
 usort($questionPerformanceRows, function ($a, $b) {
     $aHasData = $a['shown'] > 0;
     $bHasData = $b['shown'] > 0;
@@ -393,6 +417,51 @@ usort($questionPerformanceRows, function ($a, $b) {
                             <span class="card-label">Acierto Promedio</span>
                             <span class="card-value"><?php echo $overallSuccessRate; ?>%</span>
                         </div>
+                    </div>
+
+                    <!-- TRIVIAX+ Épica 4: Diagnóstico pedagógico por perfiles -->
+                    <div class="stats-table-section" id="diagnostico-section">
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;">
+                            <h3 style="margin:0;">🧭 Diagnóstico pedagógico (TRIVIAX+)</h3>
+                            <button type="button" id="btn-sugerir-refuerzo" class="btn btn-primary" style="padding:10px 16px; font-size:0.85rem; font-weight:600;">
+                                🤖 Sugerir actividades de refuerzo
+                            </button>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 10px 0 14px;">
+                            Agrupamiento automático de estudiantes según sus matrices de acierto-error en las partidas guardadas en base de datos.
+                        </p>
+                        <?php if ($diagnosticoPerfiles === null): ?>
+                            <div style="color: var(--text-muted); text-align: center; padding: 16px;">
+                                Todavía no hay partidas con sesión (código de 6 letras) registradas para esta actividad.
+                                El diagnóstico se construye con los intentos guardados en base de datos.
+                            </div>
+                        <?php else: ?>
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
+                                <?php foreach ($diagnosticoPerfiles as $grupoDiag): $infoDiag = $grupoDiag['info']; ?>
+                                    <div style="background: var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:16px;">
+                                        <div style="font-weight:800; color:var(--text-primary); margin-bottom:4px;">
+                                            <?php echo $infoDiag['icono']; ?> <?php echo htmlspecialchars($infoDiag['nombre']); ?>
+                                            <span style="font-weight:600; color:var(--text-muted);">(<?php echo count($grupoDiag['estudiantes']); ?>)</span>
+                                        </div>
+                                        <div style="color:var(--text-muted); font-size:0.8rem; margin-bottom:10px;"><?php echo htmlspecialchars($infoDiag['descripcion']); ?></div>
+                                        <?php if (empty($grupoDiag['estudiantes'])): ?>
+                                            <div style="color:var(--text-muted); font-size:0.85rem;">— Sin estudiantes en este perfil —</div>
+                                        <?php else: ?>
+                                            <?php foreach ($grupoDiag['estudiantes'] as $estDiag): ?>
+                                                <div style="display:flex; justify-content:space-between; gap:8px; padding:5px 0; border-bottom:1px dashed var(--border-color); font-size:0.88rem;">
+                                                    <span style="font-weight:600; color:var(--text-secondary);"><?php echo htmlspecialchars($estDiag['nombre']); ?></span>
+                                                    <span style="color:var(--text-muted);">
+                                                        <?php echo $estDiag['acierto']; ?>% general<?php echo $estDiag['acierto_complejo'] !== null ? ' · ' . $estDiag['acierto_complejo'] . '% aplicación' : ''; ?>
+                                                    </span>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                        <div style="color:var(--text-secondary); font-size:0.8rem; margin-top:10px;">💡 <?php echo htmlspecialchars($infoDiag['recomendacion']); ?></div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                        <div id="refuerzo-resultado" style="display:none; margin-top:16px; background: var(--bg-card); border:1px solid var(--border-color); border-radius:12px; padding:16px;"></div>
                     </div>
 
                     <!-- Tabla de Detalle por Pregunta -->
@@ -1260,6 +1329,72 @@ usort($questionPerformanceRows, function ($a, $b) {
             printWindow.document.close();
         }
     </script>
+<script>
+// TRIVIAX+ Épica 4: sugerencia de actividades de refuerzo con IA
+(function () {
+    const btn = document.getElementById('btn-sugerir-refuerzo');
+    if (!btn) return;
+    const panel = document.getElementById('refuerzo-resultado');
+    const PROJECT = <?php echo json_encode($activeProject); ?>;
+    const CSRF = <?php echo json_encode(triviax_csrf_token()); ?>;
+
+    function esc(t) {
+        const d = document.createElement('div');
+        d.textContent = String(t ?? '');
+        return d.innerHTML;
+    }
+
+    btn.addEventListener('click', async () => {
+        if (!PROJECT) return;
+        btn.disabled = true;
+        const original = btn.textContent;
+        btn.textContent = '⏳ Analizando debilidades…';
+        panel.style.display = 'block';
+        panel.innerHTML = '<span style="color:var(--text-muted);">Preparando la sugerencia de refuerzo…</span>';
+        try {
+            const res = await fetch('api.php?action=diagnostico_sugerir', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF },
+                body: JSON.stringify({ project: PROJECT })
+            });
+            const data = await res.json();
+            if (!res.ok || data.success === false) {
+                throw new Error(data.message || data.error || ('HTTP ' + res.status));
+            }
+            let html = '';
+            if (data.modo === 'ia' && data.proyecto_remedial) {
+                const n = (data.proyecto_remedial.challenges || []).length;
+                const blob = JSON.stringify(data.proyecto_remedial, null, 2);
+                html += `<div style="font-weight:700; color:var(--text-primary); margin-bottom:8px;">✅ Sub-proyecto remedial generado y validado (${n} desafíos)</div>`;
+                html += `<p style="color:var(--text-muted); font-size:0.85rem;">Descarga el JSON e impórtalo desde el <a href="admin.php" style="color:#a5b4fc;">Panel de Actividades</a> para crear la actividad de refuerzo.</p>`;
+                html += `<button type="button" class="btn btn-primary" id="btn-descargar-refuerzo" style="padding:9px 14px; font-size:0.85rem;">⬇️ Descargar proyecto de refuerzo (.json)</button>`;
+                panel.innerHTML = html;
+                document.getElementById('btn-descargar-refuerzo').addEventListener('click', () => {
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(new Blob([blob], { type: 'application/json' }));
+                    a.download = `refuerzo_${PROJECT}.json`;
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                });
+            } else {
+                html += `<div style="font-weight:700; color:var(--text-primary); margin-bottom:8px;">📋 Prompt de refuerzo listo (sin proveedor de IA configurado)</div>`;
+                html += `<p style="color:var(--text-muted); font-size:0.85rem;">Copia este prompt en tu chatbot de confianza y usa el JSON resultante en el <a href="admin.php" style="color:#a5b4fc;">Panel de Actividades</a>. Para generación directa, configura LLM_PROVIDER y LLM_API_KEY en triviax.env.</p>`;
+                html += `<textarea readonly style="width:100%; min-height:180px; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); border-radius:8px; color:var(--text-secondary); padding:10px; font-size:0.8rem; font-family:monospace;">${esc(data.prompt)}</textarea>`;
+                html += `<button type="button" class="btn btn-secondary" id="btn-copiar-prompt" style="margin-top:8px; padding:8px 14px; font-size:0.85rem;">📋 Copiar prompt</button>`;
+                panel.innerHTML = html;
+                document.getElementById('btn-copiar-prompt').addEventListener('click', (e) => {
+                    navigator.clipboard.writeText(data.prompt).then(() => { e.target.textContent = '✅ Copiado'; });
+                });
+            }
+        } catch (err) {
+            panel.innerHTML = `<span style="color:#f87171;">⚠️ ${esc(err.message)}</span>`;
+        } finally {
+            btn.disabled = false;
+            btn.textContent = original;
+        }
+    });
+})();
+</script>
 <script src="<?= TRIVIAX_BASE ?>/js/brand.js?v=5.0.6"></script>
 </body>
 </html>
